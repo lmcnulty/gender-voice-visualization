@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset='utf-8'/>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Gender Voice Analyzer Research Trial</title>
+		<link rel="stylesheet" type="text/css" href="style.css">
+	</head>
+	<body>
+		<header>
+			<button class="play-pause iconic"></button>
+			<progress class="player" value="0" min="0"></progress>
+			<button class="new-clip">New Clip</button>
+			<video class="clip"></video>
+		</header>
+		<main>
+				<section>
+
+				</section>
+				<aside>
+						<section class="details">
+							<h2>This clip</h2>
+							<button class="download">Download</button>
+						</section>
+				</aside>
+		</main>
+		<footer>
+			
+			<button class="settings iconic">⚙</button>
+			<button class="help iconic">?</button>
+			<div class="spacer"></div>
+			<button class="details">Details</button>
+
+		</footer>
+
+
+		<div class="modal-shadow hidden">
+				<div class="modal">
+						<button class="close">×</button>
+				</div>
+		</div>
+		
+		<!-- This is where we keep stuff we don't want visible -->
+		<div id="offscreen">
+				<section class="settings">
+						This is where the settings will go.
+				</section>
+				<section class="help">
+						This is where the help will go.
+				</section>
+				<section class="new-clip">
+						<h2>Add a Clip</h2>
+
+						Script <select>
+							<option>Phonetic Pangram: That quick beige fox...</option>	
+							<option>Rainbow Passage</option>	
+						</select> 
+						<br>
+						<textarea id="transcript">
+						That quick beige fox jumps in the air over each thin dog. Look out, I shout, for he's foiled you again, creating chaos.
+						</textarea>
+
+						<div>
+							<input type="radio" name="add-recording">Upload a file
+							<input type='file' id='audio-file-input' name='recording'/>
+						</div>
+						<div>
+							<input type="radio" name="add-recording">Record your voice
+						</div>
+						
+
+
+						<input type='submit' id="submit" value="Add Clip"/>
+				</section>
+		</div>
+
+		<script src="index.js"></script>
+	</body>
+</html>
