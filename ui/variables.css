@@ -1,0 +1,35 @@
+
+/* ======================= Variables ======================= */
+body {
+	--header-height: 2.5rem;
+	--body-background: white;
+	--body-color: black;
+	--widget-background: inherit;
+	--widget-color: inherit;
+	
+	--input-background: inherit;
+	--input-color: inherit;
+	
+	--accent: purple;
+
+	--border-radius: .2em;
+
+	--box-shadow-strength: 0.1;
+	--highlight-strength: 0.1;
+	--box-shadow-spread: 4px;
+	--box-shadow: -2px 2px var(--box-shadow-spread) 2px rgba(0, 0, 0, var(--box-shadow-strength));
+	
+	--chrome-background: #444;
+	--chrome-color: #ccc;
+	--chrome-border: #000;
+	
+	--chrome-background: #ddd;
+	--chrome-color: #000;
+	--chrome-border: #888;
+
+	--button-background: inherit;
+	--button-color: inherit;
+	
+	--progress-bar-background: var(--accent);
+}
+

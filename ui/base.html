@@ -1,0 +1,92 @@
+<!doctype html>
+{% include 'notice.html' %}
+<html>
+	<head>
+		<meta charset='utf-8'/>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Gender Voice Analyzer Research Trial</title>
+		<style>
+			{% filter indent(width=12) %}
+				{% include 'variables.css' %}
+				{% include 'layout.css' %}
+				{% include 'style.css' %}
+				{% include 'voice-graph.css' %}
+				{% include 'spinner.css' %}
+			{% endfilter %}
+		</style>
+
+		<link href="style-smooth.css" rel="alternate stylesheet" type="text/css" title="Smooth">
+		<link href="data:text/css," rel="stylesheet" type="text/css" title="Null">
+
+		{% if dev %}
+			<script src="./ui/dom.js"></script>
+			<script src="./ui/util.js"></script>
+			<script src="./ui/speech-scripts.js"></script>
+		{% else %}
+		<script>
+			{% filter indent(width=8) %}
+				{% include "dom.js" %}
+				{% include "util.js" %}
+				{% include 'speech-scripts.js' %}
+			{% endfilter %}
+		</script>
+		{% endif %}
+	</head>
+	<body class="narrow-body">
+		<header>
+			{% filter indent(width=12) %}
+				{% include 'player.html' %}
+			{% endfilter %}
+			<button class="new-clip">New Clip</button>
+			<div class="spinner hidden"></div>
+			<div class="loading-message">Adding clip...</div>
+			<script>
+			$('button.new-clip').addEventListener('click', evt => {
+				$('.modal').appendChild($('section.new-clip'));
+				showModal();
+			});
+			</script>
+		</header>
+		<main>
+			<section>
+				<voice-graph-2d></voice-graph-2d>
+			</section>
+			<aside>
+				{% filter indent(width=16) %}
+					{% include 'sidepane.html' %}
+				{% endfilter %}
+			</aside>
+		</main>
+
+		{% filter indent(width=8) %}
+			{% include 'modal.html' %}
+		{% endfilter %}
+
+		<!-- This is where we keep stuff we don't want visible -->
+		<div id="offscreen">
+			{% filter indent(width=12) %}
+				{% include 'settings.html' %}
+				{% include 'help.html'     %}
+				{% include 'details.html'  %}
+				{% include 'new-clip.html' %}
+			{% endfilter %}
+		</div>
+
+		{% if dev %}
+			<script src="./ui/svg-icons.js"></script>
+			<script src="./ui/recording.js"></script>
+			<script src="./ui/index.js"></script>
+			<script src="./ui/voice-graph.js"></script>
+		{% else %}
+		<script>
+			{% filter indent(width=12) %}
+				{% include "svg-icons.js" %}
+				{% include "recording.js" %}
+				{% include "index.js" %}
+				{% include "voice-graph.js" %}
+			{% endfilter %}
+		</script>
+		{% endif %}
+	</body>
+</html>
+

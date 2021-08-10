@@ -1,0 +1,127 @@
+
+<section class="new-clip">
+	<style>
+		#record-voice + label + div, #upload-file + label + div {
+			margin-left: 1em;
+			padding: 1em;
+		}
+		/* Show upload/recording elements only when that option is selected. */
+		#record-voice          + label + div { display: none; }
+		#record-voice:checked  + label + div { display: block; }
+		#upload-file           + label + div { display: none;}
+		#upload-file:checked   + label + div { display: block;}
+	</style>
+
+	<h2>Add a Clip</h2>
+
+	<!-- Script selection -->
+	Script <select class="script" id="script-select" onchange="updateScript()"/>
+	<br>
+	<textarea id="transcript"></textarea>
+	<script>
+		for (let key in speechScripts) {
+			let script = speechScripts[key].replace(/\s\s*/g, ' ');
+			$('#script-select').appendChild(option(key, {value: script}));
+		}
+
+		function updateScript() {
+			document.querySelector('#transcript').innerHTML 
+				= document.querySelector('select.script').value;
+		}
+		updateScript();
+	</script>
+
+
+	<!-- Upload Options -->
+	<input type="radio" name="add-recording" id="upload-file" checked>
+	<label for="upload-file">Upload a file</label>
+	<div>
+		<input type='file' id='audio-file-input' name='recording'/>
+	</div>
+	<br>
+	<input type="radio" name="add-recording" id="record-voice">
+	<label for="record-voice">Record your voice</label>
+	<div>
+		<button id="start-recording">Start Recording</button>
+		<button id="stop-recording">Stop Recording</button>
+	</div>
+	<br>
+
+	<!-- Submit -->
+	<button id="submit" onclick="submitAudio()">Add Clip</button>
+	<script>
+		let playingData;
+		let playingMarker;
+
+		function submitAudio() {
+
+			let audioData;
+			let formData = new FormData();
+			formData.append('transcript', $('#transcript').value);
+
+			if ($('#upload-file').checked) {
+				fileInput = $('#audio-file-input')
+				if (fileInput.files.length < 1) return
+
+				let recording = fileInput.files[0];
+				formData.append('recording', recording);
+
+				let reader = new FileReader(recording);	
+				reader.readAsDataURL(recording);
+				reader.addEventListener("load", () => {
+					audioData = reader.result.replace(
+						/data:.*;base64/, 
+						"data:audio/wav;base64"
+					);
+					//localStorage.setItem(hash(audioData), audioData);
+				});
+
+			} else if ($('#record-voice').checked) {
+				//TODO: Handle recording
+			} else {
+				alert('Please upload a file or make a recording.');
+				return;
+			}
+
+			$('button.new-clip').classList.add('hidden');
+			$('button.new-clip + .spinner').classList.remove('hidden');
+			
+			hideModal();
+			
+			fetch('./backend.cgi', { method: 'POST', body: formData})
+			.then(x => x.text()).then(data => {
+				$('button.new-clip').classList.remove('hidden');
+				$('button.new-clip + .spinner').classList.add('hidden');
+
+				if (data.trim().length < 2) {
+					alert("We couldn't identify the words in your clip. Make sure that the transcript matches the audio.");
+					return;
+				}
+
+				player.setSource(audioData);
+				console.log(data);
+				
+				let marker = $('voice-graph-2d').voiceGraph.addMarker(.5, .5, null, null);
+				playingMarker = marker;
+
+				playingData = eval(data);
+
+				marker.setAttribute('data-phonemes', data)
+
+				marker.addEventListener('click', evt => {
+					player.mediaElement.src = marker.getAttribute('data-recording');
+					player.mediaElement.currentTime = 0;
+					playingMarker = marker;
+					playingData = eval(marker.getAttribute('data-phonemes'));
+				})
+
+				player.mediaElement.src = audioData;
+				marker.setAttribute('data-recording', audioData);
+				player.mediaElement.load();
+				player.mediaElement.currentTime = 0;
+				
+
+			});
+		}
+	</script>
+</section>

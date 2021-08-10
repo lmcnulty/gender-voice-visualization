@@ -1,0 +1,129 @@
+
+/* ======================= Layout ======================= */
+* {
+	box-sizing: border-box;
+}
+html, body {
+	position: relative;
+	margin: 0px;
+	height: 100%;
+	overflow: hidden;
+	background: var(--body-background);
+	color: var(--body-color);
+	font-family: sans-serif;
+}
+header, footer {
+	height: var(--header-height);
+	width: 100%;
+	padding: .5rem;
+	display: flex;
+	position: relative;
+	align-items: center;
+
+	background: var(--chrome-background);
+	color: var(--chrome-color);
+	border-color: var(--chrome-border);
+}
+main {
+	height: calc(100vh - var(--header-height));
+	display: flex;
+	justify-content: center;
+}
+header button, footer button {
+	height: calc(var(--header-height) - 1rem);
+	flex-shrink: 0;
+	line-height: 1rem;
+	min-width: 2rem;
+}
+.spacer {
+	height: 1px;
+	width: 100%;
+	flex-shrink: 1;
+}
+
+header > * + *, footer > * + *{
+	margin-left: .5rem;
+}
+
+header > * {
+	z-index: 2;
+}
+
+main > section {
+	position: relative;
+	border-top: 1px solid var(--chrome-border);
+}
+main > aside {
+	position: relative;
+	color: var(--chrome-color);
+	background: var(--chrome-background);
+}
+input, select {
+	max-width: 100%;
+}
+
+
+#offscreen {
+	display: none;
+}
+
+section > *:first-child {
+	margin-top: 0px;
+}
+
+.wide-body main > section {
+	max-width: calc(100vh - var(--header-height));
+	max-height: 100vw;
+	width: 100%;
+	height: 100%;
+}
+.wide-body main > aside {
+	width: 100%;
+	max-width: calc(100vw - 100vh + var(--header-height));
+}
+
+.narrow-body main {
+	flex-direction: column;
+}
+.narrow-body aside, .narrow-body .current-tab {
+	border-left: 0px;
+}
+.narrow-body main aside {
+	max-width: 100%;
+	height: calc(100vh - 100vw - var(--header-height));
+}
+.narrow-body voice-graph-2d {
+	max-width: calc(60vh - var(--header-height) * .6);
+	max-height: calc(60vh - var(--header-height) * .6);
+	margin: auto;
+}
+.narrow-body main > section {
+	max-height: 60%;
+	height: 100vw;
+	flex-shrink: 0;
+}
+.narrow-body main > aside {
+	max-height: calc(100% - 100vw);
+	min-height: 40%;
+	height: 100%;
+}
+
+section > h2:first-child {
+	margin-top: 0px;
+}
+
+voice-graph-2d {
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	width: 100%;
+}
+.hidden {
+	display: none;
+}
+
+/*
+input, button, select, textarea {
+	font-size: inherit;
+}
+*/

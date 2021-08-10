@@ -1,0 +1,60 @@
+
+<div class="current-tab"></div>
+<div class="tab-set">
+	<button class="settings iconic">⚙ Settings</button>
+	<button class="help iconic">(?) Help</button>
+	<button class="details">... Details</button>
+</div>
+<style>
+	.tab-set {
+		position: absolute;
+		bottom: 0px;
+		height: calc(var(--header-height) - .5rem);
+		display: flex;
+		left: 0px;
+		right: 0px;
+		background: var(--button-background);
+	}
+	.wide-body .tab-set {
+		right: 0px;
+	}
+	.tab-set button {
+		transition: box-shadow .2s all;
+		height: 100%;
+		width: 100%;
+		border-top: 1px solid var(--chrome-border);
+		border-left: 1px solid var(--chrome-border);
+		border-right: 0px;
+		border-radius: 0px 0px var(--border-radius) var(--border-radius);
+		background: var(--button-background);
+		box-shadow: inset var(--box-shadow);
+	}
+	.current-tab {
+		overflow: auto;
+		height: calc(100% - 2em);
+		border: 1px solid var(--chrome-border);
+		border-bottom: 0px;
+		border-right: 0px;
+		padding: .5rem;
+	}
+	.tab-set button:disabled {
+		border-top: 0px;
+		opacity: 1;
+		background: var(--chrome-background);
+		color: var(--chrome-color);
+		box-shadow: 2px 2px var(--shadow-spread) 2px rgba(0,0,0,0);
+	}
+</style>
+<script>
+	for (let tab of ['settings', 'help', 'details']) {
+		let tabButton = $('button.' + tab);
+		tabButton.addEventListener('click', evt => {
+			for (let sibling of tabButton.parentNode.querySelectorAll('button')) {
+				sibling.disabled = false;
+			}
+			clearSelector('.current-tab > section');
+			evt.target.disabled = true;
+			$('aside > .current-tab').appendChild($('section.' + tab));
+		});
+	}
+</script>

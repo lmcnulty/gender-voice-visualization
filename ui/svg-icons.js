@@ -1,0 +1,153 @@
+
+
+let darkIcon = String(`
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   id="svg5181"
+   version="1.1"
+   viewBox="0 0 8.5024996 8.5054264"
+   height="32.146492"
+   width="32.135433">
+  <defs
+     id="defs5175" />
+  <metadata
+     id="metadata5178">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(-24.474941,-137.0211)"
+     id="layer1">
+    <rect style="fill:none;fill-opacity:1;stroke:currentColor;stroke-width:0.56500006;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0"
+       id="rect4546-3"
+       width="7.9375"
+       height="7.9375"
+       x="24.757441"
+       y="137.30507" />
+    <path
+       id="path4571"
+       d="m 27.40326,137.30506 c -3.43959,1.32291 -3.43959,6.61458 0,7.9375"
+       style="fill:none;stroke:currentColor;stroke-width:0.565;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       style="fill:none;stroke:currentColor;stroke-width:0.565;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 27.93242,138.09881 c -2.64583,1.85208 -2.64583,4.49791 0,6.35"
+       id="path4573" />
+    <path
+       style="fill:none;stroke:currentColor;stroke-width:0.565;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 30.0491,137.30506 c 3.43959,1.32291 3.43959,6.61458 0,7.9375"
+       id="path5740" />
+    <path
+       id="path5742"
+       d="m 29.51994,138.09881 c 2.64583,1.85208 2.64583,4.49791 0,6.35"
+       style="fill:none;stroke:currentColor;stroke-width:0.565;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  </g>
+</svg>
+`)
+
+let brightIcon = String(`
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="32.135433"
+   height="32.153236"
+   viewBox="0 0 8.5025005 8.5072107"
+   version="1.1"
+   id="svg4565"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
+   sodipodi:docname="bright.svg">
+  <defs id="defs4559">
+	<link href="style.css" type="text/css" rel="stylesheet" 
+          xmlns="http://www.w3.org/1999/xhtml"/>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="11.2"
+     inkscape:cx="12.379905"
+     inkscape:cy="11.113832"
+     inkscape:document-units="mm"
+     inkscape:current-layer="svg4565"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     units="px"
+     inkscape:window-width="1920"
+     inkscape:window-height="1002"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata4562">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-32.790418,-144.57973)">
+    <rect
+       style="fill:none;fill-opacity:1;stroke:currentColor;stroke-width:0.56500006;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0"
+       id="rect4581"
+       width="7.9375"
+       height="7.9375"
+       x="33.072918"
+       y="144.86459"
+       inkscape:export-xdpi="191.19"
+       inkscape:export-ydpi="191.19" />
+    <path
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path4583"
+       d="m 33.866667,144.86458 c 1.85208,1.32292 1.85208,6.61459 0,7.9375"
+       style="fill:none;stroke:currentColor;stroke-width:0.56500006;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       style="fill:none;stroke:currentColor;stroke-width:0.56500006;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 35.454167,145.39375 c 1.32291,1.85209 1.32291,5.02709 0,6.87917"
+       id="path4585"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;stroke:currentColor;stroke-width:0.56500006;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 40.216657,144.86459 c -1.85208,1.32292 -1.85208,6.61459 0,7.9375"
+       id="path833"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <path
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path835"
+       d="m 38.629157,145.39376 c -1.32291,1.85209 -1.32291,5.02709 0,6.87917"
+       style="fill:none;stroke:currentColor;stroke-width:0.56500006;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  </g>
+</svg>
+`)

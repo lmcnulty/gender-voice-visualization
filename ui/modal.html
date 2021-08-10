@@ -1,0 +1,67 @@
+
+<!-- ======================= Modal ======================= -->
+<style>
+	.modal-shadow {
+		position: absolute;
+		top: 0px;
+		left: 0px;
+		right: 0px;
+		bottom: 0px;
+		background: rgba(0, 0, 0, .75);
+		z-index: 3;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 10px;
+		transition: .2s all;
+	}
+	.modal-shadow.hidden {
+		display: block;
+		opacity: 0%;
+		pointer-events: none;
+	}
+	.modal {
+		max-width: 600px;
+		min-height: 300px;
+		width: 100%;
+		min-width: 50%;
+		position: relative;
+		background: var(--body-background);
+		color: var(--body-color);
+	}
+	.modal > .close {
+		position: absolute;
+		top: 0em;
+		right: .25em;
+		background: none;
+		color: var(--chrome-color);
+		border: none;
+		box-shadow: none;
+		font-size: 200%;
+	}
+	.modal > .close:after {
+		display: none;
+	}
+	.modal > * > *:first-child {
+		margin-top: 0px;
+	}
+</style>
+<div class="modal-shadow hidden">
+		<div class="modal">
+				<button class="close">×</button>
+		</div>
+</div>
+<script>
+	function showModal() {
+		$('.modal-shadow').classList.remove('hidden');
+	}
+	function hideModal() {
+		$('.modal-shadow').classList.add('hidden');
+	}
+	$('.modal > .close').addEventListener('click', evt => {
+			clearSelector('.modal > section');
+			hideModal();
+	});
+</script>
+
+<!-- ===================================================== -->

@@ -1,0 +1,196 @@
+
+/* Voice Graph */
+* {
+	--voice-graph-z-index: 0;
+}
+voice-graph-2d {
+	display: block;
+	--padding: 2em;
+}
+
+voice-graph-2d > canvas {
+	position: relative;
+	height: 100%;
+	width: 100%;
+	float: left;
+}
+
+voice-graph-2d {
+	padding: var(--padding);
+	overflow: hidden;
+}
+voice-graph-2d > .axis-labels {
+	display: flex; 
+	justify-content: space-between;
+	position: absolute;
+	line-height: var(--padding);
+}
+voice-graph-2d > .axis-labels > .title {
+	font-weight: bold;
+}
+voice-graph-2d > .x.axis-labels {
+	top: 0px;
+	left: var(--padding);
+	right: var(--padding);
+}
+voice-graph-2d > .x-opposite.axis-labels {
+	bottom: 0px;
+	left: var(--padding);
+	right: var(--padding);
+}
+
+voice-graph-2d > .y-opposite.axis-labels {
+	top: var(--padding);
+	bottom: var(--padding);
+	left: 0px;
+	writing-mode: vertical-rl;
+	text-orientation: mixed;
+}
+
+
+voice-graph-2d > .y.axis-labels {
+	top: var(--padding);
+	bottom: var(--padding);
+	right: 0px;
+	writing-mode: vertical-lr;
+	text-orientation: sideways-left;
+}
+
+
+voice-graph-2d > .overlay {
+	position: absolute;
+	top: var(--padding);
+	left: var(--padding);
+	bottom: var(--padding);
+	right: var(--padding);
+	overflow: visible;
+}
+
+voice-graph-2d > .overlay > .marker {
+	height: 1em;
+	width: 1em;
+	border-radius: 50%;
+	background: black;
+	border: .1em solid white;
+	position: absolute;
+	z-index: calc(var(--voice-graph-z-index) + 2);
+	color: white;
+	text-align: center;
+	line-height: 1em;
+	transition: all .1s;
+	top: calc(-.5em - 2px);
+	left: calc(-.5em - 2px);
+}
+
+voice-graph-2d > .overlay > .marker:hover {
+	color: yellow;
+	border: .1em solid yellow;
+}
+
+voice-graph-2d > .overlay > .x.hairline {
+	content: '';
+	border-left: .1em dotted black;
+	display: block;
+	position: absolute;
+	z-index: calc(var(--voice-graph-z-index) + 1);
+	height: 100%;
+	top: 0px;
+	left: -1px;
+	transition: .1s all;
+}
+voice-graph-2d > .x-opposite.axis-labels > .current-value {
+	position: absolute;
+	width: calc(2 * var(--padding)) ;
+	text-align: center;
+	bottom: 0px;
+	opacity: 0;
+	left: calc(-1 * var(--padding));
+	transition: .1s all;
+}
+voice-graph-2d > .overlay > .y.hairline {
+	content: '';
+	border-top: .1em dotted black;
+	display: block;
+	position: absolute;
+	z-index: calc(var(--voice-graph-z-index) + 2);
+	width: 100%;
+	left: 0px;
+	top: -1px;
+	transition: .1s all;
+}
+voice-graph-2d > .y-opposite.axis-labels > .current-value {
+	position: absolute;
+	height: calc(2 * var(--padding));
+	text-align: center;
+	transform: rotate(180deg);
+	transform-origin: center;
+	left: 0px;
+	bottom: calc(-1 * var(--padding));
+	opacity: 0;
+	transition: .1s all;
+}
+	
+voice-graph-2d .marker > .infobox {
+	position: absolute;
+	width: 18ch;
+	left: calc(0.5em - 9ch);
+	top: calc(-1 * var(--padding));
+}
+.ratings-bar {
+	box-sizing: border-box;
+	display: flex;
+	width: 100%;
+	overflow: hidden;
+	border-radius: 5px 5px 5px 5px;
+}
+.ratings-bar > span {
+	padding: 2px 0px 2px 0px;
+	display: inline-block;
+	box-sizing: border-box;
+	overflow: hidden;
+	font-size: small;
+	line-height: 1em;
+}
+.infobox .strongly-agree {
+	background: #43db20;
+	color: white;
+	border-radius: 0px 5px 5px 0px;
+}
+.infobox .agree {
+	background: #a5db99;
+	color: white;
+}
+.infobox .disagree {
+	background: #e28888;
+	color: white;
+}
+.infobox .strongly-disagree{
+	background: #e22222;
+	color: white;
+	border-radius: 5px 0px 0px 5px;
+}
+.clef {
+	position: absolute;
+	left: 0px;
+	width: var(--padding);
+	z-index: calc(var(--voice-graph-z-index) + 2);
+	text-align: center;
+	transform-origin: center center;
+	transform: scale(2);
+	padding: 0px;
+	margin-bottom: -.5em;
+}
+.clef.treble { top: var(--padding); }
+.clef.bass { bottom: var(--padding); }
+
+.instrument {
+	position: absolute;
+	bottom: calc(var(--padding) * .1);
+	height: calc(var(--padding) * .8);
+}
+.instrument.flute {
+	right: var(--padding);
+}
+.instrument.tuba {
+	left: var(--padding);
+}

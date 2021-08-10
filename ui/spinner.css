@@ -1,0 +1,55 @@
+.spinner,
+.spinner:after {
+  border-radius: 50%;
+  width: 3em;
+  height: 3em;
+  position: relative;
+  flex-shrink: 0;
+}
+.spinner {
+  margin: 60px auto;
+  font-size: 10px;
+  position: relative;
+  text-indent: -9999em;
+  border-top: .5em solid var(--accent);
+  border-right: .5em solid var(--accent);
+  border-bottom: .5em solid var(--accent);
+  border-left: .5em solid var(--button-background);
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation: load8 1.1s infinite linear;
+  animation: load8 1.1s infinite linear;
+}
+@-webkit-keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+header .spinner {
+	margin-left: 1em;
+}
+
+header .spinner.hidden + .loading-message {
+	display: none;
+}
+header .spinner + .loading-message {
+	display: inline;
+	flex-shrink: 0;
+}

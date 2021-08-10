@@ -1,0 +1,153 @@
+
+<!-- ======================= Player ======================= -->
+<button class="play-pause iconic"></button>
+<progress class="player" value="0" min="0"></progress>
+<video class="clip"></video>
+<script>
+	let player = {}; 
+	(() => {
+		let mediaElement = $('video.clip');
+		let playPauseButton = $('button.play-pause');
+		let progressBar = $('progress.player');
+
+		function setSource(src) {
+			mediaElement.src = src;
+			mediaElement.addEventListener('loadedmetadata', evt => {
+				progressBar.setAttribute('max', mediaElement.duration);
+				console.log('max: ' + progressBar.max);
+				progressBar.setAttribute('value', 0);
+			})
+		}
+
+		playPauseButton.addEventListener('click', evt => {
+			if (mediaElement.paused || mediaElement.ended) {
+				mediaElement.play();
+				playPauseButton.classList.add('playing') ;
+			} else {
+				mediaElement.pause();
+				playPauseButton.classList.remove('playing') ;
+			}
+		});
+
+		mediaElement.addEventListener('timeupdate', evt => {
+			progressBar.setAttribute('value', mediaElement.currentTime);
+			if (mediaElement.currentTime >= progressBar.max) {
+				playPauseButton.classList.remove('playing');
+			}
+		})
+
+		progressBar.addEventListener('click', evt => {
+			let pos = (evt.pageX  - progressBar.offsetLeft) / progressBar.offsetWidth;
+			mediaElement.currentTime = pos * mediaElement.duration;
+		})
+		let dragInProgress = false;
+		progressBar.addEventListener('mousedown', evt => dragInProgress = true);
+		progressBar.addEventListener('mouseup', evt => dragInProgress = false);
+		progressBar.addEventListener('mousemove', evt => {
+			if (dragInProgress) {
+				let pos = (evt.pageX  - progressBar.offsetLeft) / progressBar.offsetWidth;
+				progressBar.value = pos * mediaElement.duration;
+			}
+		})
+
+		mediaElement.ontimeupdate = () => {
+			let vg = $('voice-graph-2d').voiceGraph
+			//let playingMarker = vg.selectedMarker;
+
+			if (mediaElement.currentTime == 0) {
+				playingMarker.setAttribute('data-pitch', .5);
+				playingMarker.setAttribute('data-resonance', .5);
+			}
+
+			if (!playingData || playingData.length < 1) return
+
+			let currentPhone = playingData[0]
+
+			for (let phoneme of playingData) {
+				if (phoneme.time < mediaElement.currentTime) {
+					currentPhone = phoneme;
+				}
+			}
+
+			playingMarker.querySelector('.infobox').innerHTML = currentPhone.phone;
+
+			let isVowel = currentPhone.phone && Array.from(currentPhone.phone).filter(
+				value => ["A", "E", "I", "O", "U", "Y"].includes(value)
+			).length > 0;
+
+			if (currentPhone?.F[0] && isVowel) {
+				playingMarker.setAttribute('data-pitch', clamp(0, 1, 
+					(currentPhone.F[0] - 50) / 250
+				));
+			}
+			if (currentPhone.F_stdevs && isVowel) {
+				playingMarker.setAttribute('data-resonance', clamp(0, 1, 
+					(((1/3) * currentPhone.F_stdevs[1] 
+					+ (1/3) * currentPhone.F_stdevs[2] 
+					+ (1/3) * currentPhone.F_stdevs[3]) + 2) / 4
+				));
+			}
+
+			vg.update();
+		}
+
+		// Public Interface
+		player.setSource = setSource;
+		player.mediaElement = mediaElement;
+	})();
+</script>
+<style>
+
+	button.play-pause:before {
+		content: '>';
+	}
+	button.play-pause.playing:before {
+		content: '-';
+	}
+	progress.player {
+		width: 100%;
+		height: calc(var(--header-height) - 1em);
+		vertical-align: center;
+		flex-shrink: 1;
+	}
+	.custom-widgets progress[value] {
+	  /* Reset the default appearance */
+	  -webkit-appearance: none;
+		 -moz-appearance: none;
+			  appearance: none;
+	  
+	  /* Get rid of default border in Firefox. */
+	  border: none;
+	  border: 1px solid var(--chrome-border);
+	  border-radius: var(--border-radius);
+	  overflow: hidden;
+	}
+	.custom-widgets  progress[value]::-webkit-progress-bar, progress[value] {
+		background: var(--input-background);
+		box-shadow: inset -1px 2px calc(var(--box-shadow-spread) * 1.25) 2px rgba(255,255,255, calc(var(--highlight-strength) * 1));
+	}
+
+	/* These don't work together for some reason*/
+	.custom-widgets progress[value]::-webkit-progress-value {
+		background: var(--progress-bar-background);
+		border-radius: var(--border-radius) 0px 0px var(--border-radius);
+
+	}
+	.custom-widgets progress[value]::-moz-progress-bar { 
+		background: var(--progress-bar-background);
+		border-radius: var(--border-radius) 0px 0px var(--border-radius);
+	}
+	video.clip {
+		position: absolute;
+		top: 0px;
+		left: 0px;
+		right:0px;
+		bottom: 0px;
+		z-index: 1;
+		width: 100%;
+		height: var(--header-height);
+		margin: 0px;
+	}
+</style>
+<!-- ====================================================== -->
+

@@ -1,79 +1,1625 @@
 <!doctype html>
+<!--
+Hello! If you're seeing this, you're probably using your browser's
+"view-source" feature. You might notice that the frontend of this
+project appears to be one big file. In fact, it is compiled from
+many files that are combined into one for performance reasons.
+We've tried to make the output here as readable as possible, but
+you might have an easier time looking at the source code in the 
+Git repository: <INSERT REPOSITORY LINK>
+-->
 <html>
 	<head>
 		<meta charset='utf-8'/>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Gender Voice Analyzer Research Trial</title>
-		<link rel="stylesheet" type="text/css" href="style.css">
+		<style>
+			
+            				
+            /* ======================= Variables ======================= */
+            body {
+            	--header-height: 2.5rem;
+            	--body-background: white;
+            	--body-color: black;
+            	--widget-background: inherit;
+            	--widget-color: inherit;
+            	
+            	--input-background: inherit;
+            	--input-color: inherit;
+            	
+            	--accent: purple;
+
+            	--border-radius: .2em;
+
+            	--box-shadow-strength: 0.1;
+            	--highlight-strength: 0.1;
+            	--box-shadow-spread: 4px;
+            	--box-shadow: -2px 2px var(--box-shadow-spread) 2px rgba(0, 0, 0, var(--box-shadow-strength));
+            	
+            	--chrome-background: #444;
+            	--chrome-color: #ccc;
+            	--chrome-border: #000;
+            	
+            	--chrome-background: #ddd;
+            	--chrome-color: #000;
+            	--chrome-border: #888;
+
+            	--button-background: inherit;
+            	--button-color: inherit;
+            	
+            	--progress-bar-background: var(--accent);
+            }
+
+            				
+            /* ======================= Layout ======================= */
+            * {
+            	box-sizing: border-box;
+            }
+            html, body {
+            	position: relative;
+            	margin: 0px;
+            	height: 100%;
+            	overflow: hidden;
+            	background: var(--body-background);
+            	color: var(--body-color);
+            	font-family: sans-serif;
+            }
+            header, footer {
+            	height: var(--header-height);
+            	width: 100%;
+            	padding: .5rem;
+            	display: flex;
+            	position: relative;
+            	align-items: center;
+
+            	background: var(--chrome-background);
+            	color: var(--chrome-color);
+            	border-color: var(--chrome-border);
+            }
+            main {
+            	height: calc(100vh - var(--header-height));
+            	display: flex;
+            	justify-content: center;
+            }
+            header button, footer button {
+            	height: calc(var(--header-height) - 1rem);
+            	flex-shrink: 0;
+            	line-height: 1rem;
+            	min-width: 2rem;
+            }
+            .spacer {
+            	height: 1px;
+            	width: 100%;
+            	flex-shrink: 1;
+            }
+
+            header > * + *, footer > * + *{
+            	margin-left: .5rem;
+            }
+
+            header > * {
+            	z-index: 2;
+            }
+
+            main > section {
+            	position: relative;
+            	border-top: 1px solid var(--chrome-border);
+            }
+            main > aside {
+            	position: relative;
+            	color: var(--chrome-color);
+            	background: var(--chrome-background);
+            }
+            input, select {
+            	max-width: 100%;
+            }
+
+
+            #offscreen {
+            	display: none;
+            }
+
+            section > *:first-child {
+            	margin-top: 0px;
+            }
+
+            .wide-body main > section {
+            	max-width: calc(100vh - var(--header-height));
+            	max-height: 100vw;
+            	width: 100%;
+            	height: 100%;
+            }
+            .wide-body main > aside {
+            	width: 100%;
+            	max-width: calc(100vw - 100vh + var(--header-height));
+            }
+
+            .narrow-body main {
+            	flex-direction: column;
+            }
+            .narrow-body aside, .narrow-body .current-tab {
+            	border-left: 0px;
+            }
+            .narrow-body main aside {
+            	max-width: 100%;
+            	height: calc(100vh - 100vw - var(--header-height));
+            }
+            .narrow-body voice-graph-2d {
+            	max-width: calc(60vh - var(--header-height) * .6);
+            	max-height: calc(60vh - var(--header-height) * .6);
+            	margin: auto;
+            }
+            .narrow-body main > section {
+            	max-height: 60%;
+            	height: 100vw;
+            	flex-shrink: 0;
+            }
+            .narrow-body main > aside {
+            	max-height: calc(100% - 100vw);
+            	min-height: 40%;
+            	height: 100%;
+            }
+
+            section > h2:first-child {
+            	margin-top: 0px;
+            }
+
+            voice-graph-2d {
+            	position: absolute;
+            	top: 0px;
+            	bottom: 0px;
+            	width: 100%;
+            }
+            .hidden {
+            	display: none;
+            }
+
+            /*
+            input, button, select, textarea {
+            	font-size: inherit;
+            }
+            */
+            				
+            /* ======================= Style ======================= */
+            button:hover, input:hover, select:hover, textArea:hover {
+            	opacity: .8;
+            }
+            button:active {
+            	opacity: .5;
+            }
+            button:hover:disabled {
+            	opacity: .5;
+            }
+            *:disabled {
+            	opacity: .5;
+            }
+
+            .custom-widgets button, .custom-widgets  input[type=submit] {
+            	padding-top: 0px;
+            	padding-bottom: 0px;
+            	vertical-align: middle;
+            	background: var(--button-background);
+            	color: var(--button-color);
+            	border: 1px solid var(--chrome-border);
+            	border-radius: var(--border-radius);
+            	box-shadow: var(--box-shadow);
+            }
+            .custom-widgets textarea, .custom-widgets select, .custom-widgets input {
+            	background: var(--input-background);
+            	color: var(--input-color);
+            	border: 1px solid var(--chrome-border);
+            	border-radius: var(--border-radius);
+            	padding: .25em;
+            }
+
+            main > section {
+              box-shadow: inset var(--box-shadow);
+            }
+
+            button, input[type=submit] {
+            }
+            input, textarea, progress[value], select {
+              box-shadow: inset var(--box-shadow);
+            }
+
+            button, input[type=submit] {
+              position: relative;
+            }
+              
+            .custom-widgets button:after, .custom-widgets input[type=submit]:after {
+              content: ' ';
+              position: absolute;
+              bottom: 0px;
+              left: 0px;
+              right: 0px;
+              top: 0px;
+              box-shadow: inset -1px 2px calc(var(--box-shadow-spread) * 1.25) 2px rgba(255,255,255, calc(var(--highlight-strength) * 1));
+              border-radius: var(--border-radius);
+            }
+            .tab-set button:after {
+              content: none;
+            }
+
+            voice-graph-2d canvas {
+            	border-radius: var(--border-radius);
+            }
+
+
+            textarea {
+            	width: 100%;
+            	height: 5em;
+            	font-family: sans-serif;
+            	margin-top: 1em;
+            	margin-bottom: 1em;
+            }
+
+            .modal {
+            	border: 1px solid;
+            	padding: 1em;
+            	border-radius: var(--border-radius);
+            	box-shadow: var(--box-shadow);
+            }
+
+            .custom-widgets ::selection {
+            	background: var(--accent);
+            	color: white;
+            }
+            				
+            /* Voice Graph */
+            * {
+            	--voice-graph-z-index: 0;
+            }
+            voice-graph-2d {
+            	display: block;
+            	--padding: 2em;
+            }
+
+            voice-graph-2d > canvas {
+            	position: relative;
+            	height: 100%;
+            	width: 100%;
+            	float: left;
+            }
+
+            voice-graph-2d {
+            	padding: var(--padding);
+            	overflow: hidden;
+            }
+            voice-graph-2d > .axis-labels {
+            	display: flex; 
+            	justify-content: space-between;
+            	position: absolute;
+            	line-height: var(--padding);
+            }
+            voice-graph-2d > .axis-labels > .title {
+            	font-weight: bold;
+            }
+            voice-graph-2d > .x.axis-labels {
+            	top: 0px;
+            	left: var(--padding);
+            	right: var(--padding);
+            }
+            voice-graph-2d > .x-opposite.axis-labels {
+            	bottom: 0px;
+            	left: var(--padding);
+            	right: var(--padding);
+            }
+
+            voice-graph-2d > .y-opposite.axis-labels {
+            	top: var(--padding);
+            	bottom: var(--padding);
+            	left: 0px;
+            	writing-mode: vertical-rl;
+            	text-orientation: mixed;
+            }
+
+
+            voice-graph-2d > .y.axis-labels {
+            	top: var(--padding);
+            	bottom: var(--padding);
+            	right: 0px;
+            	writing-mode: vertical-lr;
+            	text-orientation: sideways-left;
+            }
+
+
+            voice-graph-2d > .overlay {
+            	position: absolute;
+            	top: var(--padding);
+            	left: var(--padding);
+            	bottom: var(--padding);
+            	right: var(--padding);
+            	overflow: visible;
+            }
+
+            voice-graph-2d > .overlay > .marker {
+            	height: 1em;
+            	width: 1em;
+            	border-radius: 50%;
+            	background: black;
+            	border: .1em solid white;
+            	position: absolute;
+            	z-index: calc(var(--voice-graph-z-index) + 2);
+            	color: white;
+            	text-align: center;
+            	line-height: 1em;
+            	transition: all .1s;
+            	top: calc(-.5em - 2px);
+            	left: calc(-.5em - 2px);
+            }
+
+            voice-graph-2d > .overlay > .marker:hover {
+            	color: yellow;
+            	border: .1em solid yellow;
+            }
+
+            voice-graph-2d > .overlay > .x.hairline {
+            	content: '';
+            	border-left: .1em dotted black;
+            	display: block;
+            	position: absolute;
+            	z-index: calc(var(--voice-graph-z-index) + 1);
+            	height: 100%;
+            	top: 0px;
+            	left: -1px;
+            	transition: .1s all;
+            }
+            voice-graph-2d > .x-opposite.axis-labels > .current-value {
+            	position: absolute;
+            	width: calc(2 * var(--padding)) ;
+            	text-align: center;
+            	bottom: 0px;
+            	opacity: 0;
+            	left: calc(-1 * var(--padding));
+            	transition: .1s all;
+            }
+            voice-graph-2d > .overlay > .y.hairline {
+            	content: '';
+            	border-top: .1em dotted black;
+            	display: block;
+            	position: absolute;
+            	z-index: calc(var(--voice-graph-z-index) + 2);
+            	width: 100%;
+            	left: 0px;
+            	top: -1px;
+            	transition: .1s all;
+            }
+            voice-graph-2d > .y-opposite.axis-labels > .current-value {
+            	position: absolute;
+            	height: calc(2 * var(--padding));
+            	text-align: center;
+            	transform: rotate(180deg);
+            	transform-origin: center;
+            	left: 0px;
+            	bottom: calc(-1 * var(--padding));
+            	opacity: 0;
+            	transition: .1s all;
+            }
+            	
+            voice-graph-2d .marker > .infobox {
+            	position: absolute;
+            	width: 18ch;
+            	left: calc(0.5em - 9ch);
+            	top: calc(-1 * var(--padding));
+            }
+            .ratings-bar {
+            	box-sizing: border-box;
+            	display: flex;
+            	width: 100%;
+            	overflow: hidden;
+            	border-radius: 5px 5px 5px 5px;
+            }
+            .ratings-bar > span {
+            	padding: 2px 0px 2px 0px;
+            	display: inline-block;
+            	box-sizing: border-box;
+            	overflow: hidden;
+            	font-size: small;
+            	line-height: 1em;
+            }
+            .infobox .strongly-agree {
+            	background: #43db20;
+            	color: white;
+            	border-radius: 0px 5px 5px 0px;
+            }
+            .infobox .agree {
+            	background: #a5db99;
+            	color: white;
+            }
+            .infobox .disagree {
+            	background: #e28888;
+            	color: white;
+            }
+            .infobox .strongly-disagree{
+            	background: #e22222;
+            	color: white;
+            	border-radius: 5px 0px 0px 5px;
+            }
+            .clef {
+            	position: absolute;
+            	left: 0px;
+            	width: var(--padding);
+            	z-index: calc(var(--voice-graph-z-index) + 2);
+            	text-align: center;
+            	transform-origin: center center;
+            	transform: scale(2);
+            	padding: 0px;
+            	margin-bottom: -.5em;
+            }
+            .clef.treble { top: var(--padding); }
+            .clef.bass { bottom: var(--padding); }
+
+            .instrument {
+            	position: absolute;
+            	bottom: calc(var(--padding) * .1);
+            	height: calc(var(--padding) * .8);
+            }
+            .instrument.flute {
+            	right: var(--padding);
+            }
+            .instrument.tuba {
+            	left: var(--padding);
+            }
+            				.spinner,
+            .spinner:after {
+              border-radius: 50%;
+              width: 3em;
+              height: 3em;
+              position: relative;
+              flex-shrink: 0;
+            }
+            .spinner {
+              margin: 60px auto;
+              font-size: 10px;
+              position: relative;
+              text-indent: -9999em;
+              border-top: .5em solid var(--accent);
+              border-right: .5em solid var(--accent);
+              border-bottom: .5em solid var(--accent);
+              border-left: .5em solid var(--button-background);
+              -webkit-transform: translateZ(0);
+              -ms-transform: translateZ(0);
+              transform: translateZ(0);
+              -webkit-animation: load8 1.1s infinite linear;
+              animation: load8 1.1s infinite linear;
+            }
+            @-webkit-keyframes load8 {
+              0% {
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+              }
+              100% {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+              }
+            }
+            @keyframes load8 {
+              0% {
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+              }
+              100% {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+              }
+            }
+
+            header .spinner {
+            	margin-left: 1em;
+            }
+
+            header .spinner.hidden + .loading-message {
+            	display: none;
+            }
+            header .spinner + .loading-message {
+            	display: inline;
+            	flex-shrink: 0;
+            }
+            			
+		</style>
+
+		<link href="style-smooth.css" rel="alternate stylesheet" type="text/css" title="Smooth">
+		<link href="data:text/css," rel="stylesheet" type="text/css" title="Null">
+
+		
+			<script src="./ui/dom.js"></script>
+			<script src="./ui/util.js"></script>
+			<script src="./ui/speech-scripts.js"></script>
+		
 	</head>
-	<body>
+	<body class="narrow-body">
 		<header>
-			<button class="play-pause iconic"></button>
-			<progress class="player" value="0" min="0"></progress>
+			
+            				
+            <!-- ======================= Player ======================= -->
+            <button class="play-pause iconic"></button>
+            <progress class="player" value="0" min="0"></progress>
+            <video class="clip"></video>
+            <script>
+            	let player = {}; 
+            	(() => {
+            		let mediaElement = $('video.clip');
+            		let playPauseButton = $('button.play-pause');
+            		let progressBar = $('progress.player');
+
+            		function setSource(src) {
+            			mediaElement.src = src;
+            			mediaElement.addEventListener('loadedmetadata', evt => {
+            				progressBar.setAttribute('max', mediaElement.duration);
+            				console.log('max: ' + progressBar.max);
+            				progressBar.setAttribute('value', 0);
+            			})
+            		}
+
+            		playPauseButton.addEventListener('click', evt => {
+            			if (mediaElement.paused || mediaElement.ended) {
+            				mediaElement.play();
+            				playPauseButton.classList.add('playing') ;
+            			} else {
+            				mediaElement.pause();
+            				playPauseButton.classList.remove('playing') ;
+            			}
+            		});
+
+            		mediaElement.addEventListener('timeupdate', evt => {
+            			progressBar.setAttribute('value', mediaElement.currentTime);
+            			if (mediaElement.currentTime >= progressBar.max) {
+            				playPauseButton.classList.remove('playing');
+            			}
+            		})
+
+            		progressBar.addEventListener('click', evt => {
+            			let pos = (evt.pageX  - progressBar.offsetLeft) / progressBar.offsetWidth;
+            			mediaElement.currentTime = pos * mediaElement.duration;
+            		})
+            		let dragInProgress = false;
+            		progressBar.addEventListener('mousedown', evt => dragInProgress = true);
+            		progressBar.addEventListener('mouseup', evt => dragInProgress = false);
+            		progressBar.addEventListener('mousemove', evt => {
+            			if (dragInProgress) {
+            				let pos = (evt.pageX  - progressBar.offsetLeft) / progressBar.offsetWidth;
+            				progressBar.value = pos * mediaElement.duration;
+            			}
+            		})
+
+            		mediaElement.ontimeupdate = () => {
+            			let vg = $('voice-graph-2d').voiceGraph
+            			//let playingMarker = vg.selectedMarker;
+
+            			if (mediaElement.currentTime == 0) {
+            				playingMarker.setAttribute('data-pitch', .5);
+            				playingMarker.setAttribute('data-resonance', .5);
+            			}
+
+            			if (!playingData || playingData.length < 1) return
+
+            			let currentPhone = playingData[0]
+
+            			for (let phoneme of playingData) {
+            				if (phoneme.time < mediaElement.currentTime) {
+            					currentPhone = phoneme;
+            				}
+            			}
+
+            			playingMarker.querySelector('.infobox').innerHTML = currentPhone.phone;
+
+            			let isVowel = currentPhone.phone && Array.from(currentPhone.phone).filter(
+            				value => ["A", "E", "I", "O", "U", "Y"].includes(value)
+            			).length > 0;
+
+            			if (currentPhone?.F[0] && isVowel) {
+            				playingMarker.setAttribute('data-pitch', clamp(0, 1, 
+            					(currentPhone.F[0] - 50) / 250
+            				));
+            			}
+            			if (currentPhone.F_stdevs && isVowel) {
+            				playingMarker.setAttribute('data-resonance', clamp(0, 1, 
+            					(((1/3) * currentPhone.F_stdevs[1] 
+            					+ (1/3) * currentPhone.F_stdevs[2] 
+            					+ (1/3) * currentPhone.F_stdevs[3]) + 2) / 4
+            				));
+            			}
+
+            			vg.update();
+            		}
+
+            		// Public Interface
+            		player.setSource = setSource;
+            		player.mediaElement = mediaElement;
+            	})();
+            </script>
+            <style>
+
+            	button.play-pause:before {
+            		content: '>';
+            	}
+            	button.play-pause.playing:before {
+            		content: '-';
+            	}
+            	progress.player {
+            		width: 100%;
+            		height: calc(var(--header-height) - 1em);
+            		vertical-align: center;
+            		flex-shrink: 1;
+            	}
+            	.custom-widgets progress[value] {
+            	  /* Reset the default appearance */
+            	  -webkit-appearance: none;
+            		 -moz-appearance: none;
+            			  appearance: none;
+            	  
+            	  /* Get rid of default border in Firefox. */
+            	  border: none;
+            	  border: 1px solid var(--chrome-border);
+            	  border-radius: var(--border-radius);
+            	  overflow: hidden;
+            	}
+            	.custom-widgets  progress[value]::-webkit-progress-bar, progress[value] {
+            		background: var(--input-background);
+            		box-shadow: inset -1px 2px calc(var(--box-shadow-spread) * 1.25) 2px rgba(255,255,255, calc(var(--highlight-strength) * 1));
+            	}
+
+            	/* These don't work together for some reason*/
+            	.custom-widgets progress[value]::-webkit-progress-value {
+            		background: var(--progress-bar-background);
+            		border-radius: var(--border-radius) 0px 0px var(--border-radius);
+
+            	}
+            	.custom-widgets progress[value]::-moz-progress-bar { 
+            		background: var(--progress-bar-background);
+            		border-radius: var(--border-radius) 0px 0px var(--border-radius);
+            	}
+            	video.clip {
+            		position: absolute;
+            		top: 0px;
+            		left: 0px;
+            		right:0px;
+            		bottom: 0px;
+            		z-index: 1;
+            		width: 100%;
+            		height: var(--header-height);
+            		margin: 0px;
+            	}
+            </style>
+            <!-- ====================================================== -->
+
+            			
 			<button class="new-clip">New Clip</button>
-			<video class="clip"></video>
+			<div class="spinner hidden"></div>
+			<div class="loading-message">Adding clip...</div>
+			<script>
+			$('button.new-clip').addEventListener('click', evt => {
+				$('.modal').appendChild($('section.new-clip'));
+				showModal();
+			});
+			</script>
 		</header>
 		<main>
-				<section>
-
-				</section>
-				<aside>
-						<section class="details">
-							<h2>This clip</h2>
-							<button class="download">Download</button>
-						</section>
-				</aside>
+			<section>
+				<voice-graph-2d></voice-graph-2d>
+			</section>
+			<aside>
+				
+                					
+                <div class="current-tab"></div>
+                <div class="tab-set">
+                	<button class="settings iconic">⚙ Settings</button>
+                	<button class="help iconic">(?) Help</button>
+                	<button class="details">... Details</button>
+                </div>
+                <style>
+                	.tab-set {
+                		position: absolute;
+                		bottom: 0px;
+                		height: calc(var(--header-height) - .5rem);
+                		display: flex;
+                		left: 0px;
+                		right: 0px;
+                		background: var(--button-background);
+                	}
+                	.wide-body .tab-set {
+                		right: 0px;
+                	}
+                	.tab-set button {
+                		transition: box-shadow .2s all;
+                		height: 100%;
+                		width: 100%;
+                		border-top: 1px solid var(--chrome-border);
+                		border-left: 1px solid var(--chrome-border);
+                		border-right: 0px;
+                		border-radius: 0px 0px var(--border-radius) var(--border-radius);
+                		background: var(--button-background);
+                		box-shadow: inset var(--box-shadow);
+                	}
+                	.current-tab {
+                		overflow: auto;
+                		height: calc(100% - 2em);
+                		border: 1px solid var(--chrome-border);
+                		border-bottom: 0px;
+                		border-right: 0px;
+                		padding: .5rem;
+                	}
+                	.tab-set button:disabled {
+                		border-top: 0px;
+                		opacity: 1;
+                		background: var(--chrome-background);
+                		color: var(--chrome-color);
+                		box-shadow: 2px 2px var(--shadow-spread) 2px rgba(0,0,0,0);
+                	}
+                </style>
+                <script>
+                	for (let tab of ['settings', 'help', 'details']) {
+                		let tabButton = $('button.' + tab);
+                		tabButton.addEventListener('click', evt => {
+                			for (let sibling of tabButton.parentNode.querySelectorAll('button')) {
+                				sibling.disabled = false;
+                			}
+                			clearSelector('.current-tab > section');
+                			evt.target.disabled = true;
+                			$('aside > .current-tab').appendChild($('section.' + tab));
+                		});
+                	}
+                </script>
+                				
+			</aside>
 		</main>
-		<footer>
-			
-			<button class="settings iconic">⚙</button>
-			<button class="help iconic">?</button>
-			<div class="spacer"></div>
-			<button class="details">Details</button>
 
-		</footer>
-
-
-		<div class="modal-shadow hidden">
-				<div class="modal">
-						<button class="close">×</button>
-				</div>
-		</div>
 		
+        			
+        <!-- ======================= Modal ======================= -->
+        <style>
+        	.modal-shadow {
+        		position: absolute;
+        		top: 0px;
+        		left: 0px;
+        		right: 0px;
+        		bottom: 0px;
+        		background: rgba(0, 0, 0, .75);
+        		z-index: 3;
+        		display: flex;
+        		align-items: center;
+        		justify-content: center;
+        		padding: 10px;
+        		transition: .2s all;
+        	}
+        	.modal-shadow.hidden {
+        		display: block;
+        		opacity: 0%;
+        		pointer-events: none;
+        	}
+        	.modal {
+        		max-width: 600px;
+        		min-height: 300px;
+        		width: 100%;
+        		min-width: 50%;
+        		position: relative;
+        		background: var(--body-background);
+        		color: var(--body-color);
+        	}
+        	.modal > .close {
+        		position: absolute;
+        		top: 0em;
+        		right: .25em;
+        		background: none;
+        		color: var(--chrome-color);
+        		border: none;
+        		box-shadow: none;
+        		font-size: 200%;
+        	}
+        	.modal > .close:after {
+        		display: none;
+        	}
+        	.modal > * > *:first-child {
+        		margin-top: 0px;
+        	}
+        </style>
+        <div class="modal-shadow hidden">
+        		<div class="modal">
+        				<button class="close">×</button>
+        		</div>
+        </div>
+        <script>
+        	function showModal() {
+        		$('.modal-shadow').classList.remove('hidden');
+        	}
+        	function hideModal() {
+        		$('.modal-shadow').classList.add('hidden');
+        	}
+        	$('.modal > .close').addEventListener('click', evt => {
+        			clearSelector('.modal > section');
+        			hideModal();
+        	});
+        </script>
+
+        <!-- ===================================================== -->
+        		
+
 		<!-- This is where we keep stuff we don't want visible -->
 		<div id="offscreen">
-				<section class="settings">
-						This is where the settings will go.
-				</section>
-				<section class="help">
-						This is where the help will go.
-				</section>
-				<section class="new-clip">
-						<h2>Add a Clip</h2>
+			
+            				
+            <section class="settings">
 
-						Script <select>
-							<option>Phonetic Pangram: That quick beige fox...</option>	
-							<option>Rainbow Passage</option>	
-						</select> 
-						<br>
-						<textarea id="transcript">
-						That quick beige fox jumps in the air over each thin dog. Look out, I shout, for he's foiled you again, creating chaos.
-						</textarea>
+            	<br>
+            	<label for="theme-select">Theme</label>
+            	<select id="theme-select" onchange="eval(this.value)">
+            		<option value="whiteLight()">White Light</option>
+            		<option value="simpleDark()">Deep Dark</option>
+            		<option value="simpleGray()">Medium Gray</option>
+            		<option value="pureBlack()">Pure Black</option>
 
-						<div>
-							<input type="radio" name="add-recording">Upload a file
-							<input type='file' id='audio-file-input' name='recording'/>
-						</div>
-						<div>
-							<input type="radio" name="add-recording">Record your voice
-						</div>
-						
+            		<!--option value="pinkPank()">Pink Pank</option-->
+            		<option value="pinkBlue()">Pinkin Blue</option>
+            		
+            		<option value="terminal()">80s Terminal</option>
+            		<option value="win95()">Win95</option>
+            		<option value="winXP()">WinXP</option>
+            		<option value="win10()">Win10</option>
+
+            		<!--option value="adwaita()">Adwaita</option>
+            		<option value="ubuntu()">Yaru</option>
+            		<option value="xfceEvolution()">XFCE Evolution</option-->
+            		
+            		<option value="nativeStyle()">Native Style (Limited Support)</option>
+            		
+            	<select>
+            	<br>
+            	<br>
+
+            	<details id="set-colors">
+            		<summary>Customize Theme</summary>
+            		Rounded Corners:
+            		<input type="range" value="15" class="rounded-corners" onchange="document.body.style.setProperty('--border-radius', (this.value / 50) + 'em');"/>
+            		<br>
+            		Shadow Strength:
+            		<input type="range" value="5" class="shadow-strength" onchange="document.body.style.setProperty('--box-shadow-strength', (this.value / 100));"/>
+            		<br>
+            		Shadow Spread:
+            		<input type="range" value="15" class="shadow-spread" onchange="document.body.style.setProperty('--box-shadow-spread', (this.value / 100) * 10 + 'px');"/>
+            		<br>
+            		Highlight Strength:
+            		<input type="range" value="0" class="highlight-strength" onchange="document.body.style.setProperty('--highlight-strength', (this.value / 100));"/>
+            		<br>
+            		<br>
+
+            		<input type="color" id="body-background" value="#ffffff">
+            		<label for="body-background">background color</label>
+            		<br>	
+            		<input type="color" id="body-color" value="#000000">
+            		<label for="body-color">text color</label>
+            		<br>	
+            		<input type="color" id="chrome-color" value="#000000">
+            		<label for="chrome-color">chrome color</label>
+            		<br>
+            		<input type="color" id="chrome-background" value="#dedede" >
+            		<label for="chrome-background">chrome background</label>
+            		<br>
+            		<input type="color" id="chrome-border" value='#b0b0b0'>
+            		<label for="chrome-border">chrome border</label>
+            		<br>
+            		<input type="color" id="accent" value='#478fb1'>
+            		<label for="accent">accent</label>
+            		<br>
+            		<input type="color" id="button-color" value='#000000'>
+            		<label for="button-color">button color</label>
+            		<br>
+            		<input type="color" id="button-background" value='#c1c1c1'>
+            		<label for="button-background">button background</label>
+            		<br>
+            		<input type="color" id="input-color" value='#000000'>
+            		<label for="input-color">input color</label>
+            		<br>
+            		<input type="color" id="input-background" value='#f2f2f2'>
+            		<label for="input-background">input background</label>
+            		<br>
+
+            	</details>
+            	<script>
+            		function nativeWidgets() {
+            			$('body').classList.remove('custom-widgets');
+            		}
+            		function customWidgets() {
+            			$('body').classList.add('custom-widgets');
+            		}
+            		function recordColors() {
+            			let colors = '';
+            			for (let colorSelect of $$('#set-colors > input[type=color]')) {
+            				colors += `document.querySelector('#${colorSelect.id}').value = '${getComputedStyle(document.body).getPropertyValue('--' + colorSelect.id)}';\n`;
+            				colors += `document.body.style.setProperty('--${colorSelect.id}', '${colorSelect.value}');\n`
+            			}
+            			for (let select of $$('#set-colors > input[type=slider]')) {
+            				colors += `document.querySelector('#${select.id}').value = '${getComputedStyle(document.body).getPropertyValue('--' + select.id)}';\n`;
+            				colors += `document.body.style.setProperty('--${select.id}', '${select.value}');\n`
+            			}
+            			console.log(colors);
+            		}
+            		function nativeStyle() {
+            			whiteLight();
+            			document.body.style.setProperty('--body-background', 'White');
+            			document.body.style.setProperty('--body-color', 'Black');
+            			document.body.style.setProperty('--chrome-color', 'WindowText');
+            			document.body.style.setProperty('--chrome-background', 'Window');
+            			document.body.style.setProperty('--chrome-border', 'ButtonShadow');
+            			document.body.style.setProperty('--accent', 'Highlight');
+            			document.body.style.setProperty('--button-color', 'ButtonText');
+            			document.body.style.setProperty('--button-background', 'ButtonFace');
+            			document.body.style.setProperty('--input-color', '#000000');
+
+            			document.body.style.setProperty('--border-radius', 15 / 50 + "em");
+            			document.querySelector('input.rounded-corners').value = '15';
+            			
+            			document.body.style.setProperty('--box-shadow-spread', .50 * 10 + "px");
+            			document.querySelector('input.shadow-spread').value = '50';
+            			
+            			document.body.style.setProperty('--box-shadow-strength', '0.05');
+            			document.querySelector('input.shadow-strength').value = '05';
+            			
+            			document.body.style.setProperty('--highlight-strength', '0');
+            			document.querySelector('input.highlight-strength').value = '0';
+            			nativeWidgets();
+            		}
+            		function pinkBlue() {
+            			document.querySelector('#body-background').value = '#d8f4ff';
+            			document.body.style.setProperty('--body-background', '#d8f4ff');
+            			document.querySelector('#body-color').value = '#2d2d2d';
+            			document.body.style.setProperty('--body-color', '#2d2d2d');
+            			document.querySelector('#chrome-color').value = '#2d2d2d';
+            			document.body.style.setProperty('--chrome-color', '#2d2d2d');
+            			document.querySelector('#chrome-background').value = '#aee8ff';
+            			document.body.style.setProperty('--chrome-background', '#aee8ff');
+            			document.querySelector('#chrome-border').value = '#25a5d8';
+            			document.body.style.setProperty('--chrome-border', '#25a5d8');
+            			document.querySelector('#accent').value = '#f7a8b8';
+            			document.body.style.setProperty('--accent', '#f7a8b8');
+            			document.querySelector('#button-color').value = '#000000';
+            			document.body.style.setProperty('--button-color', '#000000');
+            			document.querySelector('#button-background').value = '#55cdfc';
+            			document.body.style.setProperty('--button-background', '#55cdfc');
+            			document.querySelector('#input-color').value = '#000000';
+            			document.body.style.setProperty('--input-color', '#000000');
+            			document.querySelector('#input-background').value = '#ffffff';
+            			document.body.style.setProperty('--input-background', '#ffffff');
+
+            			document.body.style.setProperty('--border-radius', 30 / 50 + "em");
+            			document.querySelector('input.rounded-corners').value = '30';
+            			
+            			document.body.style.setProperty('--box-shadow-spread', .50 * 10 + "px");
+            			document.querySelector('input.shadow-spread').value = '50';
+            			
+            			document.body.style.setProperty('--box-shadow-strength', '0.15');
+            			document.querySelector('input.shadow-strength').value = '15';
+            			
+            			document.body.style.setProperty('--highlight-strength', '0.40');
+            			document.querySelector('input.highlight-strength').value = '40';
+            			
+            			customWidgets();
+            		}
+            		function whiteLight() {
+            			document.querySelector('#body-background').value = '#ffffff';
+            			document.body.style.setProperty('--body-background', '#ffffff');
+            			document.querySelector('#body-color').value = '#2d2d2d';
+            			document.body.style.setProperty('--body-color', '#2d2d2d');
+            			document.querySelector('#chrome-color').value = '#2d2d2d';
+            			document.body.style.setProperty('--chrome-color', '#2d2d2d');
+            			document.querySelector('#chrome-background').value = '#ffffff';
+            			document.body.style.setProperty('--chrome-background', '#ffffff');
+            			document.querySelector('#chrome-border').value = '#c3c3c3';
+            			document.body.style.setProperty('--chrome-border', '#c3c3c3');
+            			document.querySelector('#accent').value = '#4367d2';
+            			document.body.style.setProperty('--accent', '#4367d2');
+            			document.querySelector('#button-color').value = '#000000';
+            			document.body.style.setProperty('--button-color', '#000000');
+            			document.querySelector('#button-background').value = '#d9d9d9';
+            			document.body.style.setProperty('--button-background', '#d9d9d9');
+            			document.querySelector('#input-color').value = '#000000';
+            			document.body.style.setProperty('--input-color', '#000000');
+            			document.querySelector('#input-background').value = '#f4f4f4';
+            			document.body.style.setProperty('--input-background', '#f4f4f4');
+
+            			document.body.style.setProperty('--border-radius', 15 / 50 + "em");
+            			document.querySelector('input.rounded-corners').value = '15';
+            			
+            			document.body.style.setProperty('--box-shadow-spread', .50 * 10 + "px");
+            			document.querySelector('input.shadow-spread').value = '50';
+            			
+            			document.body.style.setProperty('--box-shadow-strength', '0.05');
+            			document.querySelector('input.shadow-strength').value = '05';
+            			
+            			document.body.style.setProperty('--highlight-strength', '0');
+            			document.querySelector('input.highlight-strength').value = '0';
+            			customWidgets();
+            		}
+            		function pinkPank() {
+            			document.querySelector('#body-background').value = '#fad6ff';
+            			document.body.style.setProperty('--body-background', '#fad6ff');
+            			document.querySelector('#body-color').value = '#000000';
+            			document.body.style.setProperty('--body-color', '#000000');
+            			document.querySelector('#chrome-color').value = '#000000';
+            			document.body.style.setProperty('--chrome-color', '#000000');
+            			document.querySelector('#chrome-background').value = '#f0c7f3';
+            			document.body.style.setProperty('--chrome-background', '#f0c7f3');
+            			document.querySelector('#chrome-border').value = '#914875';
+            			document.body.style.setProperty('--chrome-border', '#914875');
+            			document.querySelector('#accent').value = '#914875';
+            			document.body.style.setProperty('--accent', '#914875');
+            			document.querySelector('#button-color').value = '#000000';
+            			document.body.style.setProperty('--button-color', '#000000');
+            			document.querySelector('#button-background').value = '#f586ff';
+            			document.body.style.setProperty('--button-background', '#f586ff');
+            			document.querySelector('#input-color').value = '#000000';
+            			document.body.style.setProperty('--input-color', '#000000');
+            			document.querySelector('#input-background').value = '#fcedff';
+            			document.body.style.setProperty('--input-background', '#fcedff');
+
+            			document.body.style.setProperty('--border-radius', 30 / 50 + "em");
+            			document.querySelector('input.rounded-corners').value = '30';
+            			
+            			document.body.style.setProperty('--box-shadow-spread', .50 * 10 + "px");
+            			document.querySelector('input.shadow-spread').value = '50';
+            			
+            			document.body.style.setProperty('--box-shadow-strength', '0.15');
+            			document.querySelector('input.shadow-strength').value = '15';
+            			
+            			document.body.style.setProperty('--highlight-strength', '0.40');
+            			document.querySelector('input.highlight-strength').value = '40';
+            			
+            			customWidgets();
+            		}
+            		function simpleGray() {
+            			document.querySelector('#body-background').value = '#ffffff';
+            			document.body.style.setProperty('--body-background', '#ffffff');
+            			document.querySelector('#body-color').value = '#000000';
+            			document.body.style.setProperty('--body-color', '#000000');
+            			document.querySelector('#chrome-color').value = '#000000';
+            			document.body.style.setProperty('--chrome-color', '#000000');
+            			document.querySelector('#chrome-background').value = '#dedede';
+            			document.body.style.setProperty('--chrome-background', '#dedede');
+            			document.querySelector('#chrome-border').value = '#b0b0b0';
+            			document.body.style.setProperty('--chrome-border', '#b0b0b0');
+            			document.querySelector('#accent').value = '#478fb1';
+            			document.body.style.setProperty('--accent', '#478fb1');
+            			document.querySelector('#button-color').value = '#000000';
+            			document.body.style.setProperty('--button-color', '#000000');
+            			document.querySelector('#button-background').value = '#c1c1c1';
+            			document.body.style.setProperty('--button-background', '#c1c1c1');
+            			document.querySelector('#input-color').value = '#000000';
+            			document.body.style.setProperty('--input-color', '#000000');
+            			document.querySelector('#input-background').value = '#f2f2f2';
+            			document.body.style.setProperty('--input-background', '#f2f2f2');
+            			document.body.style.setProperty('--border-radius', 15 / 50 + "em");
+            			document.querySelector('input.rounded-corners').value = '15';
+            			
+            			document.body.style.setProperty('--box-shadow-spread', .50 * 10 + "px");
+            			document.querySelector('input.shadow-spread').value = '50';
+            			
+            			document.body.style.setProperty('--box-shadow-strength', '0.15');
+            			document.querySelector('input.shadow-strength').value = '15';
+            			
+            			document.body.style.setProperty('--highlight-strength', '0.30');
+            			document.querySelector('input.highlight-strength').value = '30';
+            			customWidgets();
+            		}
+
+            		function simpleDark() {
+            			document.querySelector('#body-background').value = '#606060';
+            			document.body.style.setProperty('--body-background', '#606060');
+            			document.querySelector('#body-color').value = '#f2f2f2';
+            			document.body.style.setProperty('--body-color', '#f2f2f2');
+            			document.querySelector('#chrome-color').value = '#f2f2f2';
+            			document.body.style.setProperty('--chrome-color', '#f2f2f2');
+            			document.querySelector('#chrome-background').value = '#565656';
+            			document.body.style.setProperty('--chrome-background', '#565656');
+            			document.querySelector('#chrome-border').value = '#181818';
+            			document.body.style.setProperty('--chrome-border', '#181818');
+            			document.querySelector('#accent').value = '#3B8DE0';
+            			document.body.style.setProperty('--accent', '#3B8DE0');
+            			document.querySelector('#button-color').value = '#ffffff';
+            			document.body.style.setProperty('--button-color', '#ffffff');
+            			document.querySelector('#button-background').value = '#474747';
+            			document.body.style.setProperty('--button-background', '#474747');
+            			document.querySelector('#input-color').value = '#f2f2f2';
+            			document.body.style.setProperty('--input-color', '#f2f2f2');
+            			document.querySelector('#input-background').value = '#707070';
+            			document.body.style.setProperty('--input-background', '#707070');
+            			document.body.style.setProperty('--border-radius', 15 / 50 + "em");
+            			document.querySelector('input.rounded-corners').value = '15';
+            			
+            			document.body.style.setProperty('--box-shadow-spread', .50 * 10 + "px");
+            			document.querySelector('input.shadow-spread').value = '50';
+            			
+            			document.body.style.setProperty('--box-shadow-strength', '0.15');
+            			document.querySelector('input.shadow-strength').value = '15';
+            			
+            			document.body.style.setProperty('--highlight-strength', '0.15');
+            			document.querySelector('input.highlight-strength').value = '15';
+            			customWidgets();
+            		}
+            		function pureBlack() {
+            			document.querySelector('#body-background').value = '#000000';
+            			document.body.style.setProperty('--body-background', '#000000');
+            			document.querySelector('#body-color').value = '#f2f2f2';
+            			document.body.style.setProperty('--body-color', '#f2f2f2');
+            			document.querySelector('#chrome-color').value = '#f2f2f2';
+            			document.body.style.setProperty('--chrome-color', '#f2f2f2');
+            			document.querySelector('#chrome-background').value = '#000000';
+            			document.body.style.setProperty('--chrome-background', '#000000');
+            			document.querySelector('#chrome-border').value = '#646464';
+            			document.body.style.setProperty('--chrome-border', '#646464');
+            			document.querySelector('#accent').value = '#d65a59';
+            			document.body.style.setProperty('--accent', '#d65a59');
+            			document.querySelector('#button-color').value = '#f2f2f2';
+            			document.body.style.setProperty('--button-color', '#f2f2f2');
+            			document.querySelector('#button-background').value = '#000000';
+            			document.body.style.setProperty('--button-background', '#000000');
+            			document.querySelector('#input-color').value = '#ffffff';
+            			document.body.style.setProperty('--input-color', '#ffffff');
+            			document.querySelector('#input-background').value = '#313131';
+            			document.body.style.setProperty('--input-background', '#313131');
+
+            			document.body.style.setProperty('--border-radius', 0 / 50 + "em");
+            			document.querySelector('input.rounded-corners').value = '0';
+            			
+            			document.body.style.setProperty('--box-shadow-spread', .50 * 10 + "px");
+            			document.querySelector('input.shadow-spread').value = '50';
+            			
+            			document.body.style.setProperty('--box-shadow-strength', '0.15');
+            			document.querySelector('input.shadow-strength').value = '15';
+            			
+            			document.body.style.setProperty('--highlight-strength', '0.0');
+            			document.querySelector('input.highlight-strength').value = '0';
+            			customWidgets();
+            		}
+            		function terminal() {
+            			document.querySelector('#body-background').value = '#000000';
+            			document.body.style.setProperty('--body-background', '#000000');
+            			document.querySelector('#body-color').value = '#00ff0c';
+            			document.body.style.setProperty('--body-color', '#00ff0c');
+            			document.querySelector('#chrome-color').value = '#00ff0c';
+            			document.body.style.setProperty('--chrome-color', '#00ff0c');
+            			document.querySelector('#chrome-background').value = '#000000';
+            			document.body.style.setProperty('--chrome-background', '#000000');
+            			document.querySelector('#chrome-border').value = '#00ff0c';
+            			document.body.style.setProperty('--chrome-border', '#00ff0c');
+            			document.querySelector('#accent').value = '#00ff0c';
+            			document.body.style.setProperty('--accent', '#00ff0c');
+            			document.querySelector('#button-color').value = '#00ff0c';
+            			document.body.style.setProperty('--button-color', '#00ff0c');
+            			document.querySelector('#button-background').value = '#000000';
+            			document.body.style.setProperty('--button-background', '#000000');
+            			document.querySelector('#input-color').value = '#00ff0c';
+            			document.body.style.setProperty('--input-color', '#00ff0c');
+            			document.querySelector('#input-background').value = '#000000';
+            			document.body.style.setProperty('--input-background', '#000000');
+
+            			document.body.style.setProperty('--border-radius', 0 / 50 + "em");
+            			document.querySelector('input.rounded-corners').value = '0';
+            			
+            			document.body.style.setProperty('--box-shadow-spread', .50 * 10 + "px");
+            			document.querySelector('input.shadow-spread').value = '50';
+            			
+            			document.body.style.setProperty('--box-shadow-strength', '0.15');
+            			document.querySelector('input.shadow-strength').value = '15';
+            			
+            			document.body.style.setProperty('--highlight-strength', '0.0');
+            			document.querySelector('input.highlight-strength').value = '0';
+            			customWidgets();
+            		}
+
+            		function xfceEvolution() {
+            			document.querySelector('#body-background').value = '#ffffff';
+            			document.body.style.setProperty('--body-background', '#ffffff');
+            			document.querySelector('#body-color').value = '#333333';
+            			document.body.style.setProperty('--body-color', '#333333');
+            			document.querySelector('#chrome-color').value = '#333333';
+            			document.body.style.setProperty('--chrome-color', '#333333');
+            			document.querySelector('#chrome-background').value = '#ceced0';
+            			document.body.style.setProperty('--chrome-background', '#ceced0');
+            			document.querySelector('#chrome-border').value = '#90908e';
+            			document.body.style.setProperty('--chrome-border', '#90908e');
+            			document.querySelector('#accent').value = '#2a75c4';
+            			document.body.style.setProperty('--accent', '#2a75c4');
+            			document.querySelector('#button-color').value = '#000000';
+            			document.body.style.setProperty('--button-color', '#000000');
+            			document.querySelector('#button-background').value = '#bfbfbf';
+            			document.body.style.setProperty('--button-background', '#bfbfbf');
+            			document.querySelector('#input-color').value = '#000000';
+            			document.body.style.setProperty('--input-color', '#000000');
+            			document.querySelector('#input-background').value = '#ffffff';
+            			document.body.style.setProperty('--input-background', '#ffffff');
+            			document.body.style.setProperty('--border-radius', 15 / 50 + "em");
+            			document.querySelector('input.rounded-corners').value = '15';
+            			
+            			document.body.style.setProperty('--box-shadow-spread', .50 * 10 + "px");
+            			document.querySelector('input.shadow-spread').value = '50';
+            			
+            			document.body.style.setProperty('--box-shadow-strength', '0.20');
+            			document.querySelector('input.shadow-strength').value = '20';
+            			
+            			document.body.style.setProperty('--highlight-strength', '0.50');
+            			document.querySelector('input.highlight-strength').value = '50';
+            			customWidgets();
+            		}
+            		function winXP() {
+            			document.querySelector('#body-background').value = '#f4f3ee';
+            			document.body.style.setProperty('--body-background', '#f4f3ee');
+            			document.querySelector('#body-color').value = '#000000';
+            			document.body.style.setProperty('--body-color', '#000000');
+            			document.querySelector('#chrome-color').value = '#000000';
+            			document.body.style.setProperty('--chrome-color', '#000000');
+            			document.querySelector('#chrome-background').value = '#ece9d8';
+            			document.body.style.setProperty('--chrome-background', '#ece9d8');
+            			document.querySelector('#chrome-border').value = '#76a2cb';
+            			document.body.style.setProperty('--chrome-border', '#76a2cb');
+            			document.querySelector('#accent').value = '#0070f6';
+            			document.body.style.setProperty('--accent', '#0070f6');
+            			document.querySelector('#button-color').value = '#000000';
+            			document.body.style.setProperty('--button-color', '#000000');
+            			document.querySelector('#button-background').value = '#f3f3ef';
+            			document.body.style.setProperty('--button-background', '#f3f3ef');
+            			document.querySelector('#input-color').value = '#000000';
+            			document.body.style.setProperty('--input-color', '#000000');
+            			document.querySelector('#input-background').value = '#ffffff';
+            			document.body.style.setProperty('--input-background', '#ffffff');
+            			document.body.style.setProperty('--border-radius', 15 / 50 + "em");
+            			document.querySelector('input.rounded-corners').value = '15';
+            			
+            			document.body.style.setProperty('--box-shadow-spread', .50 * 10 + "px");
+            			document.querySelector('input.shadow-spread').value = '50';
+            			
+            			document.body.style.setProperty('--box-shadow-strength', '0.15');
+            			document.querySelector('input.shadow-strength').value = '15';
+            			
+            			document.body.style.setProperty('--highlight-strength', '0.15');
+            			document.querySelector('input.highlight-strength').value = '15';
+            			customWidgets();
+            		}
+            		function win95() {
+            			document.querySelector('#body-background').value = '#fffee2';
+            			document.body.style.setProperty('--body-background', '#fffee2');
+            			document.querySelector('#body-color').value = '#2d2d2d';
+            			document.body.style.setProperty('--body-color', '#2d2d2d');
+            			document.querySelector('#chrome-color').value = '#2d2d2d';
+            			document.body.style.setProperty('--chrome-color', '#2d2d2d');
+            			document.querySelector('#chrome-background').value = '#c0c0c0';
+            			document.body.style.setProperty('--chrome-background', '#c0c0c0');
+            			document.querySelector('#chrome-border').value = '#404040';
+            			document.body.style.setProperty('--chrome-border', '#404040');
+            			document.querySelector('#accent').value = '#000080';
+            			document.body.style.setProperty('--accent', '#000080');
+            			document.querySelector('#button-color').value = '#000000';
+            			document.body.style.setProperty('--button-color', '#000000');
+            			document.querySelector('#button-background').value = '#c3c3c3';
+            			document.body.style.setProperty('--button-background', '#c3c3c3');
+            			document.querySelector('#input-color').value = '#000000';
+            			document.body.style.setProperty('--input-color', '#000000');
+            			document.querySelector('#input-background').value = '#ffffff';
+            			document.body.style.setProperty('--input-background', '#ffffff');
+
+            			document.body.style.setProperty('--border-radius', 20 / 50 + "em");
+            			document.querySelector('input.rounded-corners').value = '20';
+            			
+            			document.body.style.setProperty('--box-shadow-spread', 0 * 10 + "px");
+            			document.querySelector('input.shadow-spread').value = '0';
+            			
+            			document.body.style.setProperty('--box-shadow-strength', '0.30');
+            			document.querySelector('input.shadow-strength').value = '30';
+            			
+            			document.body.style.setProperty('--highlight-strength', '0.60');
+            			document.querySelector('input.highlight-strength').value = '60';
+            			customWidgets();
+            		}
+            		function win10() {
+            			document.querySelector('#body-background').value = '#ffffff';
+            			document.body.style.setProperty('--body-background', '#ffffff');
+            			document.querySelector('#body-color').value = '#2d2d2d';
+            			document.body.style.setProperty('--body-color', '#2d2d2d');
+            			document.querySelector('#chrome-color').value = '#2d2d2d';
+            			document.body.style.setProperty('--chrome-color', '#2d2d2d');
+            			document.querySelector('#chrome-background').value = '#f0f0f0';
+            			document.body.style.setProperty('--chrome-background', '#f0f0f0');
+            			document.querySelector('#chrome-border').value = '#8d8d8d';
+            			document.body.style.setProperty('--chrome-border', '#8d8d8d');
+            			document.querySelector('#accent').value = '#1979ca';
+            			document.body.style.setProperty('--accent', '#1979ca');
+            			document.querySelector('#button-color').value = '#000000';
+            			document.body.style.setProperty('--button-color', '#000000');
+            			document.querySelector('#button-background').value = '#dcdcdc';
+            			document.body.style.setProperty('--button-background', '#dcdcdc');
+            			document.querySelector('#input-color').value = '#000000';
+            			document.body.style.setProperty('--input-color', '#000000');
+            			document.querySelector('#input-background').value = '#ffffff';
+            			document.body.style.setProperty('--input-background', '#ffffff');
+            			
+            			document.body.style.setProperty('--border-radius', 0 / 50 + "em");
+            			document.querySelector('input.rounded-corners').value = '0';
+            			
+            			document.body.style.setProperty('--box-shadow-spread', .50 * 10 + "px");
+            			document.querySelector('input.shadow-spread').value = '50';
+            			
+            			document.body.style.setProperty('--box-shadow-strength', '0.0');
+            			document.querySelector('input.shadow-strength').value = '0';
+            			
+            			document.body.style.setProperty('--highlight-strength', '0.0');
+            			document.querySelector('input.highlight-strength').value = '0';
+            			customWidgets();
+            		}
+            		function ubuntu() {
+            			document.querySelector('#body-background').value = '#ffffff';
+            			document.body.style.setProperty('--body-background', '#ffffff');
+            			document.querySelector('#body-color').value = '#000000';
+            			document.body.style.setProperty('--body-color', '#000000');
+            			document.querySelector('#chrome-color').value = '#000000';
+            			document.body.style.setProperty('--chrome-color', '#000000');
+            			document.querySelector('#chrome-background').value = '#f5f6f7';
+            			document.body.style.setProperty('--chrome-background', '#f5f6f7');
+            			document.querySelector('#chrome-border').value = '#b4b7ba';
+            			document.body.style.setProperty('--chrome-border', '#b4b7ba');
+            			document.querySelector('#accent').value = '#e95421';
+            			document.body.style.setProperty('--accent', '#e95421');
+            			document.querySelector('#button-color').value = '#000000';
+            			document.body.style.setProperty('--button-color', '#000000');
+            			document.querySelector('#button-background').value = '#f0f3f4';
+            			document.body.style.setProperty('--button-background', '#f0f3f4');
+            			document.querySelector('#input-color').value = '#000000';
+            			document.body.style.setProperty('--input-color', '#000000');
+            			document.querySelector('#input-background').value = '#ffffff';
+            			document.body.style.setProperty('--input-background', '#ffffff');
+            			
+            			document.body.style.setProperty('--border-radius', 15 / 50 + "em");
+            			document.querySelector('input.rounded-corners').value = '15';
+            			
+            			document.body.style.setProperty('--box-shadow-spread', .50 * 10 + "px");
+            			document.querySelector('input.shadow-spread').value = '50';
+            			
+            			document.body.style.setProperty('--box-shadow-strength', '0.15');
+            			document.querySelector('input.shadow-strength').value = '15';
+            			
+            			document.body.style.setProperty('--highlight-strength', '0.15');
+            			document.querySelector('input.highlight-strength').value = '15';
+            			customWidgets();
+            		}
+            		function adwaita() {
+            			document.querySelector('#body-background').value = '#ffffff';
+            			document.body.style.setProperty('--body-background', '#ffffff');
+            			document.querySelector('#body-color').value = '#2d2d2d';
+            			document.body.style.setProperty('--body-color', '#2d2d2d');
+            			document.querySelector('#chrome-color').value = '#2d2d2d';
+            			document.body.style.setProperty('--chrome-color', '#2d2d2d');
+            			document.querySelector('#chrome-background').value = '#f6f5f4';
+            			document.body.style.setProperty('--chrome-background', '#f6f5f4');
+            			document.querySelector('#chrome-border').value = '#d5d0cc';
+            			document.body.style.setProperty('--chrome-border', '#d5d0cc');
+            			document.querySelector('#accent').value = '#3584e4';
+            			document.body.style.setProperty('--accent', '#3584e4');
+            			document.querySelector('#button-color').value = '#000000';
+            			document.body.style.setProperty('--button-color', '#000000');
+            			document.querySelector('#button-background').value = '#efeeec';
+            			document.body.style.setProperty('--button-background', '#efeeec');
+            			document.querySelector('#input-color').value = '#000000';
+            			document.body.style.setProperty('--input-color', '#000000');
+            			document.querySelector('#input-background').value = '#ffffff';
+            			document.body.style.setProperty('--input-background', '#ffffff');
+            			
+            			document.body.style.setProperty('--border-radius', 15 / 50 + "em");
+            			document.querySelector('input.rounded-corners').value = '15';
+            			
+            			document.body.style.setProperty('--box-shadow-spread', .50 * 10 + "px");
+            			document.querySelector('input.shadow-spread').value = '50';
+            			
+            			document.body.style.setProperty('--box-shadow-strength', '0.15');
+            			document.querySelector('input.shadow-strength').value = '15';
+            			
+            			document.body.style.setProperty('--highlight-strength', '0.80');
+            			document.querySelector('input.highlight-strength').value = '80';
+            			customWidgets();
+            		}
+            		for (let colorSelect of $$('#set-colors > input[type=color]')) {
+            			let updateColor = () => {
+            				document.body.style.setProperty('--' + colorSelect.id, colorSelect.value)
+            			}
+            			colorSelect.addEventListener('change', updateColor);
+            			updateColor();
+            		}
+            		document.body.style.setProperty('--border-radius', Number(document.querySelector('input.rounded-corners').value) / 50 + "em");
+            		
+            		document.body.style.setProperty('--box-shadow-spread', String(Number(document.querySelector('input.shadow-spread').value) / 100 * 10) + "px");
+            		
+            		document.body.style.setProperty('--box-shadow-strength', String(Number(document.querySelector('input.shadow-strength').value) / 100));
+            		
+            		document.body.style.setProperty('--highlight-strength', Number(document.querySelector('input.highlight-strength').value) / 100);
+            		
+            		customWidgets();
+            	</script>
+            </section>
+            				
+            <section class="help">
+            	<h2>Tutorial</h2>
+            	<p>
+            	Two major properties of a voice
+            	which influence how it is gendered
+            	are <strong>pitch</strong>,
+            	the frequency at which your vocal folds vibrate,
+            	and <strong>resonance</strong>,
+            	the size of the passages the air travels through.
+            	<!--
+            	<ul>
+            		<li>Pitch is the frequency at which the object emitting a sound vibrates.
+            		In voices, this will be the vocal folds.
+
+            		<li>Resonance is the effect exerted on a sound by the passage it travels through.
+            		In voices, the passage is the vocal tract.
+            	</ul>
+            	<p>
+            	Testosterone tends to thicken the vocal folds and lengthen the vocal tract,
+            	resulting in lower pitch and darker resonance.
+            	Therefore, most people read voices with these features as male or masculine.
+            	-->
+
+            	<p>
+            	If you want to feminize your voice,
+            	you'll probably want to raise your pitch and resonance,
+            	taking your voice closer to the 
+            	<span style="color: #FDCFC8; font-weight: bold; text-shadow: 0px 0px 1px red">top-right</span> corner of the graph.
+            	If you want to masculinize your voice,
+            	you should target the <span style="color: #054EC4; font-weight: bold">bottom-left</span> corner.
+
+            	If you want your voice to sound more androgynous,
+            	you should target either 
+            	the <span style="color: #b48ead; font-weight: bold">center</span>, or one of the 
+            	<span style="color: #DBD9EC; font-weight: bold; text-shadow: 0px 0px 1px blue">top-left</span>
+            	or <span style="color: #833047; font-weight: bold;">bottom-right</span> corners.
+
+            	<p>
+            	There is no specific threshold in either pitch or resonance 
+            	at which a voice will always be gendered male or female,
+            	and typical values differ by language, dialect, age,
+            	and a variety of other factors.
+            	This tool should be used to explore your own voice
+            	to find your way to a voice that suits you.
+            	It does not attempt to show you whether your voice "passes."
+            </section>
+            				
+            <!-- Details -->
+            <section class="details"> 
+            	<p>This is where the details will go.</p>
+
+            	<button>Download</button>
+            </section>
+            				
+            <section class="new-clip">
+            	<style>
+            		#record-voice + label + div, #upload-file + label + div {
+            			margin-left: 1em;
+            			padding: 1em;
+            		}
+            		/* Show upload/recording elements only when that option is selected. */
+            		#record-voice          + label + div { display: none; }
+            		#record-voice:checked  + label + div { display: block; }
+            		#upload-file           + label + div { display: none;}
+            		#upload-file:checked   + label + div { display: block;}
+            	</style>
+
+            	<h2>Add a Clip</h2>
+
+            	<!-- Script selection -->
+            	Script <select class="script" id="script-select" onchange="updateScript()"/>
+            	<br>
+            	<textarea id="transcript"></textarea>
+            	<script>
+            		for (let key in speechScripts) {
+            			let script = speechScripts[key].replace(/\s\s*/g, ' ');
+            			$('#script-select').appendChild(option(key, {value: script}));
+            		}
+
+            		function updateScript() {
+            			document.querySelector('#transcript').innerHTML 
+            				= document.querySelector('select.script').value;
+            		}
+            		updateScript();
+            	</script>
 
 
-						<input type='submit' id="submit" value="Add Clip"/>
-				</section>
+            	<!-- Upload Options -->
+            	<input type="radio" name="add-recording" id="upload-file" checked>
+            	<label for="upload-file">Upload a file</label>
+            	<div>
+            		<input type='file' id='audio-file-input' name='recording'/>
+            	</div>
+            	<br>
+            	<input type="radio" name="add-recording" id="record-voice">
+            	<label for="record-voice">Record your voice</label>
+            	<div>
+            		<button id="start-recording">Start Recording</button>
+            		<button id="stop-recording">Stop Recording</button>
+            	</div>
+            	<br>
+
+            	<!-- Submit -->
+            	<button id="submit" onclick="submitAudio()">Add Clip</button>
+            	<script>
+            		let playingData;
+            		let playingMarker;
+
+            		function submitAudio() {
+
+            			let audioData;
+            			let formData = new FormData();
+            			formData.append('transcript', $('#transcript').value);
+
+            			if ($('#upload-file').checked) {
+            				fileInput = $('#audio-file-input')
+            				if (fileInput.files.length < 1) return
+
+            				let recording = fileInput.files[0];
+            				formData.append('recording', recording);
+
+            				let reader = new FileReader(recording);	
+            				reader.readAsDataURL(recording);
+            				reader.addEventListener("load", () => {
+            					audioData = reader.result.replace(
+            						/data:.*;base64/, 
+            						"data:audio/wav;base64"
+            					);
+            					//localStorage.setItem(hash(audioData), audioData);
+            				});
+
+            			} else if ($('#record-voice').checked) {
+            				//TODO: Handle recording
+            			} else {
+            				alert('Please upload a file or make a recording.');
+            				return;
+            			}
+
+            			$('button.new-clip').classList.add('hidden');
+            			$('button.new-clip + .spinner').classList.remove('hidden');
+            			
+            			hideModal();
+            			
+            			fetch('./backend.cgi', { method: 'POST', body: formData})
+            			.then(x => x.text()).then(data => {
+            				$('button.new-clip').classList.remove('hidden');
+            				$('button.new-clip + .spinner').classList.add('hidden');
+
+            				if (data.trim().length < 2) {
+            					alert("We couldn't identify the words in your clip. Make sure that the transcript matches the audio.");
+            					return;
+            				}
+
+            				player.setSource(audioData);
+            				console.log(data);
+            				
+            				let marker = $('voice-graph-2d').voiceGraph.addMarker(.5, .5, null, null);
+            				playingMarker = marker;
+
+            				playingData = eval(data);
+
+            				marker.setAttribute('data-phonemes', data)
+
+            				marker.addEventListener('click', evt => {
+            					player.mediaElement.src = marker.getAttribute('data-recording');
+            					player.mediaElement.currentTime = 0;
+            					playingMarker = marker;
+            					playingData = eval(marker.getAttribute('data-phonemes'));
+            				})
+
+            				player.mediaElement.src = audioData;
+            				marker.setAttribute('data-recording', audioData);
+            				player.mediaElement.load();
+            				player.mediaElement.currentTime = 0;
+            				
+
+            			});
+            		}
+            	</script>
+            </section>
+            			
 		</div>
 
-		<script src="index.js"></script>
+		
+			<script src="./ui/svg-icons.js"></script>
+			<script src="./ui/recording.js"></script>
+			<script src="./ui/index.js"></script>
+			<script src="./ui/voice-graph.js"></script>
+		
 	</body>
 </html>
