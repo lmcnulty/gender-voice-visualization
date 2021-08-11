@@ -50,7 +50,13 @@
 			}
 		})
 
-		mediaElement.ontimeupdate = () => {
+
+		let updateGraph = () => {
+			window.requestAnimationFrame(updateGraph);
+			
+			if (!playingData || playingData.length < 1 || !playingMarker) return
+			
+			
 			let vg = $('voice-graph-2d').voiceGraph
 			//let playingMarker = vg.selectedMarker;
 
@@ -59,15 +65,21 @@
 				playingMarker.setAttribute('data-resonance', .5);
 			}
 
-			if (!playingData || playingData.length < 1) return
 
+			/*
 			let currentPhone = playingData[0]
-
 			for (let phoneme of playingData) {
 				if (phoneme.time < mediaElement.currentTime) {
 					currentPhone = phoneme;
 				}
 			}
+			*/
+
+			if (!timedPlayingData || timedPlayingData.length < 1) return
+			let tpdIndex = Math.floor(mediaElement.currentTime * 100)
+			if (tpdIndex >= timedPlayingData.length) return
+
+			let currentPhone = timedPlayingData[tpdIndex];
 
 			playingMarker.querySelector('.infobox').innerHTML = currentPhone.phone;
 
@@ -90,6 +102,7 @@
 
 			vg.update();
 		}
+		window.requestAnimationFrame(updateGraph);
 
 		// Public Interface
 		player.setSource = setSource;

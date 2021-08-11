@@ -343,7 +343,7 @@ Git repository: <INSERT REPOSITORY LINK>
             	color: white;
             	text-align: center;
             	line-height: 1em;
-            	transition: all .1s;
+            	/*transition: all .1s;*/
             	top: calc(-.5em - 2px);
             	left: calc(-.5em - 2px);
             }
@@ -582,7 +582,13 @@ Git repository: <INSERT REPOSITORY LINK>
             			}
             		})
 
-            		mediaElement.ontimeupdate = () => {
+
+            		let updateGraph = () => {
+            			window.requestAnimationFrame(updateGraph);
+            			
+            			if (!playingData || playingData.length < 1 || !playingMarker) return
+            			
+            			
             			let vg = $('voice-graph-2d').voiceGraph
             			//let playingMarker = vg.selectedMarker;
 
@@ -591,15 +597,21 @@ Git repository: <INSERT REPOSITORY LINK>
             				playingMarker.setAttribute('data-resonance', .5);
             			}
 
-            			if (!playingData || playingData.length < 1) return
 
+            			/*
             			let currentPhone = playingData[0]
-
             			for (let phoneme of playingData) {
             				if (phoneme.time < mediaElement.currentTime) {
             					currentPhone = phoneme;
             				}
             			}
+            			*/
+
+            			if (!timedPlayingData || timedPlayingData.length < 1) return
+            			let tpdIndex = Math.floor(mediaElement.currentTime * 100)
+            			if (tpdIndex >= timedPlayingData.length) return
+
+            			let currentPhone = timedPlayingData[tpdIndex];
 
             			playingMarker.querySelector('.infobox').innerHTML = currentPhone.phone;
 
@@ -622,6 +634,7 @@ Git repository: <INSERT REPOSITORY LINK>
 
             			vg.update();
             		}
+            		window.requestAnimationFrame(updateGraph);
 
             		// Public Interface
             		player.setSource = setSource;
@@ -1538,6 +1551,11 @@ Git repository: <INSERT REPOSITORY LINK>
             	<button id="submit" onclick="submitAudio()">Add Clip</button>
             	<script>
             		let playingData;
+            		
+            		// List of values indexed by 1/100 of milliseconds.
+            		// Faster to retreieve because array access is O(1).
+            		let timedPlayingData = [];  
+
             		let playingMarker;
 
             		function submitAudio() {
@@ -1581,17 +1599,36 @@ Git repository: <INSERT REPOSITORY LINK>
             				$('button.new-clip + .spinner').classList.add('hidden');
 
             				if (data.trim().length < 2) {
-            					alert("We couldn't identify the words in your clip. Make sure that the transcript matches the audio.");
+            					alert("We couldn't identify the words in your clip." 
+            					    + "Make sure that the transcript matches the audio.");
             					return;
             				}
 
             				player.setSource(audioData);
             				console.log(data);
-            				
-            				let marker = $('voice-graph-2d').voiceGraph.addMarker(.5, .5, null, null);
+            				let vg = $('voice-graph-2d').voiceGraph;
+            				let marker = vg.addMarker(.5, .5, null, null);
             				playingMarker = marker;
 
             				playingData = eval(data);
+            				let lastTime = playingData[playingData.length - 1].time;
+
+            				timedPlayingData = Array(Math.ceil(lastTime * 100));
+            				for (let moment of playingData) {
+            					timedPlayingData[Math.floor(moment.time * 100)] = moment;
+            				}
+
+
+            				// Fill in missing values with what came before
+            				for (let i = 0; i < timedPlayingData.length; i++) {
+            					if (!timedPlayingData[i]) {
+            						if (timedPlayingData[i - 1]) {
+            							timedPlayingData[i] = timedPlayingData[i - 1];
+            						} else {
+            							throw 'First data point is undefined';
+            						}
+            					}
+            				}
 
             				marker.setAttribute('data-phonemes', data)
 

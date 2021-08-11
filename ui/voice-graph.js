@@ -77,6 +77,8 @@ class VoiceGraph {
 		ctx.putImageData(rgba, 0, 0);
 
 		this.update();
+
+		window.addEventListener('resize', this.update);
 	}
 
 	addMarker(pitch, resonance, label, ratings) {
@@ -106,7 +108,11 @@ class VoiceGraph {
 		}
 		newMarker.addEventListener('mouseover', showDetails);
 		newMarker.addEventListener('click', showDetails);
+		
+		vg.selectedMarker = newMarker;
+		playingMarker = newMarker;
 		this.update();
+		
 		return newMarker;
 	}
 
@@ -130,25 +136,17 @@ class VoiceGraph {
 			if (marker === this.selectedMarker) {
 
 				this.xHairline.style.border = '1px solid red';
-				this.xHairline.style.translate   = `${translateX} 0px`;
+				
 				this.xValueLabel.style.translate = `${translateX} 0px`;
+				this.yValueLabel.style.translate = `0px ${markerTranslateY}`; 
 
+				// Doesn't move unless there's a delay
 				let hairx = this.xHairline;
 				let hairy = this.yHairline;
 				setTimeout(() => {
 					$('.x.hairline').style.translate = `${translateX} 0px`;
 					$('.y.hairline').style.translate = `0px ${hairTranslateY}`;
-					console.log(hairx, hairy);
 				}, 1);
-
-				console.log(this.xHairline);
-
-				this.yHairline.style.translate   = `0px ${markerTranslateY}`;
-				this.yValueLabel.style.translate = `0px ${markerTranslateY}`; 
-
-
-				
-				console.log(this.xHairline.style.left);
 
 				this.xValueLabel.innerHTML = `${Math.round(resonance * 100)}%`;
 				this.yValueLabel.innerHTML = `${Math.round(
@@ -160,7 +158,6 @@ class VoiceGraph {
 				this.xHairline.style.opacity = '1';
 				this.xValueLabel.style.opacity = '1';
 			}
-			console.log(this.xHairline.style);
 		}
 	}
 

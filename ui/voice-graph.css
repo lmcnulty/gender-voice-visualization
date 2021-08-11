@@ -77,7 +77,7 @@ voice-graph-2d > .overlay > .marker {
 	color: white;
 	text-align: center;
 	line-height: 1em;
-	transition: all .1s;
+	/*transition: all .1s;*/
 	top: calc(-.5em - 2px);
 	left: calc(-.5em - 2px);
 }
