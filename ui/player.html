@@ -57,7 +57,8 @@
 			if (!playingData || playingData.length < 1 || !playingMarker) return
 			
 			
-			let vg = $('voice-graph-2d').voiceGraph
+			let vg = $('voice-graph-2d').voiceGraph;
+			
 			//let playingMarker = vg.selectedMarker;
 
 			if (mediaElement.currentTime == 0) {
@@ -79,6 +80,7 @@
 			let tpdIndex = Math.floor(mediaElement.currentTime * 100)
 			if (tpdIndex >= timedPlayingData.length) return
 
+
 			let currentPhone = timedPlayingData[tpdIndex];
 
 			playingMarker.querySelector('.infobox').innerHTML = currentPhone.phone;
@@ -87,7 +89,7 @@
 				value => ["A", "E", "I", "O", "U", "Y"].includes(value)
 			).length > 0;
 
-			if (currentPhone?.F[0] && isVowel) {
+			if (currentPhone != null && currentPhone.F[0] && isVowel) {
 				playingMarker.setAttribute('data-pitch', clamp(0, 1, 
 					(currentPhone.F[0] - 50) / 250
 				));
@@ -100,7 +102,7 @@
 				));
 			}
 
-			vg.update();
+			console.log('update function:', $('voice-graph-2d').voiceGraph.update, "return value:", $('voice-graph-2d').voiceGraph.update());
 		}
 		window.requestAnimationFrame(updateGraph);
 

@@ -522,6 +522,7 @@ Git repository: <INSERT REPOSITORY LINK>
 		<link href="data:text/css," rel="stylesheet" type="text/css" title="Null">
 
 		
+			<script src="./ui/globals.js"></script>
 			<script src="./ui/dom.js"></script>
 			<script src="./ui/util.js"></script>
 			<script src="./ui/speech-scripts.js"></script>
@@ -589,7 +590,8 @@ Git repository: <INSERT REPOSITORY LINK>
             			if (!playingData || playingData.length < 1 || !playingMarker) return
             			
             			
-            			let vg = $('voice-graph-2d').voiceGraph
+            			let vg = $('voice-graph-2d').voiceGraph;
+            			
             			//let playingMarker = vg.selectedMarker;
 
             			if (mediaElement.currentTime == 0) {
@@ -611,6 +613,7 @@ Git repository: <INSERT REPOSITORY LINK>
             			let tpdIndex = Math.floor(mediaElement.currentTime * 100)
             			if (tpdIndex >= timedPlayingData.length) return
 
+
             			let currentPhone = timedPlayingData[tpdIndex];
 
             			playingMarker.querySelector('.infobox').innerHTML = currentPhone.phone;
@@ -619,7 +622,7 @@ Git repository: <INSERT REPOSITORY LINK>
             				value => ["A", "E", "I", "O", "U", "Y"].includes(value)
             			).length > 0;
 
-            			if (currentPhone?.F[0] && isVowel) {
+            			if (currentPhone != null && currentPhone.F[0] && isVowel) {
             				playingMarker.setAttribute('data-pitch', clamp(0, 1, 
             					(currentPhone.F[0] - 50) / 250
             				));
@@ -632,7 +635,7 @@ Git repository: <INSERT REPOSITORY LINK>
             				));
             			}
 
-            			vg.update();
+            			console.log('update function:', $('voice-graph-2d').voiceGraph.update, "return value:", $('voice-graph-2d').voiceGraph.update());
             		}
             		window.requestAnimationFrame(updateGraph);
 
@@ -794,10 +797,11 @@ Git repository: <INSERT REPOSITORY LINK>
         		justify-content: center;
         		padding: 10px;
         		transition: .2s all;
+        		opacity: 1;
         	}
         	.modal-shadow.hidden {
         		display: block;
-        		opacity: 0%;
+        		opacity: 0;
         		pointer-events: none;
         	}
         	.modal {
@@ -1550,12 +1554,7 @@ Git repository: <INSERT REPOSITORY LINK>
             	<!-- Submit -->
             	<button id="submit" onclick="submitAudio()">Add Clip</button>
             	<script>
-            		let playingData;
             		
-            		// List of values indexed by 1/100 of milliseconds.
-            		// Faster to retreieve because array access is O(1).
-            		let timedPlayingData = [];  
-
             		let playingMarker;
 
             		function submitAudio() {

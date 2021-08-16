@@ -129,7 +129,8 @@ class VoiceGraph {
 			let translateY = `${Math.round(overlay.clientHeight * (1-pitch))}px`;
 			let markerTranslateY = `${-Math.round(overlay.clientHeight * pitch)}px`;
 			let hairTranslateY = `${Math.round(overlay.clientHeight * (1 - pitch))}px`;
-			marker.style.translate = `${translateX} ${translateY}`;
+			//marker.style.translate = `${translateX} ${translateY}`;
+			marker.style.transform = `translate(${translateX}, ${translateY})`;
 
 
 			// Update the hairlines and labels
@@ -137,15 +138,20 @@ class VoiceGraph {
 
 				this.xHairline.style.border = '1px solid red';
 				
-				this.xValueLabel.style.translate = `${translateX} 0px`;
-				this.yValueLabel.style.translate = `0px ${markerTranslateY}`; 
+				//this.xValueLabel.style.translate = `${translateX} 0px`;
+				//this.yValueLabel.style.translate = `0px ${markerTranslateY}`; 
+				this.xValueLabel.style.transform = `translate(${translateX}, 0px)`;
+				this.yValueLabel.style.transform = `translate(0px, ${markerTranslateY})`; 
 
 				// Doesn't move unless there's a delay
 				let hairx = this.xHairline;
 				let hairy = this.yHairline;
 				setTimeout(() => {
-					$('.x.hairline').style.translate = `${translateX} 0px`;
-					$('.y.hairline').style.translate = `0px ${hairTranslateY}`;
+					//$('.x.hairline').style.translate = `${translateX} 0px`;
+					//$('.y.hairline').style.translate = `0px ${hairTranslateY}`;
+					$('.x.hairline').style.transform = `translate(${translateX}, 0px)`;
+					$('.y.hairline').style.transform = `translate(0px, ${hairTranslateY})`;
+					console.log($('.y.hairline').style.transform);
 				}, 1);
 
 				this.xValueLabel.innerHTML = `${Math.round(resonance * 100)}%`;
