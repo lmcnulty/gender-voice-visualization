@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
-import os, sys, subprocess, shutil, csv, random, cgi, cgitb, glob, mimetypes, json
+import os, sys, subprocess, shutil, csv, random, glob, mimetypes, json, re, statistics
+import cgi, cgitb   # I like cgi because it was popular when I was born
 import magic
 
 def random_id():
@@ -93,7 +94,8 @@ cwd = os.getcwd()
 os.chdir(tmp_dir)
 
 try:
-	subprocess.check_output([tmp_dir + '/align.sh'], stderr=subprocess.STDOUT) # shell out so we can `source`
+	# shell out so we can `source`
+	subprocess.check_output([tmp_dir + '/align.sh'], stderr=subprocess.STDOUT) 
 except subprocess.CalledProcessError as e:
 	print("CalledProcessError")
 	print(e)
@@ -120,17 +122,102 @@ for recording, grid in zip(
 	
 	praat_output = sheet.decode('utf-8')
 
-	data = [{ 
-		'time' : None if '--' in e[0] else float(e[0]),
-		'phone' : e[1],
-		'F' : [None if '--' in f else float(f) for f in e[2:-1]]
-	} for e in [line.split('\t') for line in praat_output.split('\n')] if len(e) > 4]
+	word_lines = []
+	phoneme_lines = []
+	active_list = None
 
-	for e in data:
-		if not e['phone'] in stats: continue
+	for line in praat_output.split('\n'):
+		if line == "Words:":
+			active_list = word_lines
+			continue
+		if line == "Phonemes:":
+			active_list = phoneme_lines
+			continue
+
+		active_list.append(line)	
+	
+	data = {}
+
+	pronunciation_dict = {}
+	with open('cmudict.txt', 'r', encoding='iso-8859-1') as f:
+		for line in f.readlines():
+			cols = line.split()
+			pronunciation_dict[cols[0]] = cols[1:]
+	
+	data['words'] = []
+	for line in word_lines:
+		cols = line.split('\t')
+		data['words'].append({
+			'time' : float(cols[0]),
+			'word' : cols[1],
+			'expected' : (pronunciation_dict.get(cols[1].upper()) or [None]) + [None] * 5
+		})
+
+	data['phonemes'] = []
+	word_index = -1
+	phoneme_in_word_index = 0
+	for line in phoneme_lines:	
+		cols = line.split('\t')
+
+		if len(cols) < 3:
+			continue
+
+		#time = None if '--' in cols[0] else float(cols[0])
+		time = float(cols[0]) if re.match(r'^-?\d+(?:\.\d+)?$', cols[0]) else None
+		while type(time) == float and word_index < len(data['words']) - 1 and time >= data['words'][word_index + 1]['time']:
+			word_index += 1
+			phoneme_in_word_index = 0
+			
+		data['phonemes'].append({
+			'time': time,
+			'phone': cols[1],
+			'word_index': word_index,
+			'word': data['words'][word_index],
+			'word_time': data['words'][word_index]['time'],
+			'expected': (
+				data['words']
+				[word_index]
+				['expected']
+				[phoneme_in_word_index]
+			),
+			'F': [None if '--' in f else float(f) for f in cols[2:]]
+		})
+		phoneme_in_word_index += 1
+		
+
+
+	data['mean'] = {'F': []}
+	data['stdev'] = {'F': []}
+
+	# Remove outliers (TODO: Make configurable)
+	for i in range(4):
+		mean = statistics.mean([phoneme['F'][i] for phoneme in data['phonemes'] if phoneme['F'][i] != None])
+		stdev = statistics.stdev([phoneme['F'][i] for phoneme in data['phonemes'] if phoneme['F'][i] != None])
+		data['mean']['F'].append(mean)
+		data['stdev']['F'].append(stdev)
+		for p in range(len(data['phonemes'])):
+			if not data['phonemes'][p]['F'][i]:
+				continue
+			if abs(data['phonemes'][p]['F'][i] - mean) / stdev > 2:
+				data['phonemes'][p]['outlier'] = True
+				data['phonemes'][p]['F'][i] = None
+				"""statistics.mean([
+					data['phonemes'][q]['F'][i] for q in range(i - , i + 2) if data['phonemes'][q]['F'][i] != None
+				])"""
+		
+#	data["phonemes"] = [{ 
+#		'time' : None if '--' in e[0] else float(e[0]),
+#		'phone' : e[1],
+#		'F' : [None if '--' in f else float(f) for f in e[2:-1]]
+#	} for e in [line.split('\t') for line in phoneme_lines] if len(e) > 4]
+#
+	for e in data["phonemes"]:
+		if not (e.get('phone') and e.get('expected') and stats.get(e.get('phone')) and stats.get(e.get('expected'))):
+			continue
+		if not e['phone'] and e['expected'] in stats: continue
 		e['F_stdevs'] = [
 			None if len(e['F']) <= i or e['F'][i] == None else 
-			(e['F'][i] - stats[e['phone']][i]['mean']) / stats[e['phone']][i]['stdev']
+			(e['F'][i] - stats[e['expected']][i]['mean']) / stats[e['expected']][i]['stdev']
 			for i in list(range(4))
 		]
 

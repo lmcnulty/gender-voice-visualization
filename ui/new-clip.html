@@ -105,7 +105,8 @@
 				let marker = vg.addMarker(.5, .5, null, null);
 				playingMarker = marker;
 
-				playingData = eval(data);
+				let backendData = JSON.parse(data);
+				playingData = backendData.phonemes;
 				let lastTime = playingData[playingData.length - 1].time;
 
 				timedPlayingData = Array(Math.ceil(lastTime * 100));

@@ -622,17 +622,19 @@ Git repository: <INSERT REPOSITORY LINK>
             				value => ["A", "E", "I", "O", "U", "Y"].includes(value)
             			).length > 0;
 
-            			if (currentPhone != null && currentPhone.F[0] && isVowel) {
-            				playingMarker.setAttribute('data-pitch', clamp(0, 1, 
-            					(currentPhone.F[0] - 50) / 250
-            				));
-            			}
-            			if (currentPhone.F_stdevs && isVowel) {
-            				playingMarker.setAttribute('data-resonance', clamp(0, 1, 
-            					(((1/3) * currentPhone.F_stdevs[1] 
-            					+ (1/3) * currentPhone.F_stdevs[2] 
-            					+ (1/3) * currentPhone.F_stdevs[3]) + 2) / 4
-            				));
+            			if (isVowel && currentPhone.F_stdevs[0] && currentPhone.F_stdevs[1] && currentPhone.F_stdevs[2] && currentPhone.F_stdevs[3]) {
+            				if (currentPhone != null && currentPhone.F[0]  &&isVowel) {
+            					playingMarker.setAttribute('data-pitch', clamp(0, 1, 
+            						(currentPhone.F[0] - 50) / 250
+            					));
+            				}
+            				if (currentPhone.F_stdevs && isVowel) {
+            					playingMarker.setAttribute('data-resonance', clamp(0, 1, 
+            						(((1/3) * currentPhone.F_stdevs[1] 
+            						+ (1/3) * currentPhone.F_stdevs[2] 
+            						+ (1/3) * currentPhone.F_stdevs[3]) + 2) / 4
+            					));
+            				}
             			}
 
             			console.log('update function:', $('voice-graph-2d').voiceGraph.update, "return value:", $('voice-graph-2d').voiceGraph.update());
@@ -1609,7 +1611,8 @@ Git repository: <INSERT REPOSITORY LINK>
             				let marker = vg.addMarker(.5, .5, null, null);
             				playingMarker = marker;
 
-            				playingData = eval(data);
+            				let backendData = JSON.parse(data);
+            				playingData = backendData.phonemes;
             				let lastTime = playingData[playingData.length - 1].time;
 
             				timedPlayingData = Array(Math.ceil(lastTime * 100));
