@@ -5,7 +5,6 @@ class VoiceGraph {
 	constructor(element) {
 
 		this.element = element;
-		this.selectedMarker = null;
 
 		element.style.position = 'relative';
 		element.style.boxSizing = 'border-box'
@@ -76,9 +75,68 @@ class VoiceGraph {
 		}
 		ctx.putImageData(rgba, 0, 0);
 
-		this.update();
+		window.addEventListener('resize', evt => {
+			for (let marker of $$('.marker')) {
+				this.update(marker);
+			}
+		});
 
-		window.addEventListener('resize', this.update);
+		globalState.render(['clips'], current => {
+			for (let clip of current.clips) {
+				if (!clip.marker) {
+					clip.marker = this.addMarker(clip.meanPitch || .5, clip.meanResonance || .5, null, null);
+
+					clip.marker.addEventListener('click', evt => {
+						globalState.set('playingClip', clip);
+					});
+					this.update(clip.marker);
+				}
+			}
+		})
+
+		globalState.render(['playbackTime'], current  => {
+
+			let timeIndex = Math.floor(current.playbackTime * 100);
+			let playingClip = globalState.get('playingClip');
+			if (!playingClip || 
+				!playingClip.indexedPhones || 
+				timeIndex >= playingClip.indexedPhones.length ||
+				!playingClip.marker
+			) return;
+			
+			let currentPhone = playingClip.indexedPhones[timeIndex];
+
+			playingClip.marker.querySelector('.infobox').innerHTML = currentPhone.phoneme;
+
+			if (current.playbackTime == 0 || current.playbackTime == last(playingClip.phones).time ) {
+				playingClip.marker.setAttribute('data-pitch', playingClip.meanPitch || .5);
+				playingClip.marker.setAttribute('data-resonance', playingClip.meanResonance || .5);
+			} else {
+				let isVowel = currentPhone.phoneme && Array.from(currentPhone.phoneme).filter(
+					value => ["A", "E", "I", "O", "U", "Y"].includes(value)
+				).length > 0;
+
+				if (isVowel && currentPhone.hasOwnProperty('F_stdevs') && 
+					currentPhone.F_stdevs[0] &&  currentPhone.F_stdevs[1] && 
+					currentPhone.F_stdevs[2] &&  currentPhone.F_stdevs[3]
+				) {
+					if (currentPhone != null && currentPhone.F[0]  &&isVowel) {
+						playingClip.marker.setAttribute('data-pitch', clamp(0, 1, 
+							(currentPhone.F[0] - 50) / 250
+						));
+					}
+					if (currentPhone.F_stdevs && isVowel) {
+						playingClip.marker.setAttribute('data-resonance', clamp(0, 1, 
+							(((1/3) * currentPhone.F_stdevs[1] 
+							+ (1/3) * currentPhone.F_stdevs[2] 
+							+ (1/3) * currentPhone.F_stdevs[3]) + 2) / 4
+						));
+					}
+				}
+			}
+
+			this.update(playingClip.marker);
+		});
 	}
 
 	addMarker(pitch, resonance, label, ratings) {
@@ -103,68 +161,59 @@ class VoiceGraph {
 		)
 		let vg = this;
 		let showDetails = evt => {
-			vg.selectedMarker = newMarker;
-			vg.update();
+			vg.update(newMarker);
 		}
 		newMarker.addEventListener('mouseover', showDetails);
 		newMarker.addEventListener('click', showDetails);
 		
-		vg.selectedMarker = newMarker;
-		playingMarker = newMarker;
-		this.update();
+		this.update(newMarker);
 		
 		return newMarker;
 	}
 
 	// Set visual positioning of markers and labels
 	// to match the values in `data-pitch` and `data-resonance`.
-	update() {
-		for (let marker of this.element.querySelectorAll('.marker')) {
-			let overlay = marker.parentNode
+	update(marker) {
+		let overlay = marker.parentNode
 
-			let pitch     = parseFloat(marker.getAttribute('data-pitch'));
-			let resonance = parseFloat(marker.getAttribute('data-resonance'));
+		let pitch     = parseFloat(marker.getAttribute('data-pitch'));
+		let resonance = parseFloat(marker.getAttribute('data-resonance'));
 
-			let translateX = `${Math.round(overlay.clientWidth * resonance)}px`;
-			let translateY = `${Math.round(overlay.clientHeight * (1-pitch))}px`;
-			let markerTranslateY = `${-Math.round(overlay.clientHeight * pitch)}px`;
-			let hairTranslateY = `${Math.round(overlay.clientHeight * (1 - pitch))}px`;
-			//marker.style.translate = `${translateX} ${translateY}`;
-			marker.style.transform = `translate(${translateX}, ${translateY})`;
+		let translateX = `${Math.round(overlay.clientWidth * resonance)}px`;
+		let translateY = `${Math.round(overlay.clientHeight * (1-pitch))}px`;
+		let markerTranslateY = `${-Math.round(overlay.clientHeight * pitch)}px`;
+		let hairTranslateY = `${Math.round(overlay.clientHeight * (1 - pitch))}px`;
+		//marker.style.translate = `${translateX} ${translateY}`;
+		marker.style.transform = `translate(${translateX}, ${translateY})`;
 
 
-			// Update the hairlines and labels
-			if (marker === this.selectedMarker) {
+		// Update the hairlines and labels
+		this.xHairline.style.border = '1px solid red';
+		
+		//this.xValueLabel.style.translate = `${translateX} 0px`;
+		//this.yValueLabel.style.translate = `0px ${markerTranslateY}`; 
+		this.xValueLabel.style.transform = `translate(${translateX}, 0px)`;
+		this.yValueLabel.style.transform = `translate(0px, ${markerTranslateY})`; 
 
-				this.xHairline.style.border = '1px solid red';
-				
-				//this.xValueLabel.style.translate = `${translateX} 0px`;
-				//this.yValueLabel.style.translate = `0px ${markerTranslateY}`; 
-				this.xValueLabel.style.transform = `translate(${translateX}, 0px)`;
-				this.yValueLabel.style.transform = `translate(0px, ${markerTranslateY})`; 
+		// Doesn't move unless there's a delay
+		let hairx = this.xHairline;
+		let hairy = this.yHairline;
+		setTimeout(() => {
+			//$('.x.hairline').style.translate = `${translateX} 0px`;
+			//$('.y.hairline').style.translate = `0px ${hairTranslateY}`;
+			$('.x.hairline').style.transform = `translate(${translateX}, 0px)`;
+			$('.y.hairline').style.transform = `translate(0px, ${hairTranslateY})`;
+		}, 1);
 
-				// Doesn't move unless there's a delay
-				let hairx = this.xHairline;
-				let hairy = this.yHairline;
-				setTimeout(() => {
-					//$('.x.hairline').style.translate = `${translateX} 0px`;
-					//$('.y.hairline').style.translate = `0px ${hairTranslateY}`;
-					$('.x.hairline').style.transform = `translate(${translateX}, 0px)`;
-					$('.y.hairline').style.transform = `translate(0px, ${hairTranslateY})`;
-					console.log($('.y.hairline').style.transform);
-				}, 1);
+		this.xValueLabel.innerHTML = `${Math.round(resonance * 100)}%`;
+		this.yValueLabel.innerHTML = `${Math.round(
+			this.pitchLowerBoundHz + pitch * this.pitchRange
+		)}Hz`;
 
-				this.xValueLabel.innerHTML = `${Math.round(resonance * 100)}%`;
-				this.yValueLabel.innerHTML = `${Math.round(
-					this.pitchLowerBoundHz + pitch * this.pitchRange
-				)}Hz`;
-
-				this.yHairline.style.opacity = '1';
-				this.yValueLabel.style.opacity = '1';
-				this.xHairline.style.opacity = '1';
-				this.xValueLabel.style.opacity = '1';
-			}
-		}
+		this.yHairline.style.opacity = '1';
+		this.yValueLabel.style.opacity = '1';
+		this.xHairline.style.opacity = '1';
+		this.xValueLabel.style.opacity = '1';
 	}
 
 	preview(recordings) {

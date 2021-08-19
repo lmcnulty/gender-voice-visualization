@@ -92,7 +92,6 @@
 				colors += `document.querySelector('#${select.id}').value = '${getComputedStyle(document.body).getPropertyValue('--' + select.id)}';\n`;
 				colors += `document.body.style.setProperty('--${select.id}', '${select.value}');\n`
 			}
-			console.log(colors);
 		}
 		function nativeStyle() {
 			whiteLight();

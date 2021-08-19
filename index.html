@@ -522,8 +522,9 @@ Git repository: <INSERT REPOSITORY LINK>
 		<link href="data:text/css," rel="stylesheet" type="text/css" title="Null">
 
 		
-			<script src="./ui/globals.js"></script>
 			<script src="./ui/dom.js"></script>
+			<script src="./ui/globals.js"></script>
+			<script src="./ui/clip.js"></script>
 			<script src="./ui/util.js"></script>
 			<script src="./ui/speech-scripts.js"></script>
 		
@@ -537,20 +538,21 @@ Git repository: <INSERT REPOSITORY LINK>
             <progress class="player" value="0" min="0"></progress>
             <video class="clip"></video>
             <script>
-            	let player = {}; 
             	(() => {
             		let mediaElement = $('video.clip');
             		let playPauseButton = $('button.play-pause');
             		let progressBar = $('progress.player');
 
-            		function setSource(src) {
-            			mediaElement.src = src;
-            			mediaElement.addEventListener('loadedmetadata', evt => {
-            				progressBar.setAttribute('max', mediaElement.duration);
-            				console.log('max: ' + progressBar.max);
-            				progressBar.setAttribute('value', 0);
-            			})
-            		}
+
+            		globalState.render(['playingClip'], current => {
+            			if (current.playingClip && current.playingClip.audio) {
+            				mediaElement.src = current.playingClip.audio;
+            				mediaElement.addEventListener('loadedmetadata', evt => {
+            					progressBar.setAttribute('max', mediaElement.duration);
+            					progressBar.setAttribute('value', 0);
+            				});
+            			}
+            		})
 
             		playPauseButton.addEventListener('click', evt => {
             			if (mediaElement.paused || mediaElement.ended) {
@@ -583,67 +585,12 @@ Git repository: <INSERT REPOSITORY LINK>
             			}
             		})
 
-
-            		let updateGraph = () => {
-            			window.requestAnimationFrame(updateGraph);
-            			
-            			if (!playingData || playingData.length < 1 || !playingMarker) return
-            			
-            			
-            			let vg = $('voice-graph-2d').voiceGraph;
-            			
-            			//let playingMarker = vg.selectedMarker;
-
-            			if (mediaElement.currentTime == 0) {
-            				playingMarker.setAttribute('data-pitch', .5);
-            				playingMarker.setAttribute('data-resonance', .5);
-            			}
-
-
-            			/*
-            			let currentPhone = playingData[0]
-            			for (let phoneme of playingData) {
-            				if (phoneme.time < mediaElement.currentTime) {
-            					currentPhone = phoneme;
-            				}
-            			}
-            			*/
-
-            			if (!timedPlayingData || timedPlayingData.length < 1) return
-            			let tpdIndex = Math.floor(mediaElement.currentTime * 100)
-            			if (tpdIndex >= timedPlayingData.length) return
-
-
-            			let currentPhone = timedPlayingData[tpdIndex];
-
-            			playingMarker.querySelector('.infobox').innerHTML = currentPhone.phone;
-
-            			let isVowel = currentPhone.phone && Array.from(currentPhone.phone).filter(
-            				value => ["A", "E", "I", "O", "U", "Y"].includes(value)
-            			).length > 0;
-
-            			if (isVowel && currentPhone.F_stdevs[0] && currentPhone.F_stdevs[1] && currentPhone.F_stdevs[2] && currentPhone.F_stdevs[3]) {
-            				if (currentPhone != null && currentPhone.F[0]  &&isVowel) {
-            					playingMarker.setAttribute('data-pitch', clamp(0, 1, 
-            						(currentPhone.F[0] - 50) / 250
-            					));
-            				}
-            				if (currentPhone.F_stdevs && isVowel) {
-            					playingMarker.setAttribute('data-resonance', clamp(0, 1, 
-            						(((1/3) * currentPhone.F_stdevs[1] 
-            						+ (1/3) * currentPhone.F_stdevs[2] 
-            						+ (1/3) * currentPhone.F_stdevs[3]) + 2) / 4
-            					));
-            				}
-            			}
-
-            			console.log('update function:', $('voice-graph-2d').voiceGraph.update, "return value:", $('voice-graph-2d').voiceGraph.update());
+            		let updateTime = () => {
+            			globalState.set('playbackTime', mediaElement.currentTime);
+            			window.requestAnimationFrame(updateTime);
             		}
-            		window.requestAnimationFrame(updateGraph);
+            		window.requestAnimationFrame(updateTime);
 
-            		// Public Interface
-            		player.setSource = setSource;
-            		player.mediaElement = mediaElement;
             	})();
             </script>
             <style>
@@ -950,7 +897,6 @@ Git repository: <INSERT REPOSITORY LINK>
             				colors += `document.querySelector('#${select.id}').value = '${getComputedStyle(document.body).getPropertyValue('--' + select.id)}';\n`;
             				colors += `document.body.style.setProperty('--${select.id}', '${select.value}');\n`
             			}
-            			console.log(colors);
             		}
             		function nativeStyle() {
             			whiteLight();
@@ -1556,12 +1502,11 @@ Git repository: <INSERT REPOSITORY LINK>
             	<!-- Submit -->
             	<button id="submit" onclick="submitAudio()">Add Clip</button>
             	<script>
-            		
-            		let playingMarker;
 
             		function submitAudio() {
 
-            			let audioData;
+            			let clip = new Clip();
+            			
             			let formData = new FormData();
             			formData.append('transcript', $('#transcript').value);
 
@@ -1571,16 +1516,7 @@ Git repository: <INSERT REPOSITORY LINK>
 
             				let recording = fileInput.files[0];
             				formData.append('recording', recording);
-
-            				let reader = new FileReader(recording);	
-            				reader.readAsDataURL(recording);
-            				reader.addEventListener("load", () => {
-            					audioData = reader.result.replace(
-            						/data:.*;base64/, 
-            						"data:audio/wav;base64"
-            					);
-            					//localStorage.setItem(hash(audioData), audioData);
-            				});
+            				clip.loadAudioFile(recording);
 
             			} else if ($('#record-voice').checked) {
             				//TODO: Handle recording
@@ -1595,59 +1531,26 @@ Git repository: <INSERT REPOSITORY LINK>
             			hideModal();
             			
             			fetch('./backend.cgi', { method: 'POST', body: formData})
-            			.then(x => x.text()).then(data => {
+            			.then(response => {
+            				if (!response.ok) throw new Error(response.status);
+            				if (response.headers.get('Content-Length') < 2) return {};
+            				return response.json();
+            			}).then(data => {
             				$('button.new-clip').classList.remove('hidden');
             				$('button.new-clip + .spinner').classList.add('hidden');
 
-            				if (data.trim().length < 2) {
+            				if (!data.hasOwnProperty('phones') || data.phones.length < 1) {
             					alert("We couldn't identify the words in your clip." 
             					    + "Make sure that the transcript matches the audio.");
             					return;
             				}
-
-            				player.setSource(audioData);
-            				console.log(data);
-            				let vg = $('voice-graph-2d').voiceGraph;
-            				let marker = vg.addMarker(.5, .5, null, null);
-            				playingMarker = marker;
-
-            				let backendData = JSON.parse(data);
-            				playingData = backendData.phonemes;
-            				let lastTime = playingData[playingData.length - 1].time;
-
-            				timedPlayingData = Array(Math.ceil(lastTime * 100));
-            				for (let moment of playingData) {
-            					timedPlayingData[Math.floor(moment.time * 100)] = moment;
-            				}
-
-
-            				// Fill in missing values with what came before
-            				for (let i = 0; i < timedPlayingData.length; i++) {
-            					if (!timedPlayingData[i]) {
-            						if (timedPlayingData[i - 1]) {
-            							timedPlayingData[i] = timedPlayingData[i - 1];
-            						} else {
-            							throw 'First data point is undefined';
-            						}
-            					}
-            				}
-
-            				marker.setAttribute('data-phonemes', data)
-
-            				marker.addEventListener('click', evt => {
-            					player.mediaElement.src = marker.getAttribute('data-recording');
-            					player.mediaElement.currentTime = 0;
-            					playingMarker = marker;
-            					playingData = eval(marker.getAttribute('data-phonemes'));
-            				})
-
-            				player.mediaElement.src = audioData;
-            				marker.setAttribute('data-recording', audioData);
-            				player.mediaElement.load();
-            				player.mediaElement.currentTime = 0;
             				
+            				clip.loadResponse(data);
+            				globalState.set('playingClip', clip);
+            				globalState.mutate('clips', clips => clips.push(clip));
 
-            			});
+            			})
+            			// .catch(() => alert('The server returned an error code'));
             		}
             	</script>
             </section>

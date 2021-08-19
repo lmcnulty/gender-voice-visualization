@@ -10,7 +10,6 @@ window.onresize = evt => {
 }
 window.onload = window.onresize;
 
-player.setSource('./resources/clip.mp3');
 $('button.details').click();
 
 

@@ -50,12 +50,11 @@
 	<!-- Submit -->
 	<button id="submit" onclick="submitAudio()">Add Clip</button>
 	<script>
-		
-		let playingMarker;
 
 		function submitAudio() {
 
-			let audioData;
+			let clip = new Clip();
+			
 			let formData = new FormData();
 			formData.append('transcript', $('#transcript').value);
 
@@ -65,16 +64,7 @@
 
 				let recording = fileInput.files[0];
 				formData.append('recording', recording);
-
-				let reader = new FileReader(recording);	
-				reader.readAsDataURL(recording);
-				reader.addEventListener("load", () => {
-					audioData = reader.result.replace(
-						/data:.*;base64/, 
-						"data:audio/wav;base64"
-					);
-					//localStorage.setItem(hash(audioData), audioData);
-				});
+				clip.loadAudioFile(recording);
 
 			} else if ($('#record-voice').checked) {
 				//TODO: Handle recording
@@ -89,59 +79,26 @@
 			hideModal();
 			
 			fetch('./backend.cgi', { method: 'POST', body: formData})
-			.then(x => x.text()).then(data => {
+			.then(response => {
+				if (!response.ok) throw new Error(response.status);
+				if (response.headers.get('Content-Length') < 2) return {};
+				return response.json();
+			}).then(data => {
 				$('button.new-clip').classList.remove('hidden');
 				$('button.new-clip + .spinner').classList.add('hidden');
 
-				if (data.trim().length < 2) {
+				if (!data.hasOwnProperty('phones') || data.phones.length < 1) {
 					alert("We couldn't identify the words in your clip." 
 					    + "Make sure that the transcript matches the audio.");
 					return;
 				}
-
-				player.setSource(audioData);
-				console.log(data);
-				let vg = $('voice-graph-2d').voiceGraph;
-				let marker = vg.addMarker(.5, .5, null, null);
-				playingMarker = marker;
-
-				let backendData = JSON.parse(data);
-				playingData = backendData.phonemes;
-				let lastTime = playingData[playingData.length - 1].time;
-
-				timedPlayingData = Array(Math.ceil(lastTime * 100));
-				for (let moment of playingData) {
-					timedPlayingData[Math.floor(moment.time * 100)] = moment;
-				}
-
-
-				// Fill in missing values with what came before
-				for (let i = 0; i < timedPlayingData.length; i++) {
-					if (!timedPlayingData[i]) {
-						if (timedPlayingData[i - 1]) {
-							timedPlayingData[i] = timedPlayingData[i - 1];
-						} else {
-							throw 'First data point is undefined';
-						}
-					}
-				}
-
-				marker.setAttribute('data-phonemes', data)
-
-				marker.addEventListener('click', evt => {
-					player.mediaElement.src = marker.getAttribute('data-recording');
-					player.mediaElement.currentTime = 0;
-					playingMarker = marker;
-					playingData = eval(marker.getAttribute('data-phonemes'));
-				})
-
-				player.mediaElement.src = audioData;
-				marker.setAttribute('data-recording', audioData);
-				player.mediaElement.load();
-				player.mediaElement.currentTime = 0;
 				
+				clip.loadResponse(data);
+				globalState.set('playingClip', clip);
+				globalState.mutate('clips', clips => clips.push(clip));
 
-			});
+			})
+			// .catch(() => alert('The server returned an error code'));
 		}
 	</script>
 </section>

@@ -17,3 +17,8 @@ function clamp(min, max, val) {
 	if (val > max) return max;
 	return val;
 }
+
+
+function last(list) {
+	return list[list.length - 1];
+}

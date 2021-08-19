@@ -4,20 +4,21 @@
 <progress class="player" value="0" min="0"></progress>
 <video class="clip"></video>
 <script>
-	let player = {}; 
 	(() => {
 		let mediaElement = $('video.clip');
 		let playPauseButton = $('button.play-pause');
 		let progressBar = $('progress.player');
 
-		function setSource(src) {
-			mediaElement.src = src;
-			mediaElement.addEventListener('loadedmetadata', evt => {
-				progressBar.setAttribute('max', mediaElement.duration);
-				console.log('max: ' + progressBar.max);
-				progressBar.setAttribute('value', 0);
-			})
-		}
+
+		globalState.render(['playingClip'], current => {
+			if (current.playingClip && current.playingClip.audio) {
+				mediaElement.src = current.playingClip.audio;
+				mediaElement.addEventListener('loadedmetadata', evt => {
+					progressBar.setAttribute('max', mediaElement.duration);
+					progressBar.setAttribute('value', 0);
+				});
+			}
+		})
 
 		playPauseButton.addEventListener('click', evt => {
 			if (mediaElement.paused || mediaElement.ended) {
@@ -50,67 +51,12 @@
 			}
 		})
 
-
-		let updateGraph = () => {
-			window.requestAnimationFrame(updateGraph);
-			
-			if (!playingData || playingData.length < 1 || !playingMarker) return
-			
-			
-			let vg = $('voice-graph-2d').voiceGraph;
-			
-			//let playingMarker = vg.selectedMarker;
-
-			if (mediaElement.currentTime == 0) {
-				playingMarker.setAttribute('data-pitch', .5);
-				playingMarker.setAttribute('data-resonance', .5);
-			}
-
-
-			/*
-			let currentPhone = playingData[0]
-			for (let phoneme of playingData) {
-				if (phoneme.time < mediaElement.currentTime) {
-					currentPhone = phoneme;
-				}
-			}
-			*/
-
-			if (!timedPlayingData || timedPlayingData.length < 1) return
-			let tpdIndex = Math.floor(mediaElement.currentTime * 100)
-			if (tpdIndex >= timedPlayingData.length) return
-
-
-			let currentPhone = timedPlayingData[tpdIndex];
-
-			playingMarker.querySelector('.infobox').innerHTML = currentPhone.phone;
-
-			let isVowel = currentPhone.phone && Array.from(currentPhone.phone).filter(
-				value => ["A", "E", "I", "O", "U", "Y"].includes(value)
-			).length > 0;
-
-			if (isVowel && currentPhone.F_stdevs[0] && currentPhone.F_stdevs[1] && currentPhone.F_stdevs[2] && currentPhone.F_stdevs[3]) {
-				if (currentPhone != null && currentPhone.F[0]  &&isVowel) {
-					playingMarker.setAttribute('data-pitch', clamp(0, 1, 
-						(currentPhone.F[0] - 50) / 250
-					));
-				}
-				if (currentPhone.F_stdevs && isVowel) {
-					playingMarker.setAttribute('data-resonance', clamp(0, 1, 
-						(((1/3) * currentPhone.F_stdevs[1] 
-						+ (1/3) * currentPhone.F_stdevs[2] 
-						+ (1/3) * currentPhone.F_stdevs[3]) + 2) / 4
-					));
-				}
-			}
-
-			console.log('update function:', $('voice-graph-2d').voiceGraph.update, "return value:", $('voice-graph-2d').voiceGraph.update());
+		let updateTime = () => {
+			globalState.set('playbackTime', mediaElement.currentTime);
+			window.requestAnimationFrame(updateTime);
 		}
-		window.requestAnimationFrame(updateGraph);
+		window.requestAnimationFrame(updateTime);
 
-		// Public Interface
-		player.setSource = setSource;
-		player.mediaElement = mediaElement;
 	})();
 </script>
 <style>

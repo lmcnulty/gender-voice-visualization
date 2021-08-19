@@ -153,7 +153,7 @@ for recording, grid in zip(
 			'expected' : (pronunciation_dict.get(cols[1].upper()) or [None]) + [None] * 5
 		})
 
-	data['phonemes'] = []
+	data['phones'] = []
 	word_index = -1
 	phoneme_in_word_index = 0
 	for line in phoneme_lines:	
@@ -168,9 +168,9 @@ for recording, grid in zip(
 			word_index += 1
 			phoneme_in_word_index = 0
 			
-		data['phonemes'].append({
+		data['phones'].append({
 			'time': time,
-			'phone': cols[1],
+			'phoneme': cols[1],
 			'word_index': word_index,
 			'word': data['words'][word_index],
 			'word_time': data['words'][word_index]['time'],
@@ -191,30 +191,30 @@ for recording, grid in zip(
 
 	# Remove outliers (TODO: Make configurable)
 	for i in range(4):
-		mean = statistics.mean([phoneme['F'][i] for phoneme in data['phonemes'] if phoneme['F'][i] != None])
-		stdev = statistics.stdev([phoneme['F'][i] for phoneme in data['phonemes'] if phoneme['F'][i] != None])
+		mean = statistics.mean([phoneme['F'][i] for phoneme in data['phones'] if phoneme['F'][i] != None])
+		stdev = statistics.stdev([phoneme['F'][i] for phoneme in data['phones'] if phoneme['F'][i] != None])
 		data['mean']['F'].append(mean)
 		data['stdev']['F'].append(stdev)
-		for p in range(len(data['phonemes'])):
-			if not data['phonemes'][p]['F'][i]:
+		for p in range(len(data['phones'])):
+			if not data['phones'][p]['F'][i]:
 				continue
-			if abs(data['phonemes'][p]['F'][i] - mean) / stdev > 2:
-				data['phonemes'][p]['outlier'] = True
-				data['phonemes'][p]['F'][i] = None
+			if abs(data['phones'][p]['F'][i] - mean) / stdev > 2:
+				data['phones'][p]['outlier'] = True
+				data['phones'][p]['F'][i] = None
 				"""statistics.mean([
-					data['phonemes'][q]['F'][i] for q in range(i - , i + 2) if data['phonemes'][q]['F'][i] != None
+					data['phones'][q]['F'][i] for q in range(i - , i + 2) if data['phones'][q]['F'][i] != None
 				])"""
 		
-#	data["phonemes"] = [{ 
+#	data['phones'] = [{ 
 #		'time' : None if '--' in e[0] else float(e[0]),
-#		'phone' : e[1],
+#		'phoneme' : e[1],
 #		'F' : [None if '--' in f else float(f) for f in e[2:-1]]
 #	} for e in [line.split('\t') for line in phoneme_lines] if len(e) > 4]
 #
-	for e in data["phonemes"]:
-		if not (e.get('phone') and e.get('expected') and stats.get(e.get('phone')) and stats.get(e.get('expected'))):
+	for e in data['phones']:
+		if not (e.get('phoneme') and e.get('expected') and stats.get(e.get('phoneme')) and stats.get(e.get('expected'))):
 			continue
-		if not e['phone'] and e['expected'] in stats: continue
+		if not e['phoneme'] and e['expected'] in stats: continue
 		e['F_stdevs'] = [
 			None if len(e['F']) <= i or e['F'][i] == None else 
 			(e['F'][i] - stats[e['expected']][i]['mean']) / stats[e['expected']][i]['stdev']
