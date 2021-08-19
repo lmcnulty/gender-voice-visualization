@@ -7,9 +7,10 @@
 
 let globalState = new StateManager();
 
-globalState.init('playingClip', null);
 globalState.init('clips', []);
+globalState.init('playingClip', null);
 globalState.init('playbackTime', 0);
+globalState.init('previewClip', null);
 
 /*
 globalState.init('windowSize', {

@@ -39,7 +39,7 @@
 
 		progressBar.addEventListener('click', evt => {
 			let pos = (evt.pageX  - progressBar.offsetLeft) / progressBar.offsetWidth;
-			mediaElement.currentTime = pos * mediaElement.duration;
+			globalState.set('playbackTime', pos * mediaElement.duration);
 		})
 		let dragInProgress = false;
 		progressBar.addEventListener('mousedown', evt => dragInProgress = true);
@@ -47,9 +47,13 @@
 		progressBar.addEventListener('mousemove', evt => {
 			if (dragInProgress) {
 				let pos = (evt.pageX  - progressBar.offsetLeft) / progressBar.offsetWidth;
-				progressBar.value = pos * mediaElement.duration;
+				globalState.set('playbackTime', pos * mediaElement.duration);
 			}
 		})
+
+		globalState.render(['playbackTime'], current => {
+			if (current.playbackTime) mediaElement.currentTime = current.playbackTime;
+		});
 
 		let updateTime = () => {
 			globalState.set('playbackTime', mediaElement.currentTime);

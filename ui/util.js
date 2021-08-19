@@ -22,3 +22,8 @@ function clamp(min, max, val) {
 function last(list) {
 	return list[list.length - 1];
 }
+
+
+function pitchPercent(pitch) {
+	return clamp(0, 1, (pitch - 50) / 250);
+}

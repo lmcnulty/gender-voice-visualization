@@ -21,11 +21,11 @@ id = random_id()
 os.mkdir('/rec/' + id)
 
 # Noise Removal
-tmp_dir      = '/rec/' + id
-input_file   = tmp_dir + '/orig'
-format_file  = tmp_dir + '/format.wav'
-silence_file = tmp_dir + '/silence.wav'
-clean_file   = tmp_dir + '/clean.wav'
+tmp_dir       = '/rec/' + id
+input_file    = tmp_dir + '/orig'
+format_file   = tmp_dir + '/format.wav'
+silence_file  = tmp_dir + '/silence.wav'
+clean_file    = tmp_dir + '/clean.wav'
 noise_profile = tmp_dir + '/noise.prof'
 
 with open(input_file, "wb") as f: 
@@ -113,15 +113,10 @@ for recording, grid in zip(
 	glob.glob(corpus_dir + '/*.wav'), 
 	glob.glob(output_dir + '/*.TextGrid')
 ):
-
-	sheet = subprocess.check_output([
+	praat_output = subprocess.check_output([
 		'./textgrid-formants.praat', recording, grid
-	])
-#		with open(str.replace(grid, 'TextGrid', 'tsv'), 'w') as f:
-#			f.write(sheet.decode('utf-8'))
+	]).decode('utf-8')
 	
-	praat_output = sheet.decode('utf-8')
-
 	word_lines = []
 	phoneme_lines = []
 	active_list = None
@@ -159,12 +154,14 @@ for recording, grid in zip(
 	for line in phoneme_lines:	
 		cols = line.split('\t')
 
-		if len(cols) < 3:
-			continue
+		if len(cols) < 3: continue
 
-		#time = None if '--' in cols[0] else float(cols[0])
 		time = float(cols[0]) if re.match(r'^-?\d+(?:\.\d+)?$', cols[0]) else None
-		while type(time) == float and word_index < len(data['words']) - 1 and time >= data['words'][word_index + 1]['time']:
+		while (
+			type(time) == float and 
+			word_index < len(data['words']) - 1 and
+			time >= data['words'][word_index + 1]['time']
+		):
 			word_index += 1
 			phoneme_in_word_index = 0
 			
@@ -174,25 +171,24 @@ for recording, grid in zip(
 			'word_index': word_index,
 			'word': data['words'][word_index],
 			'word_time': data['words'][word_index]['time'],
-			'expected': (
-				data['words']
-				[word_index]
-				['expected']
-				[phoneme_in_word_index]
-			),
+			'expected': data['words'][word_index]['expected'][phoneme_in_word_index],
 			'F': [None if '--' in f else float(f) for f in cols[2:]]
 		})
 		phoneme_in_word_index += 1
-		
 
-
-	data['mean'] = {'F': []}
+	data['mean']  = {'F': []}
 	data['stdev'] = {'F': []}
 
 	# Remove outliers (TODO: Make configurable)
 	for i in range(4):
-		mean = statistics.mean([phoneme['F'][i] for phoneme in data['phones'] if phoneme['F'][i] != None])
-		stdev = statistics.stdev([phoneme['F'][i] for phoneme in data['phones'] if phoneme['F'][i] != None])
+		mean = statistics.mean([
+			phoneme['F'][i] for phoneme in data['phones'] 
+			if phoneme['F'][i] != None
+		])
+		stdev = statistics.stdev([
+			phoneme['F'][i] for phoneme in data['phones']
+			if phoneme['F'][i] != None
+		])
 		data['mean']['F'].append(mean)
 		data['stdev']['F'].append(stdev)
 		for p in range(len(data['phones'])):
@@ -205,21 +201,25 @@ for recording, grid in zip(
 					data['phones'][q]['F'][i] for q in range(i - , i + 2) if data['phones'][q]['F'][i] != None
 				])"""
 		
-#	data['phones'] = [{ 
-#		'time' : None if '--' in e[0] else float(e[0]),
-#		'phoneme' : e[1],
-#		'F' : [None if '--' in f else float(f) for f in e[2:-1]]
-#	} for e in [line.split('\t') for line in phoneme_lines] if len(e) > 4]
-#
-	for e in data['phones']:
-		if not (e.get('phoneme') and e.get('expected') and stats.get(e.get('phoneme')) and stats.get(e.get('expected'))):
-			continue
-		if not e['phoneme'] and e['expected'] in stats: continue
-		e['F_stdevs'] = [
-			None if len(e['F']) <= i or e['F'][i] == None else 
-			(e['F'][i] - stats[e['expected']][i]['mean']) / stats[e['expected']][i]['stdev']
+	for phone in data['phones']:
+		if (not (phone.get('phoneme') and 
+			phone.get('expected') and 
+			stats.get(phone.get('phoneme')) and 
+			stats.get(phone.get('expected')))
+		): continue
+
+		if not phone['phoneme'] and phone['expected'] in stats: continue
+		phone['F_stdevs'] = [
+			None if len(phone['F']) <= i or phone['F'][i] == None else 
+			(phone['F'][i] - stats[phone['expected']][i]['mean']) 
+			/ stats[phone['expected']][i]['stdev']
 			for i in list(range(4))
 		]
+	
+	data['meanPitch'] = statistics.mean([
+		phone['F'][0] for phone in data['phones'] 
+		if phone.get('F') and phone['F'][0] and not phone.get('outlier')
+	])
 
 	print(json.dumps(data))
 	

@@ -54,9 +54,11 @@
 		function submitAudio() {
 
 			let clip = new Clip();
-			
 			let formData = new FormData();
-			formData.append('transcript', $('#transcript').value);
+
+			let transcriptText = $('#transcript').value;
+			formData.append('transcript', transcriptText);
+			clip.transcript = transcriptText;
 
 			if ($('#upload-file').checked) {
 				fileInput = $('#audio-file-input')
@@ -96,6 +98,7 @@
 				clip.loadResponse(data);
 				globalState.set('playingClip', clip);
 				globalState.mutate('clips', clips => clips.push(clip));
+				globalState.set('previewClip', clip);
 
 			})
 			// .catch(() => alert('The server returned an error code'));

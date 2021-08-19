@@ -1,7 +1,83 @@
 
 <!-- Details -->
-<section class="details"> 
-	<p>This is where the details will go.</p>
+<style>
+.details  h2 {
+	margin-bottom: .5em;
+	margin-top: 0px;
+}
+.details {
+	position: relative;
+}
+.details table {
+	margin-bottom: .5em;
+	margin-top: .5em;
+	border-collapse: collapse;
+}
+.details table td, .details table th {
+	border: 1px solid black;
+	padding: .25em;
+	text-align: center;
+}
+.details button.download {
+	position: absolute;
+	top: .5em;
+	right: .5em;
+}
 
-	<button>Download</button>
+.details .view {
+	display: none;
+}
+.details.has-selection .view {
+	display: block;	
+}
+.details.has-selection .instructions{
+	display: none;	
+}
+
+</style>
+<section class="details"> 
+
+	<div class='instructions'>
+		When you select a clip/point from the graph it will be displayed here.
+	</div>
+	<div class='view'>
+		<h2>Transcript</h2>
+		<div id='preview-transcript'></div>
+
+		<table>
+			<tr>
+				<th></th>
+				<th>Min</th>
+				<th>Mean</th>
+				<th>Max</th>
+				<th>St. dev.</th>
+			</tr>
+			<tr>
+				<th>Pitch</th>
+				<td id='preview-min-pitch'>--</td>
+				<td id='preview-mean-pitch'>--</td>
+				<td id='preview-max-pitch'>--</td>
+				<td id='preview-stdev-pitch'>--</td>
+			</tr>
+		</table>
+
+		<button class='download'>Download Clip</button>
+	</div>
 </section>
+<script>
+
+globalState.render(['previewClip'], current => {
+	if (current.previewClip) {
+		$('.details').classList.add('has-selection');
+		if (current.previewClip.meanPitch) {
+			$('#preview-mean-pitch').innerHTML = Math.round(current.previewClip.meanPitch) + 'Hz';
+		}
+		if (current.previewClip.transcript) {
+			$('#preview-transcript').innerHTML = current.previewClip.transcript;
+		}
+	} else {
+		$('.details').classList.remove('has-selection');
+	}
+})
+
+</script>

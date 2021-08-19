@@ -82,7 +82,9 @@ voice-graph-2d > .overlay > .marker {
 	left: calc(-.5em - 2px);
 }
 
-voice-graph-2d > .overlay > .marker:hover {
+/*voice-graph-2d > .overlay > .marker:hover {*/
+
+voice-graph-2d > .overlay > .marker.preview {
 	color: yellow;
 	border: .1em solid yellow;
 }

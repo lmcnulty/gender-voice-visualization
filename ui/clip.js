@@ -16,6 +16,7 @@ class Clip {
 		this.meanResonance = null;  // Number
 		this.id = null;
 		this.marker = null; // Element
+		this.transcript = null;
 	}
 	loadAudioFile(file) {
 		let reader = new FileReader(file);	
@@ -30,6 +31,8 @@ class Clip {
 	}
 	loadResponse(data) {
 		this.phones = data.phones;
+		this.meanPitch = data.meanPitch;
+
 		this.indexedPhones = Array(Math.ceil(last(this.phones).time * 100));
 		for (let phone of data.phones) {
 			this.indexedPhones[Math.floor(phone.time * 100)] = phone;

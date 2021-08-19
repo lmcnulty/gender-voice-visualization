@@ -84,13 +84,27 @@ class VoiceGraph {
 		globalState.render(['clips'], current => {
 			for (let clip of current.clips) {
 				if (!clip.marker) {
-					clip.marker = this.addMarker(clip.meanPitch || .5, clip.meanResonance || .5, null, null);
+					clip.marker = this.addMarker(pitchPercent(clip.meanPitch) || .5, clip.meanResonance || .5, null, null);
+					clip.marker.setAttribute('data-id', clip.id);
 
 					clip.marker.addEventListener('click', evt => {
 						globalState.set('playingClip', clip);
+						globalState.set('previewClip', clip);
+					});
+					clip.marker.addEventListener('mouseenter', evt => {
+						globalState.set('previewClip', clip);
+						for (let marker of $$('.marker')) this.update(marker);
 					});
 					this.update(clip.marker);
 				}
+			}
+		})
+
+
+		globalState.render(['previewClip'], current => {
+			for (let marker of $$('.marker.preview')) marker.classList.remove('preview');
+			if (current.previewClip && current.previewClip.marker) {
+				current.previewClip.marker.classList.add('preview');
 			}
 		})
 
@@ -109,7 +123,7 @@ class VoiceGraph {
 			playingClip.marker.querySelector('.infobox').innerHTML = currentPhone.phoneme;
 
 			if (current.playbackTime == 0 || current.playbackTime == last(playingClip.phones).time ) {
-				playingClip.marker.setAttribute('data-pitch', playingClip.meanPitch || .5);
+				playingClip.marker.setAttribute('data-pitch', pitchPercent(playingClip.meanPitch) || .5);
 				playingClip.marker.setAttribute('data-resonance', playingClip.meanResonance || .5);
 			} else {
 				let isVowel = currentPhone.phoneme && Array.from(currentPhone.phoneme).filter(
@@ -121,9 +135,7 @@ class VoiceGraph {
 					currentPhone.F_stdevs[2] &&  currentPhone.F_stdevs[3]
 				) {
 					if (currentPhone != null && currentPhone.F[0]  &&isVowel) {
-						playingClip.marker.setAttribute('data-pitch', clamp(0, 1, 
-							(currentPhone.F[0] - 50) / 250
-						));
+						playingClip.marker.setAttribute('data-pitch', pitchPercent(currentPhone.F[0]));
 					}
 					if (currentPhone.F_stdevs && isVowel) {
 						playingClip.marker.setAttribute('data-resonance', clamp(0, 1, 
@@ -139,13 +151,21 @@ class VoiceGraph {
 		});
 	}
 
+	getClipById(id) {
+		for (let marker of $$('.marker')) {
+			if (marker.getAttribute('data-id') == id) {
+				return marker;
+			}
+		}
+	}
+
 	addMarker(pitch, resonance, label, ratings) {
 		let newMarker;
 		this.element.querySelector('.overlay').appendChild(
 			 newMarker = span(label || ' ', {
 				'class': 'marker', 
 				'data-pitch': pitch,
-				'data-resonance': resonance
+				'data-resonance': resonance,
 			}, [
 				div({'class' : 'infobox'}, ratings == null ? [] : [
 					 div({'class':'ratings-bar'}, [
@@ -183,15 +203,12 @@ class VoiceGraph {
 		let translateY = `${Math.round(overlay.clientHeight * (1-pitch))}px`;
 		let markerTranslateY = `${-Math.round(overlay.clientHeight * pitch)}px`;
 		let hairTranslateY = `${Math.round(overlay.clientHeight * (1 - pitch))}px`;
-		//marker.style.translate = `${translateX} ${translateY}`;
 		marker.style.transform = `translate(${translateX}, ${translateY})`;
 
 
 		// Update the hairlines and labels
 		this.xHairline.style.border = '1px solid red';
 		
-		//this.xValueLabel.style.translate = `${translateX} 0px`;
-		//this.yValueLabel.style.translate = `0px ${markerTranslateY}`; 
 		this.xValueLabel.style.transform = `translate(${translateX}, 0px)`;
 		this.yValueLabel.style.transform = `translate(0px, ${markerTranslateY})`; 
 
@@ -199,8 +216,6 @@ class VoiceGraph {
 		let hairx = this.xHairline;
 		let hairy = this.yHairline;
 		setTimeout(() => {
-			//$('.x.hairline').style.translate = `${translateX} 0px`;
-			//$('.y.hairline').style.translate = `0px ${hairTranslateY}`;
 			$('.x.hairline').style.transform = `translate(${translateX}, 0px)`;
 			$('.y.hairline').style.transform = `translate(0px, ${hairTranslateY})`;
 		}, 1);
@@ -216,6 +231,7 @@ class VoiceGraph {
 		this.xValueLabel.style.opacity = '1';
 	}
 
+	/*
 	preview(recordings) {
 		for (recording of recordings) {
 			let el = document.createElement('div');
@@ -226,6 +242,7 @@ class VoiceGraph {
 			})
 		}
 	}
+	*/
 
 	/* Color manipulation */
 	lighten(color, proportion) {

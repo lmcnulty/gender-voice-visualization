@@ -348,7 +348,9 @@ Git repository: <INSERT REPOSITORY LINK>
             	left: calc(-.5em - 2px);
             }
 
-            voice-graph-2d > .overlay > .marker:hover {
+            /*voice-graph-2d > .overlay > .marker:hover {*/
+
+            voice-graph-2d > .overlay > .marker.preview {
             	color: yellow;
             	border: .1em solid yellow;
             }
@@ -573,7 +575,7 @@ Git repository: <INSERT REPOSITORY LINK>
 
             		progressBar.addEventListener('click', evt => {
             			let pos = (evt.pageX  - progressBar.offsetLeft) / progressBar.offsetWidth;
-            			mediaElement.currentTime = pos * mediaElement.duration;
+            			globalState.set('playbackTime', pos * mediaElement.duration);
             		})
             		let dragInProgress = false;
             		progressBar.addEventListener('mousedown', evt => dragInProgress = true);
@@ -581,9 +583,13 @@ Git repository: <INSERT REPOSITORY LINK>
             		progressBar.addEventListener('mousemove', evt => {
             			if (dragInProgress) {
             				let pos = (evt.pageX  - progressBar.offsetLeft) / progressBar.offsetWidth;
-            				progressBar.value = pos * mediaElement.duration;
+            				globalState.set('playbackTime', pos * mediaElement.duration);
             			}
             		})
+
+            		globalState.render(['playbackTime'], current => {
+            			if (current.playbackTime) mediaElement.currentTime = current.playbackTime;
+            		});
 
             		let updateTime = () => {
             			globalState.set('playbackTime', mediaElement.currentTime);
@@ -703,6 +709,9 @@ Git repository: <INSERT REPOSITORY LINK>
                 		border-bottom: 0px;
                 		border-right: 0px;
                 		padding: .5rem;
+                	}
+                	.wide-body .current-tab {
+                		padding: 1rem 2rem 1rem 2rem;
                 	}
                 	.tab-set button:disabled {
                 		border-top: 0px;
@@ -1445,11 +1454,87 @@ Git repository: <INSERT REPOSITORY LINK>
             </section>
             				
             <!-- Details -->
-            <section class="details"> 
-            	<p>This is where the details will go.</p>
+            <style>
+            .details  h2 {
+            	margin-bottom: .5em;
+            	margin-top: 0px;
+            }
+            .details {
+            	position: relative;
+            }
+            .details table {
+            	margin-bottom: .5em;
+            	margin-top: .5em;
+            	border-collapse: collapse;
+            }
+            .details table td, .details table th {
+            	border: 1px solid black;
+            	padding: .25em;
+            	text-align: center;
+            }
+            .details button.download {
+            	position: absolute;
+            	top: .5em;
+            	right: .5em;
+            }
 
-            	<button>Download</button>
+            .details .view {
+            	display: none;
+            }
+            .details.has-selection .view {
+            	display: block;	
+            }
+            .details.has-selection .instructions{
+            	display: none;	
+            }
+
+            </style>
+            <section class="details"> 
+
+            	<div class='instructions'>
+            		When you select a clip/point from the graph it will be displayed here.
+            	</div>
+            	<div class='view'>
+            		<h2>Transcript</h2>
+            		<div id='preview-transcript'></div>
+
+            		<table>
+            			<tr>
+            				<th></th>
+            				<th>Min</th>
+            				<th>Mean</th>
+            				<th>Max</th>
+            				<th>St. dev.</th>
+            			</tr>
+            			<tr>
+            				<th>Pitch</th>
+            				<td id='preview-min-pitch'>--</td>
+            				<td id='preview-mean-pitch'>--</td>
+            				<td id='preview-max-pitch'>--</td>
+            				<td id='preview-stdev-pitch'>--</td>
+            			</tr>
+            		</table>
+
+            		<button class='download'>Download Clip</button>
+            	</div>
             </section>
+            <script>
+
+            globalState.render(['previewClip'], current => {
+            	if (current.previewClip) {
+            		$('.details').classList.add('has-selection');
+            		if (current.previewClip.meanPitch) {
+            			$('#preview-mean-pitch').innerHTML = Math.round(current.previewClip.meanPitch) + 'Hz';
+            		}
+            		if (current.previewClip.transcript) {
+            			$('#preview-transcript').innerHTML = current.previewClip.transcript;
+            		}
+            	} else {
+            		$('.details').classList.remove('has-selection');
+            	}
+            })
+
+            </script>
             				
             <section class="new-clip">
             	<style>
@@ -1506,9 +1591,11 @@ Git repository: <INSERT REPOSITORY LINK>
             		function submitAudio() {
 
             			let clip = new Clip();
-            			
             			let formData = new FormData();
-            			formData.append('transcript', $('#transcript').value);
+
+            			let transcriptText = $('#transcript').value;
+            			formData.append('transcript', transcriptText);
+            			clip.transcript = transcriptText;
 
             			if ($('#upload-file').checked) {
             				fileInput = $('#audio-file-input')
@@ -1548,6 +1635,7 @@ Git repository: <INSERT REPOSITORY LINK>
             				clip.loadResponse(data);
             				globalState.set('playingClip', clip);
             				globalState.mutate('clips', clips => clips.push(clip));
+            				globalState.set('previewClip', clip);
 
             			})
             			// .catch(() => alert('The server returned an error code'));
