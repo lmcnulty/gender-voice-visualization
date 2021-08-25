@@ -4,6 +4,25 @@
 		#record-voice + label + div, #upload-file + label + div {
 			margin-left: 1em;
 			padding: 1em;
+			padding-bottom: 0px;
+		}
+		.new-clip .hbox {
+			display: flex;
+			align-items: center;
+		}
+		.new-clip .hbox select, .hbox input[type=text] {
+			width: 100%;
+			flex-shrink: 1;
+		}
+		.new-clip .hbox label {
+			margin-left: 1em;
+			margin-right: .5em;
+		}
+		.new-clip .hbox label:first-child {
+			margin-left: 0px;
+		}
+		.new-clip h2 {
+			margin-top: 0px;
 		}
 		/* Show upload/recording elements only when that option is selected. */
 		#record-voice          + label + div { display: none; }
@@ -14,10 +33,23 @@
 
 	<h2>Add a Clip</h2>
 
-	<!-- Script selection -->
-	Script <select class="script" id="script-select" onchange="updateScript()"/>
+	<div class="hbox">
+		<label for="title-input">Title</label>
+		<input type="text" id="title-input" value="Untitled"/>
+
+		<label for="color-select">Color</label>
+		<input type="color" id="color-select" value="#000000"/>
+	</div>
+
 	<br>
-	<textarea id="transcript"></textarea>
+
+	<!-- Script selection -->
+	<div class="hbox">
+		<label for="script-select">Script </label>
+		<select class="script" id="script-select" onchange="updateScript()">
+		</select>
+	</div>
+	<textarea rows="6" id="transcript"></textarea>
 	<script>
 		for (let key in speechScripts) {
 			let script = speechScripts[key].replace(/\s\s*/g, ' ');
@@ -46,7 +78,7 @@
 		<button id="stop-recording">Stop Recording</button>
 	</div>
 	<br>
-
+	<br>
 	<!-- Submit -->
 	<button id="submit" onclick="submitAudio()">Add Clip</button>
 	<script>
@@ -59,6 +91,8 @@
 			let transcriptText = $('#transcript').value;
 			formData.append('transcript', transcriptText);
 			clip.transcript = transcriptText;
+			clip.title = $('#title-input').value;
+			clip.color = $('#color-select').value;
 
 			if ($('#upload-file').checked) {
 				fileInput = $('#audio-file-input')
@@ -96,8 +130,8 @@
 				}
 				
 				clip.loadResponse(data);
-				globalState.set('playingClip', clip);
 				globalState.mutate('clips', clips => clips.push(clip));
+				globalState.set('playingClip', clip);
 				globalState.set('previewClip', clip);
 
 			})

@@ -52,11 +52,20 @@
 		})
 
 		globalState.render(['playbackTime'], current => {
-			if (current.playbackTime) mediaElement.currentTime = current.playbackTime;
+			if (current.playbackTime && 
+				current.playbackTime != mediaElement.currentTime
+			) {
+				mediaElement.currentTime = current.playbackTime;
+			}
 		});
 
 		let updateTime = () => {
-			globalState.set('playbackTime', mediaElement.currentTime);
+			let playbackTime = globalState.get('playbackTime');
+			if (playbackTime != mediaElement.currentTime) {
+				globalState.set(
+					'playbackTime', mediaElement.currentTime
+				);
+			}
 			window.requestAnimationFrame(updateTime);
 		}
 		window.requestAnimationFrame(updateTime);

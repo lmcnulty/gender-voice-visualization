@@ -85,8 +85,10 @@ voice-graph-2d > .overlay > .marker {
 /*voice-graph-2d > .overlay > .marker:hover {*/
 
 voice-graph-2d > .overlay > .marker.preview {
-	color: yellow;
-	border: .1em solid yellow;
+}
+
+voice-graph-2d > .overlay > .marker.playing{
+	border: 2px solid yellow;
 }
 
 voice-graph-2d > .overlay > .x.hairline {

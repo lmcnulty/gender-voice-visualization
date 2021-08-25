@@ -108,6 +108,10 @@ section > *:first-child {
 	height: 100%;
 }
 
+.narrow-body .loading-message {
+	display: none !important;
+}
+
 section > h2:first-child {
 	margin-top: 0px;
 }

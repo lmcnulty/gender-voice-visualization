@@ -160,6 +160,10 @@ Git repository: <INSERT REPOSITORY LINK>
             	height: 100%;
             }
 
+            .narrow-body .loading-message {
+            	display: none !important;
+            }
+
             section > h2:first-child {
             	margin-top: 0px;
             }
@@ -217,6 +221,7 @@ Git repository: <INSERT REPOSITORY LINK>
             }
 
             button, input[type=submit] {
+            	height: calc(var(--header-height) - 1rem);
             }
             input, textarea, progress[value], select {
               box-shadow: inset var(--box-shadow);
@@ -244,10 +249,9 @@ Git repository: <INSERT REPOSITORY LINK>
             	border-radius: var(--border-radius);
             }
 
-
             textarea {
             	width: 100%;
-            	height: 5em;
+            	height: 8em;
             	font-family: sans-serif;
             	margin-top: 1em;
             	margin-bottom: 1em;
@@ -351,8 +355,10 @@ Git repository: <INSERT REPOSITORY LINK>
             /*voice-graph-2d > .overlay > .marker:hover {*/
 
             voice-graph-2d > .overlay > .marker.preview {
-            	color: yellow;
-            	border: .1em solid yellow;
+            }
+
+            voice-graph-2d > .overlay > .marker.playing{
+            	border: 2px solid yellow;
             }
 
             voice-graph-2d > .overlay > .x.hairline {
@@ -588,11 +594,20 @@ Git repository: <INSERT REPOSITORY LINK>
             		})
 
             		globalState.render(['playbackTime'], current => {
-            			if (current.playbackTime) mediaElement.currentTime = current.playbackTime;
+            			if (current.playbackTime && 
+            				current.playbackTime != mediaElement.currentTime
+            			) {
+            				mediaElement.currentTime = current.playbackTime;
+            			}
             		});
 
             		let updateTime = () => {
-            			globalState.set('playbackTime', mediaElement.currentTime);
+            			let playbackTime = globalState.get('playbackTime');
+            			if (playbackTime != mediaElement.currentTime) {
+            				globalState.set(
+            					'playbackTime', mediaElement.currentTime
+            				);
+            			}
             			window.requestAnimationFrame(updateTime);
             		}
             		window.requestAnimationFrame(updateTime);
@@ -709,6 +724,8 @@ Git repository: <INSERT REPOSITORY LINK>
                 		border-bottom: 0px;
                 		border-right: 0px;
                 		padding: .5rem;
+                		background: var(--chrome-background);
+                		transition: .3s translate;
                 	}
                 	.wide-body .current-tab {
                 		padding: 1rem 2rem 1rem 2rem;
@@ -720,8 +737,28 @@ Git repository: <INSERT REPOSITORY LINK>
                 		color: var(--chrome-color);
                 		box-shadow: 2px 2px var(--shadow-spread) 2px rgba(0,0,0,0);
                 	}
+                	.narrow-body .current-tab.expanded {
+                		transform: translate(0, -60%);
+                		height: calc(200%);
+                		z-index: 500;
+                	}
+                	#expand-collapse-button.expanded {
+                		transform: translate(0, -60%);
+                	}
                 </style>
                 <script>
+                	let tab = $('.current-tab');
+                	tab.addEventListener('click', evt => {
+                		let bb = tab.getBoundingClientRect();
+                		if (evt.clientY - bb.top < 20 && document.activeElement != $('#theme-select')) {
+                			if (!tab.classList.contains('expanded')) {
+                				tab.classList.add('expanded');
+                			} else {
+                				tab.classList.remove('expanded');
+                			}
+                		}
+                	}, true);
+                	
                 	for (let tab of ['settings', 'help', 'details']) {
                 		let tabButton = $('button.' + tab);
                 		tabButton.addEventListener('click', evt => {
@@ -765,6 +802,8 @@ Git repository: <INSERT REPOSITORY LINK>
         	.modal {
         		max-width: 600px;
         		min-height: 300px;
+        		max-height: 90vh;
+        		overflow: auto;
         		width: 100%;
         		min-width: 50%;
         		position: relative;
@@ -1466,16 +1505,12 @@ Git repository: <INSERT REPOSITORY LINK>
             	margin-bottom: .5em;
             	margin-top: .5em;
             	border-collapse: collapse;
+            	margin: auto;
             }
             .details table td, .details table th {
-            	border: 1px solid black;
+            	border: 1px solid var(--chrome-border);
             	padding: .25em;
             	text-align: center;
-            }
-            .details button.download {
-            	position: absolute;
-            	top: .5em;
-            	right: .5em;
             }
 
             .details .view {
@@ -1487,7 +1522,22 @@ Git repository: <INSERT REPOSITORY LINK>
             .details.has-selection .instructions{
             	display: none;	
             }
-
+            .details .hbox h2 {
+            	display: inline;
+            	margin: 0px;
+            }
+            .details .hbox {
+            	display: flex;
+            	flex-wrap: wrap;
+            	align-items: center;
+            	justify-content: space-between;
+            	margin-bottom: 1em;
+            }
+            .details label {
+            	font-weight: bold;
+            }
+            .details .download {
+            }
             </style>
             <section class="details"> 
 
@@ -1495,8 +1545,10 @@ Git repository: <INSERT REPOSITORY LINK>
             		When you select a clip/point from the graph it will be displayed here.
             	</div>
             	<div class='view'>
-            		<h2>Transcript</h2>
-            		<div id='preview-transcript'></div>
+            		<div class="hbox">
+            			<h2 id="preview-title"></h2>
+            			<button class='download'>Download Clip</button>
+            		</div>
 
             		<table>
             			<tr>
@@ -1514,8 +1566,11 @@ Git repository: <INSERT REPOSITORY LINK>
             				<td id='preview-stdev-pitch'>--</td>
             			</tr>
             		</table>
-
-            		<button class='download'>Download Clip</button>
+            		<br>
+            		<div>
+            			<label for="preview-transcript">Transcript</label>:
+            			<span id='preview-transcript'></span>
+            		</div>
             	</div>
             </section>
             <script>
@@ -1523,6 +1578,7 @@ Git repository: <INSERT REPOSITORY LINK>
             globalState.render(['previewClip'], current => {
             	if (current.previewClip) {
             		$('.details').classList.add('has-selection');
+            		$('#preview-title').innerHTML = current.previewClip.title || '';
             		if (current.previewClip.meanPitch) {
             			$('#preview-mean-pitch').innerHTML = Math.round(current.previewClip.meanPitch) + 'Hz';
             		}
@@ -1541,6 +1597,25 @@ Git repository: <INSERT REPOSITORY LINK>
             		#record-voice + label + div, #upload-file + label + div {
             			margin-left: 1em;
             			padding: 1em;
+            			padding-bottom: 0px;
+            		}
+            		.new-clip .hbox {
+            			display: flex;
+            			align-items: center;
+            		}
+            		.new-clip .hbox select, .hbox input[type=text] {
+            			width: 100%;
+            			flex-shrink: 1;
+            		}
+            		.new-clip .hbox label {
+            			margin-left: 1em;
+            			margin-right: .5em;
+            		}
+            		.new-clip .hbox label:first-child {
+            			margin-left: 0px;
+            		}
+            		.new-clip h2 {
+            			margin-top: 0px;
             		}
             		/* Show upload/recording elements only when that option is selected. */
             		#record-voice          + label + div { display: none; }
@@ -1551,10 +1626,23 @@ Git repository: <INSERT REPOSITORY LINK>
 
             	<h2>Add a Clip</h2>
 
-            	<!-- Script selection -->
-            	Script <select class="script" id="script-select" onchange="updateScript()"/>
+            	<div class="hbox">
+            		<label for="title-input">Title</label>
+            		<input type="text" id="title-input" value="Untitled"/>
+
+            		<label for="color-select">Color</label>
+            		<input type="color" id="color-select" value="#000000"/>
+            	</div>
+
             	<br>
-            	<textarea id="transcript"></textarea>
+
+            	<!-- Script selection -->
+            	<div class="hbox">
+            		<label for="script-select">Script </label>
+            		<select class="script" id="script-select" onchange="updateScript()">
+            		</select>
+            	</div>
+            	<textarea rows="6" id="transcript"></textarea>
             	<script>
             		for (let key in speechScripts) {
             			let script = speechScripts[key].replace(/\s\s*/g, ' ');
@@ -1583,7 +1671,7 @@ Git repository: <INSERT REPOSITORY LINK>
             		<button id="stop-recording">Stop Recording</button>
             	</div>
             	<br>
-
+            	<br>
             	<!-- Submit -->
             	<button id="submit" onclick="submitAudio()">Add Clip</button>
             	<script>
@@ -1596,6 +1684,8 @@ Git repository: <INSERT REPOSITORY LINK>
             			let transcriptText = $('#transcript').value;
             			formData.append('transcript', transcriptText);
             			clip.transcript = transcriptText;
+            			clip.title = $('#title-input').value;
+            			clip.color = $('#color-select').value;
 
             			if ($('#upload-file').checked) {
             				fileInput = $('#audio-file-input')
@@ -1633,8 +1723,8 @@ Git repository: <INSERT REPOSITORY LINK>
             				}
             				
             				clip.loadResponse(data);
-            				globalState.set('playingClip', clip);
             				globalState.mutate('clips', clips => clips.push(clip));
+            				globalState.set('playingClip', clip);
             				globalState.set('previewClip', clip);
 
             			})

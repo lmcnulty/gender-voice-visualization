@@ -36,6 +36,8 @@
 		border-bottom: 0px;
 		border-right: 0px;
 		padding: .5rem;
+		background: var(--chrome-background);
+		transition: .3s translate;
 	}
 	.wide-body .current-tab {
 		padding: 1rem 2rem 1rem 2rem;
@@ -47,8 +49,28 @@
 		color: var(--chrome-color);
 		box-shadow: 2px 2px var(--shadow-spread) 2px rgba(0,0,0,0);
 	}
+	.narrow-body .current-tab.expanded {
+		transform: translate(0, -60%);
+		height: calc(200%);
+		z-index: 500;
+	}
+	#expand-collapse-button.expanded {
+		transform: translate(0, -60%);
+	}
 </style>
 <script>
+	let tab = $('.current-tab');
+	tab.addEventListener('click', evt => {
+		let bb = tab.getBoundingClientRect();
+		if (evt.clientY - bb.top < 20 && document.activeElement != $('#theme-select')) {
+			if (!tab.classList.contains('expanded')) {
+				tab.classList.add('expanded');
+			} else {
+				tab.classList.remove('expanded');
+			}
+		}
+	}, true);
+	
 	for (let tab of ['settings', 'help', 'details']) {
 		let tabButton = $('button.' + tab);
 		tabButton.addEventListener('click', evt => {

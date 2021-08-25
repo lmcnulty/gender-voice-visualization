@@ -84,8 +84,9 @@ class VoiceGraph {
 		globalState.render(['clips'], current => {
 			for (let clip of current.clips) {
 				if (!clip.marker) {
-					clip.marker = this.addMarker(pitchPercent(clip.meanPitch) || .5, clip.meanResonance || .5, null, null);
+					clip.marker = this.addMarker(pitchPercent(clip.medianPitch) || .5, clip.medianResonance || .5, null, null);
 					clip.marker.setAttribute('data-id', clip.id);
+					clip.marker.style.background = clip.color;
 
 					clip.marker.addEventListener('click', evt => {
 						globalState.set('playingClip', clip);
@@ -108,6 +109,13 @@ class VoiceGraph {
 			}
 		})
 
+		globalState.render(['playingClip'], current => {
+			for (let marker of $$('.marker.playing')) marker.classList.remove('playing');
+			if (current.playingClip && current.playingClip.marker) {
+				current.playingClip.marker.classList.add('playing');
+			}
+		})
+
 		globalState.render(['playbackTime'], current  => {
 
 			let timeIndex = Math.floor(current.playbackTime * 100);
@@ -123,8 +131,8 @@ class VoiceGraph {
 			playingClip.marker.querySelector('.infobox').innerHTML = currentPhone.phoneme;
 
 			if (current.playbackTime == 0 || current.playbackTime == last(playingClip.phones).time ) {
-				playingClip.marker.setAttribute('data-pitch', pitchPercent(playingClip.meanPitch) || .5);
-				playingClip.marker.setAttribute('data-resonance', playingClip.meanResonance || .5);
+				playingClip.marker.setAttribute('data-pitch', pitchPercent(playingClip.medianPitch) || .5);
+				playingClip.marker.setAttribute('data-resonance', playingClip.medianResonance || .5);
 			} else {
 				let isVowel = currentPhone.phoneme && Array.from(currentPhone.phoneme).filter(
 					value => ["A", "E", "I", "O", "U", "Y"].includes(value)
@@ -139,9 +147,9 @@ class VoiceGraph {
 					}
 					if (currentPhone.F_stdevs && isVowel) {
 						playingClip.marker.setAttribute('data-resonance', clamp(0, 1, 
-							(((1/3) * currentPhone.F_stdevs[1] 
-							+ (1/3) * currentPhone.F_stdevs[2] 
-							+ (1/3) * currentPhone.F_stdevs[3]) + 2) / 4
+							(((2/5) * currentPhone.F_stdevs[1] 
+							+ (2/5) * currentPhone.F_stdevs[2] 
+							+ (1/5) * currentPhone.F_stdevs[3]) + 2) / 4
 						));
 					}
 				}
@@ -209,26 +217,30 @@ class VoiceGraph {
 		// Update the hairlines and labels
 		this.xHairline.style.border = '1px solid red';
 		
-		this.xValueLabel.style.transform = `translate(${translateX}, 0px)`;
-		this.yValueLabel.style.transform = `translate(0px, ${markerTranslateY})`; 
+		let previewClip = globalState.get('previewClip');
 
-		// Doesn't move unless there's a delay
-		let hairx = this.xHairline;
-		let hairy = this.yHairline;
-		setTimeout(() => {
-			$('.x.hairline').style.transform = `translate(${translateX}, 0px)`;
-			$('.y.hairline').style.transform = `translate(0px, ${hairTranslateY})`;
-		}, 1);
+		if (previewClip && previewClip.marker && marker == previewClip.marker) {
+			this.xValueLabel.style.transform = `translate(${translateX}, 0px)`;
+			this.yValueLabel.style.transform = `translate(0px, ${markerTranslateY})`; 
 
-		this.xValueLabel.innerHTML = `${Math.round(resonance * 100)}%`;
-		this.yValueLabel.innerHTML = `${Math.round(
-			this.pitchLowerBoundHz + pitch * this.pitchRange
-		)}Hz`;
+			// Doesn't move unless there's a delay
+			let hairx = this.xHairline;
+			let hairy = this.yHairline;
+			setTimeout(() => {
+				$('.x.hairline').style.transform = `translate(${translateX}, 0px)`;
+				$('.y.hairline').style.transform = `translate(0px, ${hairTranslateY})`;
+			}, 1);
 
-		this.yHairline.style.opacity = '1';
-		this.yValueLabel.style.opacity = '1';
-		this.xHairline.style.opacity = '1';
-		this.xValueLabel.style.opacity = '1';
+			this.xValueLabel.innerHTML = `${Math.round(resonance * 100)}%`;
+			this.yValueLabel.innerHTML = `${Math.round(
+				this.pitchLowerBoundHz + pitch * this.pitchRange
+			)}Hz`;
+
+			this.yHairline.style.opacity = '1';
+			this.yValueLabel.style.opacity = '1';
+			this.xHairline.style.opacity = '1';
+			this.xValueLabel.style.opacity = '1';
+		}
 	}
 
 	/*

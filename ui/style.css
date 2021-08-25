@@ -36,6 +36,7 @@ main > section {
 }
 
 button, input[type=submit] {
+	height: calc(var(--header-height) - 1rem);
 }
 input, textarea, progress[value], select {
   box-shadow: inset var(--box-shadow);
@@ -63,10 +64,9 @@ voice-graph-2d canvas {
 	border-radius: var(--border-radius);
 }
 
-
 textarea {
 	width: 100%;
-	height: 5em;
+	height: 8em;
 	font-family: sans-serif;
 	margin-top: 1em;
 	margin-bottom: 1em;

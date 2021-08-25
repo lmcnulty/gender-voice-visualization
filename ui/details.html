@@ -12,16 +12,12 @@
 	margin-bottom: .5em;
 	margin-top: .5em;
 	border-collapse: collapse;
+	margin: auto;
 }
 .details table td, .details table th {
-	border: 1px solid black;
+	border: 1px solid var(--chrome-border);
 	padding: .25em;
 	text-align: center;
-}
-.details button.download {
-	position: absolute;
-	top: .5em;
-	right: .5em;
 }
 
 .details .view {
@@ -33,7 +29,22 @@
 .details.has-selection .instructions{
 	display: none;	
 }
-
+.details .hbox h2 {
+	display: inline;
+	margin: 0px;
+}
+.details .hbox {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 1em;
+}
+.details label {
+	font-weight: bold;
+}
+.details .download {
+}
 </style>
 <section class="details"> 
 
@@ -41,8 +52,10 @@
 		When you select a clip/point from the graph it will be displayed here.
 	</div>
 	<div class='view'>
-		<h2>Transcript</h2>
-		<div id='preview-transcript'></div>
+		<div class="hbox">
+			<h2 id="preview-title"></h2>
+			<button class='download'>Download Clip</button>
+		</div>
 
 		<table>
 			<tr>
@@ -60,8 +73,11 @@
 				<td id='preview-stdev-pitch'>--</td>
 			</tr>
 		</table>
-
-		<button class='download'>Download Clip</button>
+		<br>
+		<div>
+			<label for="preview-transcript">Transcript</label>:
+			<span id='preview-transcript'></span>
+		</div>
 	</div>
 </section>
 <script>
@@ -69,6 +85,7 @@
 globalState.render(['previewClip'], current => {
 	if (current.previewClip) {
 		$('.details').classList.add('has-selection');
+		$('#preview-title').innerHTML = current.previewClip.title || '';
 		if (current.previewClip.meanPitch) {
 			$('#preview-mean-pitch').innerHTML = Math.round(current.previewClip.meanPitch) + 'Hz';
 		}

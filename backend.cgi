@@ -4,9 +4,11 @@ import os, sys, subprocess, shutil, csv, random, glob, mimetypes, json, re, stat
 import cgi, cgitb   # I like cgi because it was popular when I was born
 import magic
 
-def random_id():
-	return str(random.randint(0, 2**32))
+# Helpers
+clamp = lambda minimum, maximum, value : max(minimum, min(value, maximum))
+random_id = lambda: str(random.randint(0, 2**32))
 
+################## Form Handling ##################
 cgitb.enable()
 
 print("Content-type:text/plain\r\n\r\n")
@@ -20,7 +22,7 @@ filetype = magic.from_buffer(uploaded_file)
 id = random_id()
 os.mkdir('/rec/' + id)
 
-# Noise Removal
+################## Noise Removal ##################
 tmp_dir       = '/rec/' + id
 input_file    = tmp_dir + '/orig'
 format_file   = tmp_dir + '/format.wav'
@@ -60,7 +62,7 @@ subprocess.check_output(['sox', format_file, clean_file, 'noisered', noise_profi
 
 assert(os.path.exists(clean_file))
 
-# Forced Alignment
+################## Forced Alignment ##################
 corpus_dir = tmp_dir + '/corpus'
 output_dir = tmp_dir + '/output'
 os.mkdir(corpus_dir)
@@ -109,6 +111,7 @@ os.chdir(cwd)
 with open('stats.json') as f:
 	stats = json.loads(f.read())
 
+################## Phonetic Analysis ##################
 for recording, grid in zip(
 	glob.glob(corpus_dir + '/*.wav'), 
 	glob.glob(output_dir + '/*.TextGrid')
@@ -216,10 +219,38 @@ for recording, grid in zip(
 			for i in list(range(4))
 		]
 	
-	data['meanPitch'] = statistics.mean([
+
+
+	for i in range(len(data['phones'])):
+		currentPhone = data['phones'][i]
+		
+		isVowel = currentPhone['phoneme'] and len([
+			value for value in list(currentPhone['phoneme'])
+			if value in ["A", "E", "I", "O", "U", "Y"]
+		]) > 1
+
+		if ('F_stdevs' in currentPhone  and currentPhone['F_stdevs'][1] and
+			currentPhone['F_stdevs'][2] and currentPhone['F_stdevs'][3]
+		):
+			data['phones'][i]['resonance'] = clamp(0, 1, 
+				( (2/5) * currentPhone['F_stdevs'][1] 
+				+ (2/5) * currentPhone['F_stdevs'][2] 
+				+ (1/5) * currentPhone['F_stdevs'][3]) / 3 + .5
+			)
+	
+	pitch_sample = [
 		phone['F'][0] for phone in data['phones'] 
 		if phone.get('F') and phone['F'][0] and not phone.get('outlier')
-	])
+	]
+	data['meanPitch'] = statistics.mean(pitch_sample)
+	data['medianPitch'] = statistics.median(pitch_sample)
+
+	resonance_sample = [
+		phone['resonance'] for phone in data['phones'] 
+		if phone.get('resonance') and not phone.get('outlier')
+	]
+	data['meanResonance'] = statistics.mean(resonance_sample)
+	data['medianResonance'] = statistics.median(resonance_sample)
 
 	print(json.dumps(data))
 	
