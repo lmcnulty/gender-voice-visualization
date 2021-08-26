@@ -15,7 +15,6 @@
 			{% endfilter %}
 		</style>
 
-		<link href="style-smooth.css" rel="alternate stylesheet" type="text/css" title="Smooth">
 		<link href="data:text/css," rel="stylesheet" type="text/css" title="Null">
 
 		{% if dev %}
@@ -41,7 +40,7 @@
 			{% filter indent(width=12) %}
 				{% include 'player.html' %}
 			{% endfilter %}
-			<button class="new-clip">New Clip</button>
+			<button class="new-clip attention" title='Add new clip'>{% include 'plus-lg.svg' %}<span>Clip</span></button>
 			<div class="spinner hidden"></div>
 			<div class="loading-message">Adding clip...</div>
 			<script>

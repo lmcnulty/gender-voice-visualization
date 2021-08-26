@@ -35,6 +35,16 @@ header button, footer button {
 	line-height: 1rem;
 	min-width: 2rem;
 }
+button span {
+	display: inline-block;
+	vertical-align: bottom;
+}
+button svg + span {
+	margin-left: .25em;
+}
+button *{
+	height: 100%;
+}
 .spacer {
 	height: 1px;
 	width: 100%;
@@ -114,8 +124,11 @@ section > *:first-child {
 
 section > h2:first-child {
 	margin-top: 0px;
+	margin-bottom: 0px;
 }
-
+section > h2:first-child + p {
+	margin-top: 0px;
+}
 voice-graph-2d {
 	position: absolute;
 	top: 0px;
@@ -124,6 +137,19 @@ voice-graph-2d {
 }
 .hidden {
 	display: none;
+}
+
+.scrolling-text-box {
+	overflow-y: auto;
+	height: 6em;
+	border: 1px solid var(--chrome-border);
+	padding: 1em;
+}
+.scrolling-text-box *:first-child {
+	margin-top: 0px;
+}
+.scrolling-text-box *:last-child {
+	margin-bottom: 0px;
 }
 
 /*

@@ -5,7 +5,7 @@ from jinja2 import Template, Environment, FileSystemLoader
 
 cgitb.enable()
 
-loader = FileSystemLoader('./ui')
+loader = FileSystemLoader(['./ui', './resources'])
 env = Environment(loader=loader)
 template = env.get_template('base.html')
 rendered = template.render(dev=True) 

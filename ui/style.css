@@ -46,6 +46,9 @@ input, textarea, progress[value], select {
 button, input[type=submit] {
   position: relative;
 }
+h2 {
+	font-size: 100%;
+}
   
 .custom-widgets button:after, .custom-widgets input[type=submit]:after {
   content: ' ';
@@ -84,4 +87,18 @@ textarea {
 	background: var(--accent);
 	color: white;
 	color: var(--accent-text);
+}
+
+
+.scrolling-text-box {
+	background: var(--body-background);
+	color: var(--body-color);
+	border-radius: var(--border-radius);
+	box-shadow: inset var(--box-shadow);
+}
+
+.custom-widgets button.attention{
+	background: var(--accent);
+	color: var(--accent-text);
+	font-weight: bold;
 }

@@ -43,6 +43,10 @@ for (let e of ['div', 'span', 'img', 'canvas', 'svg', 'option']) {
 	}
 }
 
+function downloadFile(content, title) {
+	create('a', { download : title, href : content }).click();
+}
+
 class StateManager {
 
 	constructor() {
@@ -84,6 +88,9 @@ class StateManager {
 		this.update(key);
 	}
 
+	// This should be used for immutable access,
+    // but actually making a copy each time would probably be inefficient,
+	// so just be disciplined.
 	get(key) {
 		this.checkKey(key);
 		return this.state[key].value;

@@ -36,14 +36,14 @@ class VoiceGraph {
 			]),
 			
 			div({'class': 'overlay'}, [
-				this.xHairline = span(' ', {'class': 'x hairline'}),
-				this.yHairline = span(' ', {'class': 'y hairline'}),
+				this.xHairline = span(' ', {'class': 'x hairline hidden'}),
+				this.yHairline = span(' ', {'class': 'y hairline hidden'}),
 			], ' '),
 			
 			div('𝄞', {'class': 'treble clef'}),
 			div('𝄢', {'class': 'bass clef'}),
-			svg({'class': 'instrument flute'}, String(brightIcon)),
-			svg({ 'class': 'instrument tuba'}, String(darkIcon)),
+			div({'class': 'instrument flute'}, String(brightIcon)),
+			div({ 'class': 'instrument tuba'}, String(darkIcon)),
 
 			this.canvas = create('canvas', {
 				height: size, 
@@ -82,6 +82,7 @@ class VoiceGraph {
 		});
 
 		globalState.render(['clips'], current => {
+			let orphanedMarkers = $$('.marker');
 			for (let clip of current.clips) {
 				if (!clip.marker) {
 					clip.marker = this.addMarker(pitchPercent(clip.medianPitch) || .5, clip.medianResonance || .5, null, null);
@@ -97,8 +98,15 @@ class VoiceGraph {
 						for (let marker of $$('.marker')) this.update(marker);
 					});
 					this.update(clip.marker);
+				} else {
+					let index = orphanedMarkers.indexOf(clip.marker);
+					orphanedMarkers.splice(index, 1);
 				}
 			}
+			for (let marker of orphanedMarkers) {
+				marker.parentNode.removeChild(marker);
+			}
+
 		})
 
 
@@ -106,6 +114,14 @@ class VoiceGraph {
 			for (let marker of $$('.marker.preview')) marker.classList.remove('preview');
 			if (current.previewClip && current.previewClip.marker) {
 				current.previewClip.marker.classList.add('preview');
+			}
+			let hairlines = $$('voice-graph-2d > .overlay > .hairline');
+			for (let hairline of hairlines) {
+				if (current.previewClip) {
+					hairline.classList.remove('hidden');
+				} else {
+					hairline.classList.add('hidden');
+				}
 			}
 		})
 

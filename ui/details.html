@@ -32,23 +32,31 @@
 .details .hbox h2 {
 	display: inline;
 	margin: 0px;
+	margin-right: auto;
+}
+.details .hbox > * + * {
+	margin-left: .5em;
 }
 .details .hbox {
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
-	justify-content: space-between;
 	margin-bottom: 1em;
+	height: 2em;
 }
 .details label {
 	font-weight: bold;
-}
-.details .download {
 }
 td.highlight {
 	background: var(--accent);
 	color: white;
 	color: var(--accent-text);
+}
+.details details {
+	margin-top: .5em;
+}
+.details summary {
+	margin-bottom: .5em;
 }
 </style>
 <section class="details"> 
@@ -59,7 +67,10 @@ td.highlight {
 	<div class='view'>
 		<div class="hbox">
 			<h2 id="preview-title"></h2>
-			<button class='download'>Download Clip</button>
+			<span class='buttons'>
+				<button class='delete' title='Delete Clip'>{% include 'trash.svg' %}</button>
+				<button class='download' title='Download Clip'>{% include 'download.svg' %}</button>
+			</span>
 		</div>
 
 		<table>
@@ -87,6 +98,11 @@ td.highlight {
 			<label for="preview-transcript">Transcript</label>:
 			<span id='preview-transcript'></span>
 		</div>
+		<details>
+			<summary>Advanced</summary>
+
+			<button id='dl-json'>Download JSON</button>
+		</details>
 		<hr>
 		<div>
 			<small>* In many contexts, greater variation in pitch (standard deviation) is 
@@ -115,6 +131,32 @@ globalState.render(['previewClip'], current => {
 	} else {
 		$('.details').classList.remove('has-selection');
 	}
+})
+
+$('section.details button.download').addEventListener('click', evt => {
+	let previewClip = globalState.get('previewClip');
+	downloadFile(previewClip.audio, previewClip.title);
+});
+
+$('section.details button.delete').addEventListener('click', evt => {
+	let previewClip = globalState.get('previewClip');
+	globalState.mutate('clips', clips => {
+		let index = clips.indexOf(previewClip);
+		clips.splice(index, 1);
+	})
+	globalState.set('previewClip', null);
+});
+
+$('#dl-json').addEventListener('click', evt => {
+	let previewClip = globalState.get('previewClip');
+	let cloneClip = JSON.parse(JSON.stringify(previewClip));
+	delete cloneClip.marker;
+	downloadFile(
+		'data:text/json;charset=utf-8,' 
+		+ encodeURIComponent(JSON.stringify(cloneClip)), 
+
+		previewClip.title + '.json'
+	);
 })
 
 </script>

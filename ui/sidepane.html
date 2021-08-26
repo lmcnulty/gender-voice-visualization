@@ -30,17 +30,24 @@
 		box-shadow: inset var(--box-shadow);
 	}
 	.current-tab {
+		width: 100%;
 		overflow: auto;
 		height: calc(100% - 2em);
 		border: 1px solid var(--chrome-border);
 		border-bottom: 0px;
 		border-right: 0px;
 		padding: .5rem;
+		padding-top: 0px;
 		background: var(--chrome-background);
 		transition: .3s all;
+		position: absolute;
 	}
-	.wide-body .current-tab {
-		padding: 1rem 2rem 1rem 2rem;
+	.current-tab section {
+		min-height: 100%;
+	}
+	.current-tab > section > *:first-child {
+		height: 2em;
+		line-height: 2em;
 	}
 	.tab-set button:disabled {
 		border-top: 0px;
@@ -52,7 +59,7 @@
 	.narrow-body .current-tab.expanded {
 		transform: translate(0, -60%);
 		height: calc(200%);
-		z-index: 500;
+		z-index: calc(var(--voice-graph-z-index) + 3);
 	}
 	#expand-collapse-button.expanded {
 		transform: translate(0, -60%);
@@ -62,7 +69,12 @@
 	let tab = $('.current-tab');
 	tab.addEventListener('click', evt => {
 		let bb = tab.getBoundingClientRect();
-		if (evt.clientY - bb.top < 20 && document.activeElement != $('#theme-select')) {
+		if (
+			evt.clientY - bb.top < 20 && document.activeElement != $('#theme-select') &&
+			evt.clientX - bb.left > (bb.right - bb.left) / 4 &&
+			evt.clientX - bb.left < 3 * (bb.right - bb.left) / 4
+
+		) {
 			if (!tab.classList.contains('expanded')) {
 				tab.classList.add('expanded');
 			} else {

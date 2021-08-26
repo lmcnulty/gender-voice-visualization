@@ -17,6 +17,7 @@ class Clip {
 		this.id = null;
 		this.marker = null; // Element
 		this.transcript = null;
+		this.title = '';
 	}
 	loadAudioFile(file) {
 		let reader = new FileReader(file);	
@@ -55,3 +56,4 @@ class Clip {
 		}
 	}
 }
+

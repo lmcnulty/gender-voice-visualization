@@ -1,6 +1,9 @@
 
 <!-- ======================= Player ======================= -->
-<button class="play-pause iconic"></button>
+<button class="play-pause iconic" title='play/pause'>
+{% include 'play-fill.svg' %}
+{% include 'pause-fill.svg' %}
+</button>
 <progress class="player" value="0" min="0"></progress>
 <video class="clip"></video>
 <script>
@@ -73,11 +76,17 @@
 </script>
 <style>
 
-	button.play-pause:before {
-		content: '>';
+	button.play-pause svg {
+		display: none;
 	}
-	button.play-pause.playing:before {
-		content: '-';
+	button.play-pause svg:first-child {
+		display: inline-block;
+	}
+	button.play-pause.playing svg {
+		display: inline-block;
+	}
+	button.play-pause.playing svg:first-child {
+		display: none;
 	}
 	progress.player {
 		width: 100%;

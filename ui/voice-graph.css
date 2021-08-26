@@ -39,6 +39,13 @@ voice-graph-2d > .x-opposite.axis-labels {
 	right: var(--padding);
 }
 
+.current-value {
+	z-index: calc(var(--voice-graph-z-index) + 3);
+
+	text-shadow: var(--body-background) 0px 1px, var(--body-background) 0px -1px, var(--body-background) 1px 0px, var(--body-background) -1px 0px;
+}
+
+
 voice-graph-2d > .y-opposite.axis-labels {
 	top: var(--padding);
 	bottom: var(--padding);
@@ -101,6 +108,9 @@ voice-graph-2d > .overlay > .x.hairline {
 	top: 0px;
 	left: -1px;
 	transition: .1s all;
+}
+voice-graph-2d > .overlay > .hairline.hidden {
+	opacity: 0;
 }
 voice-graph-2d > .x-opposite.axis-labels > .current-value {
 	position: absolute;
@@ -178,7 +188,7 @@ voice-graph-2d .marker > .infobox {
 	position: absolute;
 	left: 0px;
 	width: var(--padding);
-	z-index: calc(var(--voice-graph-z-index) + 2);
+	/*z-index: calc(var(--voice-graph-z-index) + 2);*/
 	text-align: center;
 	transform-origin: center center;
 	transform: scale(2);
@@ -192,6 +202,9 @@ voice-graph-2d .marker > .infobox {
 	position: absolute;
 	bottom: calc(var(--padding) * .1);
 	height: calc(var(--padding) * .8);
+}
+.instrument svg {
+	height: 100%;
 }
 .instrument.flute {
 	right: var(--padding);
