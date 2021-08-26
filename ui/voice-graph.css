@@ -139,6 +139,7 @@ voice-graph-2d .marker > .infobox {
 	width: 18ch;
 	left: calc(0.5em - 9ch);
 	top: calc(-1 * var(--padding));
+	pointer-events: none;
 }
 .ratings-bar {
 	box-sizing: border-box;

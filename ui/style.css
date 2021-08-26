@@ -13,6 +13,7 @@ button:hover:disabled {
 	opacity: .5;
 }
 
+
 .custom-widgets button, .custom-widgets  input[type=submit] {
 	padding-top: 0px;
 	padding-bottom: 0px;
@@ -82,4 +83,5 @@ textarea {
 .custom-widgets ::selection {
 	background: var(--accent);
 	color: white;
+	color: var(--accent-text);
 }

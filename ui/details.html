@@ -45,6 +45,11 @@
 }
 .details .download {
 }
+td.highlight {
+	background: var(--accent);
+	color: white;
+	color: var(--accent-text);
+}
 </style>
 <section class="details"> 
 
@@ -60,23 +65,33 @@
 		<table>
 			<tr>
 				<th></th>
-				<th>Min</th>
 				<th>Mean</th>
-				<th>Max</th>
+				<th>Median</th>
 				<th>St. dev.</th>
 			</tr>
 			<tr>
 				<th>Pitch</th>
-				<td id='preview-min-pitch'>--</td>
 				<td id='preview-mean-pitch'>--</td>
-				<td id='preview-max-pitch'>--</td>
-				<td id='preview-stdev-pitch'>--</td>
+				<td id='preview-median-pitch'>--</td>
+				<td class='highlight'><span id='preview-stdev-pitch'></span>*</td>
+			</tr>
+			<tr>
+				<th>Resonance</th>
+				<td id='preview-mean-resonance'>--</td>
+				<td id='preview-median-resonance'>--</td>
+				<td id='preview-stdev-resonance'>--</td>
 			</tr>
 		</table>
 		<br>
 		<div>
 			<label for="preview-transcript">Transcript</label>:
 			<span id='preview-transcript'></span>
+		</div>
+		<hr>
+		<div>
+			<small>* In many contexts, greater variation in pitch (standard deviation) is 
+			associated with women's speech, whereas monotone is associated with men's speech.
+			</small>
 		</div>
 	</div>
 </section>
@@ -88,6 +103,11 @@ globalState.render(['previewClip'], current => {
 		$('#preview-title').innerHTML = current.previewClip.title || '';
 		if (current.previewClip.meanPitch) {
 			$('#preview-mean-pitch').innerHTML = Math.round(current.previewClip.meanPitch) + 'Hz';
+			$('#preview-mean-resonance').innerHTML = Math.round(current.previewClip.meanResonance * 100) + '%';
+			$('#preview-stdev-pitch').innerHTML = Math.round(current.previewClip.stdevPitch) + 'Hz';
+			$('#preview-stdev-resonance').innerHTML = Math.round(current.previewClip.stdevResonance * 100) + '%';
+			$('#preview-median-pitch').innerHTML = Math.round(current.previewClip.medianPitch) + 'Hz';
+			$('#preview-median-resonance').innerHTML = Math.round(current.previewClip.medianResonance * 100) + '%';
 		}
 		if (current.previewClip.transcript) {
 			$('#preview-transcript').innerHTML = current.previewClip.transcript;

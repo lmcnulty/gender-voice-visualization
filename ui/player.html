@@ -4,73 +4,72 @@
 <progress class="player" value="0" min="0"></progress>
 <video class="clip"></video>
 <script>
-	(() => {
-		let mediaElement = $('video.clip');
-		let playPauseButton = $('button.play-pause');
-		let progressBar = $('progress.player');
+(() => {
+	let mediaElement = $('video.clip');
+	let playPauseButton = $('button.play-pause');
+	let progressBar = $('progress.player');
 
 
-		globalState.render(['playingClip'], current => {
-			if (current.playingClip && current.playingClip.audio) {
-				mediaElement.src = current.playingClip.audio;
-				mediaElement.addEventListener('loadedmetadata', evt => {
-					progressBar.setAttribute('max', mediaElement.duration);
-					progressBar.setAttribute('value', 0);
-				});
-			}
-		})
+	globalState.render(['playingClip'], current => {
+		if (current.playingClip && current.playingClip.audio) {
+			mediaElement.src = current.playingClip.audio;
+			mediaElement.addEventListener('loadedmetadata', evt => {
+				progressBar.setAttribute('max', mediaElement.duration);
+				progressBar.setAttribute('value', 0);
+			});
+		}
+	})
 
-		playPauseButton.addEventListener('click', evt => {
-			if (mediaElement.paused || mediaElement.ended) {
-				mediaElement.play();
-				playPauseButton.classList.add('playing') ;
-			} else {
-				mediaElement.pause();
-				playPauseButton.classList.remove('playing') ;
-			}
-		});
+	playPauseButton.addEventListener('click', evt => {
+		if (mediaElement.paused || mediaElement.ended) {
+			mediaElement.play();
+			playPauseButton.classList.add('playing') ;
+		} else {
+			mediaElement.pause();
+			playPauseButton.classList.remove('playing') ;
+		}
+	});
 
-		mediaElement.addEventListener('timeupdate', evt => {
-			progressBar.setAttribute('value', mediaElement.currentTime);
-			if (mediaElement.currentTime >= progressBar.max) {
-				playPauseButton.classList.remove('playing');
-			}
-		})
+	mediaElement.addEventListener('timeupdate', evt => {
+		progressBar.setAttribute('value', mediaElement.currentTime);
+		if (mediaElement.currentTime >= progressBar.max) {
+			playPauseButton.classList.remove('playing');
+		}
+	})
 
-		progressBar.addEventListener('click', evt => {
-			let pos = (evt.pageX  - progressBar.offsetLeft) / progressBar.offsetWidth;
+	progressBar.addEventListener('click', evt => {
+		let pos = (evt.pageX  - progressBar.offsetLeft) / progressBar.offsetWidth;
+		globalState.set('playbackTime', pos * mediaElement.duration);
+	})
+	let dragInProgress = false;
+	progressBar.addEventListener('mousedown', evt => dragInProgress = true);
+	progressBar.addEventListener('mouseup', evt => dragInProgress = false);
+	progressBar.addEventListener('mousemove', evt => {
+		if (dragInProgress) {
+			let pos =  (evt.pageX  - progressBar.offsetLeft) 
+			          / progressBar.offsetWidth;
 			globalState.set('playbackTime', pos * mediaElement.duration);
-		})
-		let dragInProgress = false;
-		progressBar.addEventListener('mousedown', evt => dragInProgress = true);
-		progressBar.addEventListener('mouseup', evt => dragInProgress = false);
-		progressBar.addEventListener('mousemove', evt => {
-			if (dragInProgress) {
-				let pos = (evt.pageX  - progressBar.offsetLeft) / progressBar.offsetWidth;
-				globalState.set('playbackTime', pos * mediaElement.duration);
-			}
-		})
+		}
+	})
 
-		globalState.render(['playbackTime'], current => {
-			if (current.playbackTime && 
-				current.playbackTime != mediaElement.currentTime
-			) {
-				mediaElement.currentTime = current.playbackTime;
-			}
-		});
+	globalState.render(['playbackTime'], current => {
+		if (current.playbackTime && 
+			current.playbackTime != mediaElement.currentTime
+		) {
+			mediaElement.currentTime = current.playbackTime;
+		}
+	});
 
-		let updateTime = () => {
-			let playbackTime = globalState.get('playbackTime');
-			if (playbackTime != mediaElement.currentTime) {
-				globalState.set(
-					'playbackTime', mediaElement.currentTime
-				);
-			}
-			window.requestAnimationFrame(updateTime);
+	let updateTime = () => {
+		let playbackTime = globalState.get('playbackTime');
+		if (playbackTime != mediaElement.currentTime) {
+			globalState.set('playbackTime', mediaElement.currentTime);
 		}
 		window.requestAnimationFrame(updateTime);
+	}
+	window.requestAnimationFrame(updateTime);
 
-	})();
+})();
 </script>
 <style>
 

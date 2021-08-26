@@ -129,8 +129,8 @@ class VoiceGraph {
 			let currentPhone = playingClip.indexedPhones[timeIndex];
 
 			playingClip.marker.querySelector('.infobox').innerHTML = currentPhone.phoneme;
-
-			if (current.playbackTime == 0 || current.playbackTime == last(playingClip.phones).time ) {
+			
+			if (current.playbackTime == 0 || Math.abs(current.playbackTime - last(playingClip.phones).time) < 1 ) {
 				playingClip.marker.setAttribute('data-pitch', pitchPercent(playingClip.medianPitch) || .5);
 				playingClip.marker.setAttribute('data-resonance', playingClip.medianResonance || .5);
 			} else {
@@ -147,9 +147,9 @@ class VoiceGraph {
 					}
 					if (currentPhone.F_stdevs && isVowel) {
 						playingClip.marker.setAttribute('data-resonance', clamp(0, 1, 
-							(((2/5) * currentPhone.F_stdevs[1] 
-							+ (2/5) * currentPhone.F_stdevs[2] 
-							+ (1/5) * currentPhone.F_stdevs[3]) + 2) / 4
+							((0.7321428571428571 * currentPhone.F_stdevs[1] 
+							+ 0.26785714285714285 * currentPhone.F_stdevs[2] 
+							/*+ 0 * currentPhone.F_stdevs[3]*/) + 2) / 4
 						));
 					}
 				}

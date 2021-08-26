@@ -32,9 +32,11 @@ class Clip {
 	loadResponse(data) {
 		this.phones = data.phones;
 		this.meanPitch = data.meanPitch;
-		this.medianPitch = data.medianPitch;
 		this.meanResonance = data.meanResonance;
+		this.medianPitch = data.medianPitch;
 		this.medianResonance = data.medianResonance;
+		this.stdevPitch = data.stdevPitch;
+		this.stdevResonance = data.stdevResonance;
 
 		this.indexedPhones = Array(Math.ceil(last(this.phones).time * 100));
 		for (let phone of data.phones) {
