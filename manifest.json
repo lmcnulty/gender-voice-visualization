@@ -1,0 +1,17 @@
+ {
+  "short_name": "Genderspace",
+  "name": "Acoustic Genderspace",
+  "description": "An application for vocal gender visualization and training",
+  "icons": [
+    {
+      "src": "resources/logo.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "./?utm_source=web_app_manifest",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#ffffff",
+  "background_color": "#45acf4"
+}

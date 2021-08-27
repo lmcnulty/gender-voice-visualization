@@ -4,7 +4,7 @@
 	<head>
 		<meta charset='utf-8'/>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>Gender Voice Analyzer Research Trial</title>
+		<title>Acoustic Genderspace Viewer - Research Trial</title>
 		<style>
 			{% filter indent(width=12) %}
 				{% include 'variables.css' %}
@@ -14,8 +14,9 @@
 				{% include 'spinner.css' %}
 			{% endfilter %}
 		</style>
-
+		<link rel="shortcut icon" href="./resources/logo.png">
 		<link href="data:text/css," rel="stylesheet" type="text/css" title="Null">
+		<link rel="manifest" href="./manifest.json">
 
 		{% if dev %}
 			<script src="./ui/dom.js"></script>
