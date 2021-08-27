@@ -1,8 +1,14 @@
-
+<style>
+	.settings > label:first-child {
+		font-weight: bold;
+	}
+	#theme-select {
+		width: 100%;
+	}
+</style>
 <section class="settings">
-
-	<br>
 	<label for="theme-select">Theme</label>
+	<br>
 	<select id="theme-select" onchange="eval(this.value)">
 		<option value="whiteLight()">White Light</option>
 		<option value="simpleDark()">Deep Dark</option>

@@ -58,6 +58,17 @@ td.highlight {
 .details summary {
 	margin-bottom: .5em;
 }
+#delete-confirm.hidden {
+	display: inline-block;
+	overflow: hidden;
+	opacity: 0;
+	width: 1ch;
+	height: 1ch;
+	visibility: hidden;
+}
+#delete-confirm {
+	transition: .3s all;
+}
 </style>
 <section class="details"> 
 
@@ -68,6 +79,7 @@ td.highlight {
 		<div class="hbox">
 			<h2 id="preview-title"></h2>
 			<span class='buttons'>
+				<span id='delete-confirm' class='hidden'>Press again to delete</span>
 				<button class='delete' title='Delete Clip'>{% include 'trash.svg' %}</button>
 				<button class='download' title='Download Clip'>{% include 'download.svg' %}</button>
 			</span>
@@ -138,13 +150,22 @@ $('section.details button.download').addEventListener('click', evt => {
 	downloadFile(previewClip.audio, previewClip.title);
 });
 
+let lastDeletePress = 0;
 $('section.details button.delete').addEventListener('click', evt => {
-	let previewClip = globalState.get('previewClip');
-	globalState.mutate('clips', clips => {
-		let index = clips.indexOf(previewClip);
-		clips.splice(index, 1);
-	})
-	globalState.set('previewClip', null);
+	if (Date.now() - lastDeletePress > 4000) {
+		$('#delete-confirm').classList.remove('hidden');
+		lastDeletePress = Date.now();
+		window.setTimeout(() => {
+			$('#delete-confirm').classList.add('hidden');
+		}, 4000)
+	} else {
+		let previewClip = globalState.get('previewClip');
+		globalState.mutate('clips', clips => {
+			let index = clips.indexOf(previewClip);
+			clips.splice(index, 1);
+		})
+		globalState.set('previewClip', null);
+	}
 });
 
 $('#dl-json').addEventListener('click', evt => {

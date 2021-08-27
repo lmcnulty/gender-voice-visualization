@@ -82,7 +82,7 @@ class VoiceGraph {
 		});
 
 		globalState.render(['clips'], current => {
-			let orphanedMarkers = $$('.marker');
+			let orphanedMarkers = Array.from($$('.marker'));
 			for (let clip of current.clips) {
 				if (!clip.marker) {
 					clip.marker = this.addMarker(pitchPercent(clip.medianPitch) || .5, clip.medianResonance || .5, null, null);
@@ -111,7 +111,10 @@ class VoiceGraph {
 
 
 		globalState.render(['previewClip'], current => {
-			for (let marker of $$('.marker.preview')) marker.classList.remove('preview');
+			for (let marker of $$('.marker')) {
+				marker.classList.remove('preview');
+				this.update(marker);
+			}
 			if (current.previewClip && current.previewClip.marker) {
 				current.previewClip.marker.classList.add('preview');
 			}
@@ -186,7 +189,7 @@ class VoiceGraph {
 	addMarker(pitch, resonance, label, ratings) {
 		let newMarker;
 		this.element.querySelector('.overlay').appendChild(
-			 newMarker = span(label || ' ', {
+			 newMarker = button(label || ' ', {
 				'class': 'marker', 
 				'data-pitch': pitch,
 				'data-resonance': resonance,

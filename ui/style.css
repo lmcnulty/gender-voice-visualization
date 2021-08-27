@@ -6,6 +6,9 @@ button:hover, input:hover, select:hover, textArea:hover {
 button:active {
 	opacity: .5;
 }
+*:focus {
+	box-shadow: 0px 0px 2px 2px var(--accent) !important;
+}
 button:hover:disabled {
 	opacity: .5;
 }
@@ -79,8 +82,12 @@ textarea {
 .modal {
 	border: 1px solid;
 	padding: 1em;
+	padding-bottom: 0em;
 	border-radius: var(--border-radius);
 	box-shadow: var(--box-shadow);
+}
+.modal section {
+	padding-bottom: 2em;
 }
 
 .custom-widgets ::selection {

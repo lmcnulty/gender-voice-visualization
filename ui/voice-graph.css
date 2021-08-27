@@ -74,8 +74,8 @@ voice-graph-2d > .overlay {
 }
 
 voice-graph-2d > .overlay > .marker {
-	height: 1em;
-	width: 1em;
+	height: 1.5em;
+	width: 1.5em;
 	border-radius: 50%;
 	background: black;
 	border: .1em solid white;
@@ -85,8 +85,15 @@ voice-graph-2d > .overlay > .marker {
 	text-align: center;
 	line-height: 1em;
 	/*transition: all .1s;*/
-	top: calc(-.5em - 2px);
-	left: calc(-.5em - 2px);
+	top: calc(-.75em);
+	left: calc(-.75em);
+}
+.marker:hover {
+	opacity: 1;
+}
+.custom-widgets button.marker:after {
+	box-shadow: 0px;
+	display: none;
 }
 
 /*voice-graph-2d > .overlay > .marker:hover {*/
@@ -150,6 +157,7 @@ voice-graph-2d .marker > .infobox {
 	left: calc(0.5em - 9ch);
 	top: calc(-1 * var(--padding));
 	pointer-events: none;
+	text-shadow: rgba(0,0,0,.5) 1px 1px, rgba(0,0,0,.5) -1px -1px, rgba(0,0,0,.5) 1px -1px, rgba(0,0,0,.5) -1px 1px;
 }
 .ratings-bar {
 	box-sizing: border-box;

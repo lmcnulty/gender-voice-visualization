@@ -14,4 +14,6 @@ $('button.details').click();
 
 fetch('./resources/high-dark.json').then(response => response.json()).then(clip => {
 	globalState.mutate('clips', clips => clips.push(clip));
+	globalState.set('playingClip', clip);
+	globalState.set('previewClip', clip);
 });

@@ -72,6 +72,9 @@ input, select {
 	max-width: 100%;
 }
 
+audio {
+	width: 100%;
+}
 
 #offscreen {
 	display: none;
@@ -157,3 +160,4 @@ input, button, select, textarea {
 	font-size: inherit;
 }
 */
+

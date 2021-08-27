@@ -36,7 +36,7 @@ function create(elementType) {
 	}
 	return newElement;
 }
-for (let e of ['div', 'span', 'img', 'canvas', 'svg', 'option']) {
+for (let e of ['div', 'span', 'img', 'canvas', 'svg', 'option', 'button']) {
 	window[e] = function() {
 		let args = [e].concat(Array.from(arguments));
 		return create.apply(null, args);

@@ -3,14 +3,16 @@
 	<style>
 		#record-voice + label + div, #upload-file + label + div {
 			margin-left: 1em;
-			padding: 1em;
-			padding-bottom: 0px;
+			padding: .5em;
 		}
 		#script-select {	
 			max-width: calc(100% - 6ch);
 		}
 		#title-input {
 			max-width: calc(100% - 16ch);
+		}
+		section.new-clip .new-clip {
+			margin-bottom: 1em;
 		}
 		.new-clip .hbox {
 			display: flex;
@@ -29,6 +31,11 @@
 		}
 		.new-clip h2 {
 			margin-top: 0px;
+		}
+		.new-clip #submit {
+			float: right;
+		}
+		#upload-file + label + div, #record-voice + label + div {
 		}
 		/* Show upload/recording elements only when that option is selected. */
 		#record-voice          + label + div { display: none; }
@@ -74,20 +81,84 @@
 	<input type="radio" name="add-recording" id="upload-file" checked>
 	<label for="upload-file">Upload a file</label>
 	<div>
-		<input type='file' id='audio-file-input' name='recording'/>
+		<input type='file' id='audio-file-input' name='recording' accept="audio/*"/>
 	</div>
 	<br>
 	<input type="radio" name="add-recording" id="record-voice">
 	<label for="record-voice">Record your voice</label>
 	<div>
-		<button id="start-recording">Start Recording</button>
-		<button id="stop-recording">Stop Recording</button>
+		<button id="start-recording">⏺︎ Start</button>
+		<button id="stop-recording">⏹︎ Stop</button>
+		Recorded <span id="recording-count">0</span> seconds
+		<br>
+		<br>
+		<audio controls id="recording-preview"></audio>
 	</div>
-	<br>
-	<br>
 	<!-- Submit -->
-	<button id="submit" onclick="submitAudio()">Add Clip</button>
+	<button id="submit" class='attention' onclick="submitAudio()">Add Clip</button>
 	<script>
+
+		// record from their microphone in-browser,
+		let mediaRecorder = null;
+		let audioChunks = [];
+		let recordedAudio = null;
+		function recordAudio() {
+			let stopButton = document.querySelector("#stop-recording");
+			let startButton = document.querySelector("#start-recording");
+
+			const startRecording = () => {
+				$('#recording-count').innerHTML = '0';
+				let recordingInterval = setInterval(() => {
+					$('#recording-count').innerHTML = Number($('#recording-count').innerHTML) + 1;
+				}, 1000);
+
+				mediaRecorder.addEventListener("stop", () => {
+					clearInterval(recordingInterval);
+				});
+				console.log('recording');
+				stopButton.disabled = false;
+				startButton.disabled = true;
+				audioChunks = [];
+				mediaRecorder.start();
+				mediaRecorder.addEventListener("dataavailable", event => {
+					audioChunks.push(event.data);
+				});
+			}
+
+			if (mediaRecorder) { startRecording(); } else {
+				navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+					
+					mediaRecorder = new MediaRecorder(stream);
+					
+					mediaRecorder.addEventListener("stop", () => {
+						stopButton.disabled = true;
+						startButton.disabled = false;
+						const audioBlob = new Blob(audioChunks);
+						recordedAudio = audioBlob;
+
+						let reader = new FileReader(recordedAudio);	
+						reader.readAsDataURL(recordedAudio);
+						reader.addEventListener("load", () => {
+							$('#recording-preview').src = reader.result.replace(
+								/data:.*;base64/, "data:audio/wav;base64"
+							);
+							$('#recording-preview').load();
+						});
+					});
+					stopButton.addEventListener("click", () => {mediaRecorder.stop();}, false);
+					startRecording();
+				}).catch(() => {
+					alert("Sorry, something went wrong." 
+						+ "Your device's browser may not be able to record audio."
+						+ "Try uploading a file instead."
+					);
+				});
+			}
+		}
+		$('#start-recording').addEventListener('click', evt => {
+			recordAudio();
+
+		});
 
 		function submitAudio() {
 
@@ -109,7 +180,8 @@
 				clip.loadAudioFile(recording);
 
 			} else if ($('#record-voice').checked) {
-				//TODO: Handle recording
+				formData.append('recording', recordedAudio);
+				clip.loadAudioFile(recordedAudio);
 			} else {
 				alert('Please upload a file or make a recording.');
 				return;
@@ -140,8 +212,10 @@
 				globalState.set('playingClip', clip);
 				globalState.set('previewClip', clip);
 
-			})
-			// .catch(() => alert('The server returned an error code'));
+			}).catch(() => alert(`
+				Sorry, we weren't able to process your recording.
+				Make sure to speak clearly and ensure that your transcript matches the audio.
+			`.replace(/[\n\t ]*/, ' ')));
 		}
 	</script>
 </section>

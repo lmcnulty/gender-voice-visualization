@@ -1,11 +1,20 @@
 
 <div class="current-tab"></div>
 <div class="tab-set">
+	<button class="details hbox iconic">{% include 'info-circle.svg' %} <span>Details</span></button>
+	<button class="help iconic hbox">{% include 'question-circle.svg' %} <span>Help</span></button>
 	<button class="settings iconic">⚙ Settings</button>
-	<button class="help iconic">(?) Help</button>
-	<button class="details">... Details</button>
 </div>
 <style>
+
+		button.hbox {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+		.tab-set button.hbox span {
+			line-height: 2.5em;
+		}
 	.tab-set {
 		position: absolute;
 		bottom: 0px;
@@ -39,7 +48,7 @@
 		padding: .5rem;
 		padding-top: 0px;
 		background: var(--chrome-background);
-		transition: .3s all;
+		transition: .3s transform;
 		position: absolute;
 	}
 	.current-tab section {

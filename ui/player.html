@@ -12,18 +12,47 @@
 	let playPauseButton = $('button.play-pause');
 	let progressBar = $('progress.player');
 
+	document.body.addEventListener('keyup', evt => {
+		console.log(document.activeElement.tagName);
+		if (['INPUT', 'TEXTAREA', 'BUTTON', 'SUMMARY'].filter(
+			tag => tag == document.activeElement.tagName
+		).length > 0) {
+			return;
+		}
+		if (evt.code == 'ArrowRight') {
+			globalState.set('playbackTime', Math.min(globalState.get('playbackTime') + 1, mediaElement.duration));
+		}
+		if (evt.code == 'ArrowLeft') {
+			globalState.set('playbackTime', Math.max(globalState.get('playbackTime') - 1, 0));
+		}
+		if (evt.code == 'Space' && document.activeElement != playPauseButton) {
+			togglePlayPause();
+		}
+	});
+
+	function updateDuration(evt) {
+		console.log('duration', mediaElement.duration);
+		if (this.duration == Infinity) {
+			mediaElement.load();
+			progressBar.setAttribute('max', 60);
+		} else {
+			playPauseButton.disabled = false;
+			progressBar.setAttribute('max', mediaElement.duration);
+		};
+	}
 
 	globalState.render(['playingClip'], current => {
+		playPauseButton.disabled = true;
+		progressBar.setAttribute('max', 60);
 		if (current.playingClip && current.playingClip.audio) {
+			mediaElement.addEventListener('loadedmetadata', updateDuration);
+			mediaElement.addEventListener('durationchange', updateDuration);
 			mediaElement.src = current.playingClip.audio;
-			mediaElement.addEventListener('loadedmetadata', evt => {
-				progressBar.setAttribute('max', mediaElement.duration);
-				progressBar.setAttribute('value', 0);
-			});
+			globalState.set('playbackTime', 0);
 		}
 	})
 
-	playPauseButton.addEventListener('click', evt => {
+	function togglePlayPause() {
 		if (mediaElement.paused || mediaElement.ended) {
 			mediaElement.play();
 			playPauseButton.classList.add('playing') ;
@@ -31,13 +60,12 @@
 			mediaElement.pause();
 			playPauseButton.classList.remove('playing') ;
 		}
+	}
+	playPauseButton.addEventListener('click', evt => {
+		togglePlayPause();
 	});
 
 	mediaElement.addEventListener('timeupdate', evt => {
-		progressBar.setAttribute('value', mediaElement.currentTime);
-		if (mediaElement.currentTime >= progressBar.max) {
-			playPauseButton.classList.remove('playing');
-		}
 	})
 
 	progressBar.addEventListener('click', evt => {
@@ -60,6 +88,11 @@
 			current.playbackTime != mediaElement.currentTime
 		) {
 			mediaElement.currentTime = current.playbackTime;
+		}
+
+		progressBar.setAttribute('value', current.playbackTime);
+		if (current.playbackTime >= progressBar.max) {
+			playPauseButton.classList.remove('playing');
 		}
 	});
 
