@@ -28,6 +28,7 @@ Git repository: <INSERT REPOSITORY LINK>
             	--input-color: inherit;
             	
             	--accent: purple;
+            	--accent-text: white;
 
             	--border-radius: .2em;
 
@@ -87,6 +88,16 @@ Git repository: <INSERT REPOSITORY LINK>
             	line-height: 1rem;
             	min-width: 2rem;
             }
+            button span {
+            	display: inline-block;
+            	vertical-align: bottom;
+            }
+            button svg + span {
+            	margin-left: .25em;
+            }
+            button *{
+            	height: 100%;
+            }
             .spacer {
             	height: 1px;
             	width: 100%;
@@ -114,6 +125,9 @@ Git repository: <INSERT REPOSITORY LINK>
             	max-width: 100%;
             }
 
+            audio {
+            	width: 100%;
+            }
 
             #offscreen {
             	display: none;
@@ -166,8 +180,11 @@ Git repository: <INSERT REPOSITORY LINK>
 
             section > h2:first-child {
             	margin-top: 0px;
+            	margin-bottom: 0px;
             }
-
+            section > h2:first-child + p {
+            	margin-top: 0px;
+            }
             voice-graph-2d {
             	position: absolute;
             	top: 0px;
@@ -178,11 +195,25 @@ Git repository: <INSERT REPOSITORY LINK>
             	display: none;
             }
 
+            .scrolling-text-box {
+            	overflow-y: auto;
+            	height: 6em;
+            	border: 1px solid var(--chrome-border);
+            	padding: 1em;
+            }
+            .scrolling-text-box *:first-child {
+            	margin-top: 0px;
+            }
+            .scrolling-text-box *:last-child {
+            	margin-bottom: 0px;
+            }
+
             /*
             input, button, select, textarea {
             	font-size: inherit;
             }
             */
+
             				
             /* ======================= Style ======================= */
             button:hover, input:hover, select:hover, textArea:hover {
@@ -191,12 +222,16 @@ Git repository: <INSERT REPOSITORY LINK>
             button:active {
             	opacity: .5;
             }
+            *:focus {
+            	box-shadow: 0px 0px 2px 2px var(--accent) !important;
+            }
             button:hover:disabled {
             	opacity: .5;
             }
             *:disabled {
             	opacity: .5;
             }
+
 
             .custom-widgets button, .custom-widgets  input[type=submit] {
             	padding-top: 0px;
@@ -230,6 +265,9 @@ Git repository: <INSERT REPOSITORY LINK>
             button, input[type=submit] {
               position: relative;
             }
+            h2 {
+            	font-size: 100%;
+            }
               
             .custom-widgets button:after, .custom-widgets input[type=submit]:after {
               content: ' ';
@@ -260,13 +298,32 @@ Git repository: <INSERT REPOSITORY LINK>
             .modal {
             	border: 1px solid;
             	padding: 1em;
+            	padding-bottom: 0em;
             	border-radius: var(--border-radius);
             	box-shadow: var(--box-shadow);
+            }
+            .modal section {
+            	padding-bottom: 2em;
             }
 
             .custom-widgets ::selection {
             	background: var(--accent);
             	color: white;
+            	color: var(--accent-text);
+            }
+
+
+            .scrolling-text-box {
+            	background: var(--body-background);
+            	color: var(--body-color);
+            	border-radius: var(--border-radius);
+            	box-shadow: inset var(--box-shadow);
+            }
+
+            .custom-widgets button.attention{
+            	background: var(--accent);
+            	color: var(--accent-text);
+            	font-weight: bold;
             }
             				
             /* Voice Graph */
@@ -309,6 +366,13 @@ Git repository: <INSERT REPOSITORY LINK>
             	right: var(--padding);
             }
 
+            .current-value {
+            	z-index: calc(var(--voice-graph-z-index) + 3);
+
+            	text-shadow: var(--body-background) 0px 1px, var(--body-background) 0px -1px, var(--body-background) 1px 0px, var(--body-background) -1px 0px;
+            }
+
+
             voice-graph-2d > .y-opposite.axis-labels {
             	top: var(--padding);
             	bottom: var(--padding);
@@ -337,8 +401,8 @@ Git repository: <INSERT REPOSITORY LINK>
             }
 
             voice-graph-2d > .overlay > .marker {
-            	height: 1em;
-            	width: 1em;
+            	height: 1.5em;
+            	width: 1.5em;
             	border-radius: 50%;
             	background: black;
             	border: .1em solid white;
@@ -348,8 +412,15 @@ Git repository: <INSERT REPOSITORY LINK>
             	text-align: center;
             	line-height: 1em;
             	/*transition: all .1s;*/
-            	top: calc(-.5em - 2px);
-            	left: calc(-.5em - 2px);
+            	top: calc(-.75em);
+            	left: calc(-.75em);
+            }
+            .marker:hover {
+            	opacity: 1;
+            }
+            .custom-widgets button.marker:after {
+            	box-shadow: 0px;
+            	display: none;
             }
 
             /*voice-graph-2d > .overlay > .marker:hover {*/
@@ -371,6 +442,9 @@ Git repository: <INSERT REPOSITORY LINK>
             	top: 0px;
             	left: -1px;
             	transition: .1s all;
+            }
+            voice-graph-2d > .overlay > .hairline.hidden {
+            	opacity: 0;
             }
             voice-graph-2d > .x-opposite.axis-labels > .current-value {
             	position: absolute;
@@ -409,6 +483,8 @@ Git repository: <INSERT REPOSITORY LINK>
             	width: 18ch;
             	left: calc(0.5em - 9ch);
             	top: calc(-1 * var(--padding));
+            	pointer-events: none;
+            	text-shadow: rgba(0,0,0,.5) 1px 1px, rgba(0,0,0,.5) -1px -1px, rgba(0,0,0,.5) 1px -1px, rgba(0,0,0,.5) -1px 1px;
             }
             .ratings-bar {
             	box-sizing: border-box;
@@ -447,7 +523,7 @@ Git repository: <INSERT REPOSITORY LINK>
             	position: absolute;
             	left: 0px;
             	width: var(--padding);
-            	z-index: calc(var(--voice-graph-z-index) + 2);
+            	/*z-index: calc(var(--voice-graph-z-index) + 2);*/
             	text-align: center;
             	transform-origin: center center;
             	transform: scale(2);
@@ -461,6 +537,9 @@ Git repository: <INSERT REPOSITORY LINK>
             	position: absolute;
             	bottom: calc(var(--padding) * .1);
             	height: calc(var(--padding) * .8);
+            }
+            .instrument svg {
+            	height: 100%;
             }
             .instrument.flute {
             	right: var(--padding);
@@ -526,7 +605,6 @@ Git repository: <INSERT REPOSITORY LINK>
             			
 		</style>
 
-		<link href="style-smooth.css" rel="alternate stylesheet" type="text/css" title="Smooth">
 		<link href="data:text/css," rel="stylesheet" type="text/css" title="Null">
 
 		
@@ -542,85 +620,130 @@ Git repository: <INSERT REPOSITORY LINK>
 			
             				
             <!-- ======================= Player ======================= -->
-            <button class="play-pause iconic"></button>
+            <button class="play-pause iconic" title='play/pause'>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
+              <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pause-fill" viewBox="0 0 16 16">
+              <path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z"/>
+            </svg>
+            </button>
             <progress class="player" value="0" min="0"></progress>
             <video class="clip"></video>
             <script>
-            	(() => {
-            		let mediaElement = $('video.clip');
-            		let playPauseButton = $('button.play-pause');
-            		let progressBar = $('progress.player');
+            (() => {
+            	let mediaElement = $('video.clip');
+            	let playPauseButton = $('button.play-pause');
+            	let progressBar = $('progress.player');
 
+            	document.body.addEventListener('keyup', evt => {
+            		console.log(document.activeElement.tagName);
+            		if (['INPUT', 'TEXTAREA', 'BUTTON', 'SUMMARY'].filter(
+            			tag => tag == document.activeElement.tagName
+            		).length > 0) {
+            			return;
+            		}
+            		if (evt.code == 'ArrowRight') {
+            			globalState.set('playbackTime', Math.min(globalState.get('playbackTime') + 1, mediaElement.duration));
+            		}
+            		if (evt.code == 'ArrowLeft') {
+            			globalState.set('playbackTime', Math.max(globalState.get('playbackTime') - 1, 0));
+            		}
+            		if (evt.code == 'Space' && document.activeElement != playPauseButton) {
+            			togglePlayPause();
+            		}
+            	});
 
-            		globalState.render(['playingClip'], current => {
-            			if (current.playingClip && current.playingClip.audio) {
-            				mediaElement.src = current.playingClip.audio;
-            				mediaElement.addEventListener('loadedmetadata', evt => {
-            					progressBar.setAttribute('max', mediaElement.duration);
-            					progressBar.setAttribute('value', 0);
-            				});
-            			}
-            		})
+            	function updateDuration(evt) {
+            		console.log('duration', mediaElement.duration);
+            		if (this.duration == Infinity) {
+            			mediaElement.load();
+            			progressBar.setAttribute('max', 60);
+            		} else {
+            			playPauseButton.disabled = false;
+            			progressBar.setAttribute('max', mediaElement.duration);
+            		};
+            	}
 
-            		playPauseButton.addEventListener('click', evt => {
-            			if (mediaElement.paused || mediaElement.ended) {
-            				mediaElement.play();
-            				playPauseButton.classList.add('playing') ;
-            			} else {
-            				mediaElement.pause();
-            				playPauseButton.classList.remove('playing') ;
-            			}
-            		});
+            	globalState.render(['playingClip'], current => {
+            		playPauseButton.disabled = true;
+            		progressBar.setAttribute('max', 60);
+            		if (current.playingClip && current.playingClip.audio) {
+            			mediaElement.addEventListener('loadedmetadata', updateDuration);
+            			mediaElement.addEventListener('durationchange', updateDuration);
+            			mediaElement.src = current.playingClip.audio;
+            			globalState.set('playbackTime', 0);
+            		}
+            	})
 
-            		mediaElement.addEventListener('timeupdate', evt => {
-            			progressBar.setAttribute('value', mediaElement.currentTime);
-            			if (mediaElement.currentTime >= progressBar.max) {
-            				playPauseButton.classList.remove('playing');
-            			}
-            		})
+            	function togglePlayPause() {
+            		if (mediaElement.paused || mediaElement.ended) {
+            			mediaElement.play();
+            			playPauseButton.classList.add('playing') ;
+            		} else {
+            			mediaElement.pause();
+            			playPauseButton.classList.remove('playing') ;
+            		}
+            	}
+            	playPauseButton.addEventListener('click', evt => {
+            		togglePlayPause();
+            	});
 
-            		progressBar.addEventListener('click', evt => {
-            			let pos = (evt.pageX  - progressBar.offsetLeft) / progressBar.offsetWidth;
+            	mediaElement.addEventListener('timeupdate', evt => {
+            	})
+
+            	progressBar.addEventListener('click', evt => {
+            		let pos = (evt.pageX  - progressBar.offsetLeft) / progressBar.offsetWidth;
+            		globalState.set('playbackTime', pos * mediaElement.duration);
+            	})
+            	let dragInProgress = false;
+            	progressBar.addEventListener('mousedown', evt => dragInProgress = true);
+            	progressBar.addEventListener('mouseup', evt => dragInProgress = false);
+            	progressBar.addEventListener('mousemove', evt => {
+            		if (dragInProgress) {
+            			let pos =  (evt.pageX  - progressBar.offsetLeft) 
+            			          / progressBar.offsetWidth;
             			globalState.set('playbackTime', pos * mediaElement.duration);
-            		})
-            		let dragInProgress = false;
-            		progressBar.addEventListener('mousedown', evt => dragInProgress = true);
-            		progressBar.addEventListener('mouseup', evt => dragInProgress = false);
-            		progressBar.addEventListener('mousemove', evt => {
-            			if (dragInProgress) {
-            				let pos = (evt.pageX  - progressBar.offsetLeft) / progressBar.offsetWidth;
-            				globalState.set('playbackTime', pos * mediaElement.duration);
-            			}
-            		})
+            		}
+            	})
 
-            		globalState.render(['playbackTime'], current => {
-            			if (current.playbackTime && 
-            				current.playbackTime != mediaElement.currentTime
-            			) {
-            				mediaElement.currentTime = current.playbackTime;
-            			}
-            		});
+            	globalState.render(['playbackTime'], current => {
+            		if (current.playbackTime && 
+            			current.playbackTime != mediaElement.currentTime
+            		) {
+            			mediaElement.currentTime = current.playbackTime;
+            		}
 
-            		let updateTime = () => {
-            			let playbackTime = globalState.get('playbackTime');
-            			if (playbackTime != mediaElement.currentTime) {
-            				globalState.set(
-            					'playbackTime', mediaElement.currentTime
-            				);
-            			}
-            			window.requestAnimationFrame(updateTime);
+            		progressBar.setAttribute('value', current.playbackTime);
+            		if (current.playbackTime >= progressBar.max) {
+            			playPauseButton.classList.remove('playing');
+            		}
+            	});
+
+            	let updateTime = () => {
+            		let playbackTime = globalState.get('playbackTime');
+            		if (playbackTime != mediaElement.currentTime) {
+            			globalState.set('playbackTime', mediaElement.currentTime);
             		}
             		window.requestAnimationFrame(updateTime);
+            	}
+            	window.requestAnimationFrame(updateTime);
 
-            	})();
+            })();
             </script>
             <style>
 
-            	button.play-pause:before {
-            		content: '>';
+            	button.play-pause svg {
+            		display: none;
             	}
-            	button.play-pause.playing:before {
-            		content: '-';
+            	button.play-pause svg:first-child {
+            		display: inline-block;
+            	}
+            	button.play-pause.playing svg {
+            		display: inline-block;
+            	}
+            	button.play-pause.playing svg:first-child {
+            		display: none;
             	}
             	progress.player {
             		width: 100%;
@@ -670,7 +793,9 @@ Git repository: <INSERT REPOSITORY LINK>
             <!-- ====================================================== -->
 
             			
-			<button class="new-clip">New Clip</button>
+			<button class="new-clip attention" title='Add new clip'><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+  <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"/>
+</svg><span>Clip</span></button>
 			<div class="spinner hidden"></div>
 			<div class="loading-message">Adding clip...</div>
 			<script>
@@ -689,11 +814,26 @@ Git repository: <INSERT REPOSITORY LINK>
                 					
                 <div class="current-tab"></div>
                 <div class="tab-set">
+                	<button class="details hbox iconic"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
+                  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                  <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                </svg> <span>Details</span></button>
+                	<button class="help iconic hbox"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-circle" viewBox="0 0 16 16">
+                  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                  <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+                </svg> <span>Help</span></button>
                 	<button class="settings iconic">⚙ Settings</button>
-                	<button class="help iconic">(?) Help</button>
-                	<button class="details">... Details</button>
                 </div>
                 <style>
+
+                		button.hbox {
+                			display: flex;
+                			align-items: center;
+                			justify-content: center;
+                		}
+                		.tab-set button.hbox span {
+                			line-height: 2.5em;
+                		}
                 	.tab-set {
                 		position: absolute;
                 		bottom: 0px;
@@ -718,17 +858,24 @@ Git repository: <INSERT REPOSITORY LINK>
                 		box-shadow: inset var(--box-shadow);
                 	}
                 	.current-tab {
+                		width: 100%;
                 		overflow: auto;
                 		height: calc(100% - 2em);
                 		border: 1px solid var(--chrome-border);
                 		border-bottom: 0px;
                 		border-right: 0px;
                 		padding: .5rem;
+                		padding-top: 0px;
                 		background: var(--chrome-background);
-                		transition: .3s translate;
+                		transition: .3s transform;
+                		position: absolute;
                 	}
-                	.wide-body .current-tab {
-                		padding: 1rem 2rem 1rem 2rem;
+                	.current-tab section {
+                		min-height: 100%;
+                	}
+                	.current-tab > section > *:first-child {
+                		height: 2em;
+                		line-height: 2em;
                 	}
                 	.tab-set button:disabled {
                 		border-top: 0px;
@@ -740,7 +887,7 @@ Git repository: <INSERT REPOSITORY LINK>
                 	.narrow-body .current-tab.expanded {
                 		transform: translate(0, -60%);
                 		height: calc(200%);
-                		z-index: 500;
+                		z-index: calc(var(--voice-graph-z-index) + 3);
                 	}
                 	#expand-collapse-button.expanded {
                 		transform: translate(0, -60%);
@@ -750,7 +897,12 @@ Git repository: <INSERT REPOSITORY LINK>
                 	let tab = $('.current-tab');
                 	tab.addEventListener('click', evt => {
                 		let bb = tab.getBoundingClientRect();
-                		if (evt.clientY - bb.top < 20 && document.activeElement != $('#theme-select')) {
+                		if (
+                			evt.clientY - bb.top < 20 && document.activeElement != $('#theme-select') &&
+                			evt.clientX - bb.left > (bb.right - bb.left) / 4 &&
+                			evt.clientX - bb.left < 3 * (bb.right - bb.left) / 4
+
+                		) {
                 			if (!tab.classList.contains('expanded')) {
                 				tab.classList.add('expanded');
                 			} else {
@@ -851,11 +1003,17 @@ Git repository: <INSERT REPOSITORY LINK>
 		<!-- This is where we keep stuff we don't want visible -->
 		<div id="offscreen">
 			
-            				
+            				<style>
+            	.settings > label:first-child {
+            		font-weight: bold;
+            	}
+            	#theme-select {
+            		width: 100%;
+            	}
+            </style>
             <section class="settings">
-
-            	<br>
             	<label for="theme-select">Theme</label>
+            	<br>
             	<select id="theme-select" onchange="eval(this.value)">
             		<option value="whiteLight()">White Light</option>
             		<option value="simpleDark()">Deep Dark</option>
@@ -1183,6 +1341,8 @@ Git repository: <INSERT REPOSITORY LINK>
             			customWidgets();
             		}
             		function terminal() {
+            			document.body.style.setProperty('--accent-text', '#000000');
+
             			document.querySelector('#body-background').value = '#000000';
             			document.body.style.setProperty('--body-background', '#000000');
             			document.querySelector('#body-color').value = '#00ff0c';
@@ -1287,6 +1447,9 @@ Git repository: <INSERT REPOSITORY LINK>
             			customWidgets();
             		}
             		function win95() {
+
+            			document.body.style.setProperty('--accent-text', '#ffffff');
+
             			document.querySelector('#body-background').value = '#fffee2';
             			document.body.style.setProperty('--body-background', '#fffee2');
             			document.querySelector('#body-color').value = '#2d2d2d';
@@ -1444,9 +1607,23 @@ Git repository: <INSERT REPOSITORY LINK>
             		customWidgets();
             	</script>
             </section>
-            				
+            				<style>
+            	.wide-body .tutorial-text {
+            		height: calc(100vh - 7em);
+            	}
+            	.narrow-body .tutorial-text {
+            		height: calc(40vh - 5.6em);
+            	}
+            	.narrow-body .expanded .tutorial-text {
+            		height: calc(100vh - 12em);
+            	}
+            	.tutorial-text {
+            		max-width: 80ch;
+            	}
+            </style>
             <section class="help">
             	<h2>Tutorial</h2>
+            	<div class='tutorial-text scrolling-text-box'>
             	<p>
             	Two major properties of a voice
             	which influence how it is gendered
@@ -1490,6 +1667,7 @@ Git repository: <INSERT REPOSITORY LINK>
             	This tool should be used to explore your own voice
             	to find your way to a voice that suits you.
             	It does not attempt to show you whether your voice "passes."
+            	</div>
             </section>
             				
             <!-- Details -->
@@ -1525,18 +1703,42 @@ Git repository: <INSERT REPOSITORY LINK>
             .details .hbox h2 {
             	display: inline;
             	margin: 0px;
+            	margin-right: auto;
+            }
+            .details .hbox > * + * {
+            	margin-left: .5em;
             }
             .details .hbox {
             	display: flex;
             	flex-wrap: wrap;
             	align-items: center;
-            	justify-content: space-between;
             	margin-bottom: 1em;
+            	height: 2em;
             }
             .details label {
             	font-weight: bold;
             }
-            .details .download {
+            td.highlight {
+            	background: var(--accent);
+            	color: white;
+            	color: var(--accent-text);
+            }
+            .details details {
+            	margin-top: .5em;
+            }
+            .details summary {
+            	margin-bottom: .5em;
+            }
+            #delete-confirm.hidden {
+            	display: inline-block;
+            	overflow: hidden;
+            	opacity: 0;
+            	width: 1ch;
+            	height: 1ch;
+            	visibility: hidden;
+            }
+            #delete-confirm {
+            	transition: .3s all;
             }
             </style>
             <section class="details"> 
@@ -1547,29 +1749,54 @@ Git repository: <INSERT REPOSITORY LINK>
             	<div class='view'>
             		<div class="hbox">
             			<h2 id="preview-title"></h2>
-            			<button class='download'>Download Clip</button>
+            			<span class='buttons'>
+            				<span id='delete-confirm' class='hidden'>Press again to delete</span>
+            				<button class='delete' title='Delete Clip'><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+              <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+              <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+            </svg></button>
+            				<button class='download' title='Download Clip'><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+              <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+              <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+            </svg></button>
+            			</span>
             		</div>
 
             		<table>
             			<tr>
             				<th></th>
-            				<th>Min</th>
             				<th>Mean</th>
-            				<th>Max</th>
+            				<th>Median</th>
             				<th>St. dev.</th>
             			</tr>
             			<tr>
             				<th>Pitch</th>
-            				<td id='preview-min-pitch'>--</td>
             				<td id='preview-mean-pitch'>--</td>
-            				<td id='preview-max-pitch'>--</td>
-            				<td id='preview-stdev-pitch'>--</td>
+            				<td id='preview-median-pitch'>--</td>
+            				<td class='highlight'><span id='preview-stdev-pitch'></span>*</td>
+            			</tr>
+            			<tr>
+            				<th>Resonance</th>
+            				<td id='preview-mean-resonance'>--</td>
+            				<td id='preview-median-resonance'>--</td>
+            				<td id='preview-stdev-resonance'>--</td>
             			</tr>
             		</table>
             		<br>
             		<div>
             			<label for="preview-transcript">Transcript</label>:
             			<span id='preview-transcript'></span>
+            		</div>
+            		<details>
+            			<summary>Advanced</summary>
+
+            			<button id='dl-json'>Download JSON</button>
+            		</details>
+            		<hr>
+            		<div>
+            			<small>* In many contexts, greater variation in pitch (standard deviation) is 
+            			associated with women's speech, whereas monotone is associated with men's speech.
+            			</small>
             		</div>
             	</div>
             </section>
@@ -1581,6 +1808,11 @@ Git repository: <INSERT REPOSITORY LINK>
             		$('#preview-title').innerHTML = current.previewClip.title || '';
             		if (current.previewClip.meanPitch) {
             			$('#preview-mean-pitch').innerHTML = Math.round(current.previewClip.meanPitch) + 'Hz';
+            			$('#preview-mean-resonance').innerHTML = Math.round(current.previewClip.meanResonance * 100) + '%';
+            			$('#preview-stdev-pitch').innerHTML = Math.round(current.previewClip.stdevPitch) + 'Hz';
+            			$('#preview-stdev-resonance').innerHTML = Math.round(current.previewClip.stdevResonance * 100) + '%';
+            			$('#preview-median-pitch').innerHTML = Math.round(current.previewClip.medianPitch) + 'Hz';
+            			$('#preview-median-resonance').innerHTML = Math.round(current.previewClip.medianResonance * 100) + '%';
             		}
             		if (current.previewClip.transcript) {
             			$('#preview-transcript').innerHTML = current.previewClip.transcript;
@@ -1590,14 +1822,57 @@ Git repository: <INSERT REPOSITORY LINK>
             	}
             })
 
+            $('section.details button.download').addEventListener('click', evt => {
+            	let previewClip = globalState.get('previewClip');
+            	downloadFile(previewClip.audio, previewClip.title);
+            });
+
+            let lastDeletePress = 0;
+            $('section.details button.delete').addEventListener('click', evt => {
+            	if (Date.now() - lastDeletePress > 4000) {
+            		$('#delete-confirm').classList.remove('hidden');
+            		lastDeletePress = Date.now();
+            		window.setTimeout(() => {
+            			$('#delete-confirm').classList.add('hidden');
+            		}, 4000)
+            	} else {
+            		let previewClip = globalState.get('previewClip');
+            		globalState.mutate('clips', clips => {
+            			let index = clips.indexOf(previewClip);
+            			clips.splice(index, 1);
+            		})
+            		globalState.set('previewClip', null);
+            	}
+            });
+
+            $('#dl-json').addEventListener('click', evt => {
+            	let previewClip = globalState.get('previewClip');
+            	let cloneClip = JSON.parse(JSON.stringify(previewClip));
+            	delete cloneClip.marker;
+            	downloadFile(
+            		'data:text/json;charset=utf-8,' 
+            		+ encodeURIComponent(JSON.stringify(cloneClip)), 
+
+            		previewClip.title + '.json'
+            	);
+            })
+
             </script>
             				
             <section class="new-clip">
             	<style>
             		#record-voice + label + div, #upload-file + label + div {
             			margin-left: 1em;
-            			padding: 1em;
-            			padding-bottom: 0px;
+            			padding: .5em;
+            		}
+            		#script-select {	
+            			max-width: calc(100% - 6ch);
+            		}
+            		#title-input {
+            			max-width: calc(100% - 16ch);
+            		}
+            		section.new-clip .new-clip {
+            			margin-bottom: 1em;
             		}
             		.new-clip .hbox {
             			display: flex;
@@ -1616,6 +1891,11 @@ Git repository: <INSERT REPOSITORY LINK>
             		}
             		.new-clip h2 {
             			margin-top: 0px;
+            		}
+            		.new-clip #submit {
+            			float: right;
+            		}
+            		#upload-file + label + div, #record-voice + label + div {
             		}
             		/* Show upload/recording elements only when that option is selected. */
             		#record-voice          + label + div { display: none; }
@@ -1661,20 +1941,84 @@ Git repository: <INSERT REPOSITORY LINK>
             	<input type="radio" name="add-recording" id="upload-file" checked>
             	<label for="upload-file">Upload a file</label>
             	<div>
-            		<input type='file' id='audio-file-input' name='recording'/>
+            		<input type='file' id='audio-file-input' name='recording' accept="audio/*"/>
             	</div>
             	<br>
             	<input type="radio" name="add-recording" id="record-voice">
             	<label for="record-voice">Record your voice</label>
             	<div>
-            		<button id="start-recording">Start Recording</button>
-            		<button id="stop-recording">Stop Recording</button>
+            		<button id="start-recording">⏺︎ Start</button>
+            		<button id="stop-recording">⏹︎ Stop</button>
+            		Recorded <span id="recording-count">0</span> seconds
+            		<br>
+            		<br>
+            		<audio controls id="recording-preview"></audio>
             	</div>
-            	<br>
-            	<br>
             	<!-- Submit -->
-            	<button id="submit" onclick="submitAudio()">Add Clip</button>
+            	<button id="submit" class='attention' onclick="submitAudio()">Add Clip</button>
             	<script>
+
+            		// record from their microphone in-browser,
+            		let mediaRecorder = null;
+            		let audioChunks = [];
+            		let recordedAudio = null;
+            		function recordAudio() {
+            			let stopButton = document.querySelector("#stop-recording");
+            			let startButton = document.querySelector("#start-recording");
+
+            			const startRecording = () => {
+            				$('#recording-count').innerHTML = '0';
+            				let recordingInterval = setInterval(() => {
+            					$('#recording-count').innerHTML = Number($('#recording-count').innerHTML) + 1;
+            				}, 1000);
+
+            				mediaRecorder.addEventListener("stop", () => {
+            					clearInterval(recordingInterval);
+            				});
+            				console.log('recording');
+            				stopButton.disabled = false;
+            				startButton.disabled = true;
+            				audioChunks = [];
+            				mediaRecorder.start();
+            				mediaRecorder.addEventListener("dataavailable", event => {
+            					audioChunks.push(event.data);
+            				});
+            			}
+
+            			if (mediaRecorder) { startRecording(); } else {
+            				navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+            					
+            					mediaRecorder = new MediaRecorder(stream);
+            					
+            					mediaRecorder.addEventListener("stop", () => {
+            						stopButton.disabled = true;
+            						startButton.disabled = false;
+            						const audioBlob = new Blob(audioChunks);
+            						recordedAudio = audioBlob;
+
+            						let reader = new FileReader(recordedAudio);	
+            						reader.readAsDataURL(recordedAudio);
+            						reader.addEventListener("load", () => {
+            							$('#recording-preview').src = reader.result.replace(
+            								/data:.*;base64/, "data:audio/wav;base64"
+            							);
+            							$('#recording-preview').load();
+            						});
+            					});
+            					stopButton.addEventListener("click", () => {mediaRecorder.stop();}, false);
+            					startRecording();
+            				}).catch(() => {
+            					alert("Sorry, something went wrong." 
+            						+ "Your device's browser may not be able to record audio."
+            						+ "Try uploading a file instead."
+            					);
+            				});
+            			}
+            		}
+            		$('#start-recording').addEventListener('click', evt => {
+            			recordAudio();
+
+            		});
 
             		function submitAudio() {
 
@@ -1696,7 +2040,8 @@ Git repository: <INSERT REPOSITORY LINK>
             				clip.loadAudioFile(recording);
 
             			} else if ($('#record-voice').checked) {
-            				//TODO: Handle recording
+            				formData.append('recording', recordedAudio);
+            				clip.loadAudioFile(recordedAudio);
             			} else {
             				alert('Please upload a file or make a recording.');
             				return;
@@ -1727,8 +2072,10 @@ Git repository: <INSERT REPOSITORY LINK>
             				globalState.set('playingClip', clip);
             				globalState.set('previewClip', clip);
 
-            			})
-            			// .catch(() => alert('The server returned an error code'));
+            			}).catch(() => alert(`
+            				Sorry, we weren't able to process your recording.
+            				Make sure to speak clearly and ensure that your transcript matches the audio.
+            			`.replace(/[\n\t ]*/, ' ')));
             		}
             	</script>
             </section>
