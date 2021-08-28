@@ -11,51 +11,72 @@
 	.tutorial-text {
 		max-width: 80ch;
 	}
+	.wide-body .mobile-help {
+		display: none;
+	}
+	.mobile-help {
+		font-size: smaller;
+		font-style: italic;
+	}
+	.wide-body .mobile-help + p {
+		margin-top: 0px;
+	}
 </style>
 <section class="help">
 	<h2>Tutorial</h2>
-	<p>
-	<!--img src="resources/logo.png" alt="An acoustic guitar where the headstick is semi-triangular forming a Mars-sign along with the neck and sound hold. Likewise, the sound hole, strings, and bridge form a Venus sign. The image is in the pink, blue, and white transgender pride colors." style="float: right" width='128'/-->
-	Two major properties of a voice
-	which influence how it is gendered
-	are <strong>pitch</strong>,
-	the frequency at which your vocal folds vibrate,
-	and <strong>resonance</strong>,
-	the size of the passages the air travels through.
-	<!--
-	<ul>
-		<li>Pitch is the frequency at which the object emitting a sound vibrates.
-		In voices, this will be the vocal folds.
 
-		<li>Resonance is the effect exerted on a sound by the passage it travels through.
-		In voices, the passage is the vocal tract.
-	</ul>
-	<p>
-	Testosterone tends to thicken the vocal folds and lengthen the vocal tract,
-	resulting in lower pitch and darker resonance.
-	Therefore, most people read voices with these features as male or masculine.
-	-->
+	<div class='mobile-help'>
+	Mobile users: You can tap the top this pane
+	to expand/collapse it for easier reading.
+	</div>
 
 	<p>
-	If you want to feminize your voice,
-	you'll probably want to raise your pitch and resonance,
-	taking your voice closer to the 
-	<span style="color: #FDCFC8; font-weight: bold; text-shadow: 0px 0px 1px red">top-right</span> corner of the graph.
-	If you want to masculinize your voice,
-	you should target the <span style="color: #054EC4; font-weight: bold">bottom-left</span> corner.
+	<img src="resources/logo.png" alt="An acoustic guitar where the headstick is semi-triangular forming a Mars-sign along with the neck and sound hold. Likewise, the sound hole, strings, and bridge form a Venus sign. The image is in the pink, blue, and white transgender pride colors." style="float: right" width='128'/>
+	This app visualizes the pitch and resonance of voices in recordings over time.
+	<strong>Pitch</strong> is our perception of the frequency at which the vocal folds vibrate.
+	<strong>Resonance</strong> is the effect exerted on a sound by the passage the air travels through.
+	The program plots recordings in a <strong>2-dimensional space</strong>,
+	where the Y-axis represents pitch,
+	and the X-axis represents resonance,
+	with brighter sounds represented with a higher percentage.
+	</p>
+	
 
-	If you want your voice to sound more androgynous,
-	you should target either 
-	the <span style="color: #b48ead; font-weight: bold">center</span>, or one of the 
-	<span style="color: #DBD9EC; font-weight: bold; text-shadow: 0px 0px 1px blue">top-left</span>
-	or <span style="color: #833047; font-weight: bold;">bottom-right</span> corners.
+	<p>Typically, voices perceived as female have brighter resonance and higher pitch (top right),
+	while those perceived as male have darker resonance and lower pitch (bottom left).
+	These features can be blended in different degrees
+	to create a <strong>broad spectrum</strong> of perceptual and aesthetic qualities related to gender.
+	There are no sharp cutoffs at which a voice is 
+	guaranteed to be gendered a specific way,
+	just as the colors in the graph blend seamlessly into one another.
 
-	<p>
-	There is no specific threshold in either pitch or resonance 
-	at which a voice will always be gendered male or female,
-	and typical values differ by language, dialect, age,
-	and a variety of other factors.
-	This tool should be used to explore your own voice
-	to find your way to a voice that suits you.
-	It does not attempt to show you whether your voice "passes."
+	<p>Press the <strong>play button</strong> in the top-left corner of the app to play the clip
+	associated with the selected point on the graph.
+	Examine some of the provided examples to get a sense
+	of how positions on the graph correspond to your perceptions of gender.
+	You can visualize your own recordings by pressing the <strong>add clip button</strong>
+	in the top-right and submitting a recording.
+	It will take some time to process,
+	so you may wish to examine the other clips while the recording is processed.
+
+	<p>Your clips are sent to our server for processing,
+	but they are <strong>not stored persistently</strong>.
+	You can save the sound file from your recording
+	using the <strong>download button</strong> in the "Details" tab.
+	From the settings tab,
+	you can also <strong>export</strong> all of your data in a single file
+	which can be imported for viewing at another time.
+	Otherwise, your data will be lost when you exit the page.
+
+	<p>We hope that using this program will help you understand how voices are gendered
+	and assess your own progress if you are trying to alter your voice
+	to better match your gender identity or desired presentation. Good luck!
+
+	<h2>Credits</h2>
+	<p>This application is developed by Luna McNulty
+	as part of a research project for her Sc. M. program at Brown University.
+	Its content is available under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>
+	and uses Creative-Commons-licensed sound files from
+	Morgan and Christine Lemmer-Webber's podcast <a href="https://fossandcrafts.org">Foss and Crafts</a>
+	as well as public domain content audiobook content from <a href="librivox.org">Librivox</a>.</p>
 </section>

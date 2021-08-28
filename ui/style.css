@@ -16,6 +16,9 @@ button:hover:disabled {
 	opacity: .5;
 }
 
+a {
+	color: var(--accent);
+}
 
 .custom-widgets button, .custom-widgets  input[type=submit] {
 	padding-top: 0px;
@@ -95,7 +98,12 @@ textarea {
 	color: white;
 	color: var(--accent-text);
 }
-
+h2 {
+	margin-bottom: .5em;
+}
+h2 + p {
+	margin-top: .5em;
+}
 
 .scrolling-text-box {
 	background: var(--body-background);
@@ -108,4 +116,7 @@ textarea {
 	background: var(--accent);
 	color: var(--accent-text);
 	font-weight: bold;
+}
+hr {
+	border: 1px solid var(--chrome-border);
 }

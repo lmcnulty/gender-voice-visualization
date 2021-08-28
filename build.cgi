@@ -8,7 +8,7 @@ cgitb.enable()
 loader = FileSystemLoader(['./ui', './resources'])
 env = Environment(loader=loader)
 template = env.get_template('base.html')
-rendered = template.render(dev=True) 
+rendered = template.render(dev=False) 
 
 print("Content-type: text/html\n")
 print(rendered)

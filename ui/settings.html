@@ -2,18 +2,30 @@
 	.settings > label:first-child {
 		font-weight: bold;
 	}
-	#theme-select {
-		width: 100%;
-	}
 	#export-clips {
 		margin-right: auto;
 	}
 	section.settings .hbox {
 		display: flex;
+		align-items: center;
+	}
+	section.settings .hbox > * + * {
+		margin-left: .25em;
 	}
 	#import-export {
 		margin-top: .5em;
 		margin-bottom: .5em;
+	}
+	section.settings .hbox h2 {
+		margin: 0px;
+		margin-right: auto;
+	}
+	.example {
+		align-items: center;
+	}
+	section.settings select {
+		width: 50ch;
+		flex-shrink: 1;
 	}
 </style>
 <section class="settings">
@@ -47,43 +59,49 @@
 			}
 		});
 	</script>
+	<hr>
+	<div class="hbox examples">
 	<h2>Examples</h2>
-	<button id="load-default-clips" onclick="loadDefaultClips()">Reload Defaults</button>
-	<button id="load-extended-clips" onclick="loadExtendedClips()">Load Extended</button>
-	<p><strong>Warning</strong>: The extended set of examples may use large amounts of data.</p>
+		<button id="load-default-clips" onclick="loadDefaultClips()">Reload Defaults</button>
+		<button id="load-extended-clips" onclick="loadExtendedClips()">Load Extended</button>
+	</div>
+	<p>Warning: The extended set of examples may use large amounts of data.</p>
 
+	<hr>
 
-	<h2>Theme</h2>
-	<select id="theme-select" onchange="if (this.value != 'custom') eval(this.value)">
-		<option value="simpleDark()">Deep Dark</option>
-		
-		<option value="lightBlue()">Light Blue</option>
-		
-		<option value="lightRed()">Light Red</option>
-		
-		<option value="popular()">Popular</option>
-		
-		<!--option value="whiteLight()">White Light</option>
-		<option value="simpleGray()">Medium Gray</option>
-		<option value="pureBlack()">Pure Black</option-->
+	<div class="hbox">
+		<h2>Theme</h2>
+		<br>
+		<select id="theme-select" onchange="if (this.value != 'custom') eval(this.value)">
+			<option value="simpleDark()">Deep Dark</option>
+			
+			<option value="lightBlue()">Light Blue</option>
+			
+			<option value="lightRed()">Light Red</option>
+			
+			<option value="popular()">Popular</option>
+			
+			<!--option value="whiteLight()">White Light</option>
+			<option value="simpleGray()">Medium Gray</option>
+			<option value="pureBlack()">Pure Black</option-->
 
-		<!--option value="pinkPank()">Pink Pank</option-->
-		<option value="pinkBlue()">Pinkin Blue</option>
-		
-		<!--option value="terminal()">80s Terminal</option>
-		<option value="win95()">Win95</option>
-		<option value="winXP()">WinXP</option>
-		<option value="win10()">Win10</option-->
+			<!--option value="pinkPank()">Pink Pank</option-->
+			<option value="pinkBlue()">Pinkin Blue</option>
+			
+			<!--option value="terminal()">80s Terminal</option>
+			<option value="win95()">Win95</option>
+			<option value="winXP()">WinXP</option>
+			<option value="win10()">Win10</option-->
 
-		<!--option value="adwaita()">Adwaita</option>
-		<option value="ubuntu()">Yaru</option>
-		<option value="xfceEvolution()">XFCE Evolution</option-->
-		
-		<!--option value="nativeStyle()">Native Style (Limited Support)</option-->
-		
-		<option value="custom">Custom</option>
-	<select>
-	<br>
+			<!--option value="adwaita()">Adwaita</option>
+			<option value="ubuntu()">Yaru</option>
+			<option value="xfceEvolution()">XFCE Evolution</option-->
+			
+			<!--option value="nativeStyle()">Native Style (Limited Support)</option-->
+			
+			<option value="custom">Custom</option>
+		</select>
+	</div>
 	<br>
 
 	<details id="set-colors">
