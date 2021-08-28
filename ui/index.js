@@ -12,8 +12,61 @@ window.onload = window.onresize;
 
 $('button.details').click();
 
-fetch('./resources/high-dark.json').then(response => response.json()).then(clip => {
+/*fetch('./resources/jenn.json').then(response => response.json()).then(clip => {
+	globalState.mutate('clips', clips => clips.push(clip));
+	globalState.set('playingClip', clip);
+	globalState.set('previewClip', clip);
+});*/
+fetch('./resources/charlotte.json').then(response => response.json()).then(clip => {
 	globalState.mutate('clips', clips => clips.push(clip));
 	globalState.set('playingClip', clip);
 	globalState.set('previewClip', clip);
 });
+fetch('./resources/quinn.json').then(response => response.json()).then(clip => {
+	globalState.mutate('clips', clips => clips.push(clip));
+});
+fetch('./resources/lucy.json').then(response => response.json()).then(clip => {
+	globalState.mutate('clips', clips => clips.push(clip));
+});
+//fetch('./resources/chuck.json').then(response => response.json()).then(clip => {
+//	globalState.mutate('clips', clips => clips.push(clip));
+//});
+fetch('./resources/morgan.json').then(response => response.json()).then(clip => {
+	globalState.mutate('clips', clips => clips.push(clip));
+});
+fetch('./resources/fern.json').then(response => response.json()).then(clip => {
+	globalState.mutate('clips', clips => clips.push(clip));
+});
+fetch('./resources/bob.json').then(response => response.json()).then(clip => {
+	globalState.mutate('clips', clips => clips.push(clip));
+});
+//fetch('./resources/steve.json').then(response => response.json()).then(clip => {
+//	globalState.mutate('clips', clips => clips.push(clip));
+//});
+/*fetch('./resources/david.json').then(response => response.json()).then(clip => {
+	globalState.mutate('clips', clips => clips.push(clip));
+});*/
+//
+//fetch('./resources/aiden.json').then(response => response.json()).then(clip => {
+//	globalState.mutate('clips', clips => clips.push(clip));
+//});
+//
+//fetch('./resources/zoe.json').then(response => response.json()).then(clip => {
+//	globalState.mutate('clips', clips => clips.push(clip));
+//});
+//
+//fetch('./resources/lesley.json').then(response => response.json()).then(clip => {
+//	globalState.mutate('clips', clips => clips.push(clip));
+//});
+//fetch('./resources/luna.json').then(response => response.json()).then(clip => {
+//	globalState.mutate('clips', clips => clips.push(clip));
+//});
+//fetch('./resources/leonard.json').then(response => response.json()).then(clip => {
+//	globalState.mutate('clips', clips => clips.push(clip));
+//});
+//fetch('./resources/kristen.json').then(response => response.json()).then(clip => {
+//	globalState.mutate('clips', clips => clips.push(clip));
+//});
+///*fetch('./resources/wina.json').then(response => response.json()).then(clip => {
+//	globalState.mutate('clips', clips => clips.push(clip));
+//});*/

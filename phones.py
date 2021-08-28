@@ -29,7 +29,7 @@ def parse(praat_output):
 		data['words'].append({
 			'time' : float(cols[0]),
 			'word' : cols[1],
-			'expected' : (pronunciation_dict.get(cols[1].upper()) or [None]) + [None] * 5
+			'expected' : (pronunciation_dict.get(cols[1].upper()) or [None]) + [None] * 10
 		})
 
 	data['phones'] = []
