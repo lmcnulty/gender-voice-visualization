@@ -80,7 +80,6 @@ class VoiceGraph {
 				this.update(marker);
 			}
 		});
-
 		globalState.render(['clips'], current => {
 			let orphanedMarkers = Array.from($$('.marker'));
 			for (let clip of current.clips) {
@@ -93,6 +92,7 @@ class VoiceGraph {
 						if (globalState.get('playingClip') == clip) {
 							globalState.set('playing', !globalState.get('playing'));
 						} else {
+							$('.tab-set button.details').click();
 							globalState.set('playbackTime', 0);
 							globalState.set('playing', false);
 							globalState.set('playingClip', clip);
@@ -135,7 +135,10 @@ class VoiceGraph {
 		})
 
 		globalState.render(['playingClip'], current => {
-			for (let marker of $$('.marker.playing')) marker.classList.remove('playing');
+			for (let marker of $$('.marker')) {
+				marker.querySelector('.infobox').innerHTML = '';
+				marker.classList.remove('playing');
+			};
 			if (current.playingClip && current.playingClip.marker) {
 				current.playingClip.marker.classList.add('playing');
 			}
@@ -153,7 +156,10 @@ class VoiceGraph {
 			
 			let currentPhone = playingClip.indexedPhones[timeIndex];
 
-			playingClip.marker.querySelector('.infobox').innerHTML = currentPhone.phoneme;
+			playingClip.marker.querySelector('.infobox').innerHTML = 
+				currentPhone.word.word == '' ? '' 
+					: (currentPhone.word.word.replace(/^\w/, (c) => c.toUpperCase()) + ' - ') 
+				+ currentPhone.phoneme;
 			
 			if (current.playbackTime == 0 || Math.abs(current.playbackTime - last(playingClip.phones).time) < 1 ) {
 				playingClip.marker.setAttribute('data-pitch', pitchPercent(playingClip.medianPitch) || .5);
@@ -227,7 +233,8 @@ class VoiceGraph {
 	// Set visual positioning of markers and labels
 	// to match the values in `data-pitch` and `data-resonance`.
 	update(marker) {
-		let overlay = marker.parentNode
+		let overlay = $('.overlay');
+		console.log('overlay', overlay);
 
 		let pitch     = parseFloat(marker.getAttribute('data-pitch'));
 		let resonance = parseFloat(marker.getAttribute('data-resonance'));

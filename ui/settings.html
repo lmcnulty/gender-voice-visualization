@@ -5,10 +5,55 @@
 	#theme-select {
 		width: 100%;
 	}
+	#export-clips {
+		margin-right: auto;
+	}
+	section.settings .hbox {
+		display: flex;
+	}
+	#import-export {
+		margin-top: .5em;
+		margin-bottom: .5em;
+	}
 </style>
 <section class="settings">
-	<label for="theme-select">Theme</label>
-	<br>
+	<h2>Your Data</h2>
+	<div id="import-export" class="hbox">
+		<button id="export-clips">Export</button>
+		<input type="file" id="import-clips-file"/>
+		<button id="import-clips">Import</button>
+	</div>
+	<script>
+		$('#export-clips').addEventListener('click', evt => {
+			let cloneClips = JSON.parse(JSON.stringify(globalState.get('clips')));
+			for (let clip of cloneClips) delete clip.marker;
+			downloadFile('data:text/json;charset=utf-8,' + encodeURIComponent(
+				JSON.stringify(cloneClips)
+			), 'clips.json');
+		});
+		
+		$('#import-clips').addEventListener('click', evt => {
+			if ($('#import-clips-file').files.length > 0) {
+				let reader = new FileReader();
+				reader.onload = evt => {
+					let loadedClips = JSON.parse(evt.target.result);
+					globalState.set('clips', loadedClips);
+					globalState.set('playingClip', last(loadedClips));
+					globalState.set('previewClip', last(loadedClips));
+				}
+				reader.readAsText($('#import-clips-file').files[0]);
+			} else {
+				alert('You need to select the file containing your exported data.');
+			}
+		});
+	</script>
+	<h2>Examples</h2>
+	<button id="load-default-clips" onclick="loadDefaultClips()">Reload Defaults</button>
+	<button id="load-extended-clips" onclick="loadExtendedClips()">Load Extended</button>
+	<p><strong>Warning</strong>: The extended set of examples may use large amounts of data.</p>
+
+
+	<h2>Theme</h2>
 	<select id="theme-select" onchange="if (this.value != 'custom') eval(this.value)">
 		<option value="simpleDark()">Deep Dark</option>
 		
@@ -42,7 +87,7 @@
 	<br>
 
 	<details id="set-colors">
-		<summary>Customize Theme</summary>
+		<summary>Customize</summary>
 		Rounded Corners:
 		<input type="range" value="15" id="border-radius" data-onchange="document.body.style.setProperty('--border-radius', (this.value / 50) + 'em');"/>
 		<br>
@@ -107,7 +152,6 @@
 		}
 
 		for (let select of $$('#set-colors > input[type=range]')) {
-			console.log(select.id);
 			themeState.sync(select.id, select, 'value');
 			themeState.render([select.id], current => {
 				if (select.classList.contains('proportion')) {

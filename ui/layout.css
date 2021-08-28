@@ -6,12 +6,17 @@
 html, body {
 	position: relative;
 	margin: 0px;
-	height: 100%;
 	overflow: hidden;
 	background: var(--body-background);
 	color: var(--body-color);
 	font-family: sans-serif;
 }
+
+html {
+	height: 100vh; 
+}
+body { height: 100%; }
+
 header, footer {
 	height: var(--header-height);
 	width: 100%;

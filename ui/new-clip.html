@@ -138,7 +138,8 @@
 			function alertRecordingFailure(exception) {
 				alert("Sorry, something went wrong. " 
 					+ "Your device's browser may not be able to record audio. "
-					+ "Try uploading a file recorded from a native app instead."
+					+ "Try uploading a file recorded from a native app instead "
+					+ "or using a different browser."
 				);
 				console.error(exception);
 			}
@@ -228,8 +229,8 @@
 					"Sorry, we weren't able to process your recording. " +
 					"Make sure to speak clearly and ensure " +
 					"that your transcript matches the audio. " +
-					"Also, try to include a 1-second period of silence in your clip " +
-					"for successful noise removal."
+					"For increased chance of success," +
+					"try using short clips with a 1-second period of silence."
 				);
 				$('button.new-clip').classList.remove('hidden');
 				$('button.new-clip + .spinner').classList.add('hidden');
