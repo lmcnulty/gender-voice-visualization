@@ -9,26 +9,34 @@
 <section class="settings">
 	<label for="theme-select">Theme</label>
 	<br>
-	<select id="theme-select" onchange="eval(this.value)">
-		<option value="whiteLight()">White Light</option>
+	<select id="theme-select" onchange="if (this.value != 'custom') eval(this.value)">
 		<option value="simpleDark()">Deep Dark</option>
+		
+		<option value="lightBlue()">Light Blue</option>
+		
+		<option value="lightRed()">Light Red</option>
+		
+		<option value="popular()">Popular</option>
+		
+		<!--option value="whiteLight()">White Light</option>
 		<option value="simpleGray()">Medium Gray</option>
-		<option value="pureBlack()">Pure Black</option>
+		<option value="pureBlack()">Pure Black</option-->
 
 		<!--option value="pinkPank()">Pink Pank</option-->
 		<option value="pinkBlue()">Pinkin Blue</option>
 		
-		<option value="terminal()">80s Terminal</option>
+		<!--option value="terminal()">80s Terminal</option>
 		<option value="win95()">Win95</option>
 		<option value="winXP()">WinXP</option>
-		<option value="win10()">Win10</option>
+		<option value="win10()">Win10</option-->
 
 		<!--option value="adwaita()">Adwaita</option>
 		<option value="ubuntu()">Yaru</option>
 		<option value="xfceEvolution()">XFCE Evolution</option-->
 		
-		<option value="nativeStyle()">Native Style (Limited Support)</option>
+		<!--option value="nativeStyle()">Native Style (Limited Support)</option-->
 		
+		<option value="custom">Custom</option>
 	<select>
 	<br>
 	<br>
@@ -36,58 +44,109 @@
 	<details id="set-colors">
 		<summary>Customize Theme</summary>
 		Rounded Corners:
-		<input type="range" value="15" class="rounded-corners" onchange="document.body.style.setProperty('--border-radius', (this.value / 50) + 'em');"/>
+		<input type="range" value="15" id="border-radius" data-onchange="document.body.style.setProperty('--border-radius', (this.value / 50) + 'em');"/>
 		<br>
 		Shadow Strength:
-		<input type="range" value="5" class="shadow-strength" onchange="document.body.style.setProperty('--box-shadow-strength', (this.value / 100));"/>
+		<input type="range" value="5" id="box-shadow-strength" class="proportion"  data-onchange="document.body.style.setProperty('--box-shadow-strength', (this.value / 100));"/>
 		<br>
 		Shadow Spread:
-		<input type="range" value="15" class="shadow-spread" onchange="document.body.style.setProperty('--box-shadow-spread', (this.value / 100) * 10 + 'px');"/>
+		<input type="range" value="15" id="box-shadow-spread" data-onchange="document.body.style.setProperty('--box-shadow-spread', (this.value / 100) * 10 + 'px');"/>
 		<br>
 		Highlight Strength:
-		<input type="range" value="0" class="highlight-strength" onchange="document.body.style.setProperty('--highlight-strength', (this.value / 100));"/>
+		<input type="range" value="0" id="highlight-strength" class="proportion" data-onchange="document.body.style.setProperty('--highlight-strength', (this.value / 100));"/>
 		<br>
 		<br>
 
-		<input type="color" id="body-background" value="#ffffff">
+		<input type="color" id="body-background" >
 		<label for="body-background">background color</label>
 		<br>	
-		<input type="color" id="body-color" value="#000000">
+		<input type="color" id="body-color" >
 		<label for="body-color">text color</label>
 		<br>	
-		<input type="color" id="chrome-color" value="#000000">
+		<input type="color" id="chrome-color" >
 		<label for="chrome-color">chrome color</label>
 		<br>
-		<input type="color" id="chrome-background" value="#dedede" >
+		<input type="color" id="chrome-background"  >
 		<label for="chrome-background">chrome background</label>
 		<br>
-		<input type="color" id="chrome-border" value='#b0b0b0'>
+		<input type="color" id="chrome-border" >
 		<label for="chrome-border">chrome border</label>
 		<br>
-		<input type="color" id="accent" value='#478fb1'>
+		<input type="color" id="accent" >
 		<label for="accent">accent</label>
 		<br>
-		<input type="color" id="button-color" value='#000000'>
+		<input type="color" id="accent-text" >
+		<label for="accent">accent text</label>
+		<br>
+		<input type="color" id="button-color" >
 		<label for="button-color">button color</label>
 		<br>
-		<input type="color" id="button-background" value='#c1c1c1'>
+		<input type="color" id="button-background" >
 		<label for="button-background">button background</label>
 		<br>
-		<input type="color" id="input-color" value='#000000'>
+		<input type="color" id="input-color" >
 		<label for="input-color">input color</label>
 		<br>
-		<input type="color" id="input-background" value='#f2f2f2'>
+		<input type="color" id="input-background" >
 		<label for="input-background">input background</label>
 		<br>
 
 	</details>
 	<script>
+		let themeState = new StateManager();
+
+		for (let colorSelect of $$('#set-colors > input[type=color]')) {
+			themeState.sync(colorSelect.id, colorSelect, 'value');
+			themeState.render([colorSelect.id], current => {
+				document.body.style.setProperty('--' + colorSelect.id, current[colorSelect.id]);
+			});
+			themeState.set(colorSelect.id, colorSelect.value);
+			colorSelect.addEventListener('change', evt => {
+				$('#theme-select').value = 'custom';
+			});
+		}
+
+		for (let select of $$('#set-colors > input[type=range]')) {
+			console.log(select.id);
+			themeState.sync(select.id, select, 'value');
+			themeState.render([select.id], current => {
+				if (select.classList.contains('proportion')) {
+					document.body.style.setProperty('--' + select.id, current[select.id] / 100);
+				}
+				if (select.id == 'border-radius') {
+					document.body.style.setProperty('--' + select.id, (current[select.id] / 50) + 'em');
+				}
+				if (select.id == 'box-shadow-spread') {
+					document.body.style.setProperty('--' + select.id, (current[select.id] / 100) * 10 + 'px');
+				}
+			});
+
+			select.addEventListener('change', evt => {
+				$('#theme-select').value = 'custom';
+			});
+		}
+
+		eval($('#theme-select').value);
+
 		function nativeWidgets() {
 			$('body').classList.remove('custom-widgets');
 		}
 		function customWidgets() {
 			$('body').classList.add('custom-widgets');
 		}
+		function recordTheme() {
+			let theme = {};
+			for (let key in themeState.state) {
+				theme[key] = themeState.get(key);
+			}
+			alert(JSON.stringify(theme));
+		}
+		function loadTheme(theme) {
+			for (let key in theme) {
+				themeState.set(key, theme[key]);
+			}
+		}
+		/*
 		function recordColors() {
 			let colors = '';
 			for (let colorSelect of $$('#set-colors > input[type=color]')) {
@@ -99,6 +158,7 @@
 				colors += `document.body.style.setProperty('--${select.id}', '${select.value}');\n`
 			}
 		}
+		*/
 		function nativeStyle() {
 			whiteLight();
 			document.body.style.setProperty('--body-background', 'White');
@@ -112,19 +172,33 @@
 			document.body.style.setProperty('--input-color', '#000000');
 
 			document.body.style.setProperty('--border-radius', 15 / 50 + "em");
-			document.querySelector('input.rounded-corners').value = '15';
+			document.querySelector('input.border-radius').value = '15';
 			
 			document.body.style.setProperty('--box-shadow-spread', .50 * 10 + "px");
-			document.querySelector('input.shadow-spread').value = '50';
+			document.querySelector('input.box-shadow-spread').value = '50';
 			
 			document.body.style.setProperty('--box-shadow-strength', '0.05');
-			document.querySelector('input.shadow-strength').value = '05';
+			document.querySelector('input.box-shadow-strength').value = '05';
 			
 			document.body.style.setProperty('--highlight-strength', '0');
 			document.querySelector('input.highlight-strength').value = '0';
 			nativeWidgets();
 		}
+		
+		function lightBlue() {
+			loadTheme({"body-background":"#ffffff","body-color":"#000000","chrome-color":"#000000","chrome-background":"#f4f7f9","chrome-border":"#bfc2c4","accent":"#0fa9ff","accent-text":"#ffffff","button-color":"#000000","button-background":"#f7f7f7","input-color":"#000000","input-background":"#ffffff","border-radius":"30","box-shadow-strength":"11","box-shadow-spread":"50","highlight-strength":"24"});
+			customWidgets();
+		}
+		function lightRed() {
+			loadTheme(
+				{"body-background":"#ffffff","body-color":"#401a25","chrome-color":"#401a25","chrome-background":"#f9f4f5","chrome-border":"#c4bfc0","accent":"#ff6d96","accent-text":"#ffffff","button-color":"#401a25","button-background":"#f7f7f7","input-color":"#401a25","input-background":"#ffffff","border-radius":"30","box-shadow-strength":"17","box-shadow-spread":"83","highlight-strength":"29"}
+			);
+			customWidgets();
+		}
+
+
 		function pinkBlue() {
+			/*
 			document.querySelector('#body-background').value = '#d8f4ff';
 			document.body.style.setProperty('--body-background', '#d8f4ff');
 			document.querySelector('#body-color').value = '#2d2d2d';
@@ -147,17 +221,20 @@
 			document.body.style.setProperty('--input-background', '#ffffff');
 
 			document.body.style.setProperty('--border-radius', 30 / 50 + "em");
-			document.querySelector('input.rounded-corners').value = '30';
+			document.querySelector('input.border-radius').value = '30';
 			
 			document.body.style.setProperty('--box-shadow-spread', .50 * 10 + "px");
-			document.querySelector('input.shadow-spread').value = '50';
+			document.querySelector('input.box-shadow-spread').value = '50';
 			
 			document.body.style.setProperty('--box-shadow-strength', '0.15');
-			document.querySelector('input.shadow-strength').value = '15';
+			document.querySelector('input.box-shadow-strength').value = '15';
 			
 			document.body.style.setProperty('--highlight-strength', '0.40');
 			document.querySelector('input.highlight-strength').value = '40';
-			
+			*/
+
+
+			loadTheme({"body-background":"#c6efff","body-color":"#2d2d2d","chrome-color":"#2d2d2d","chrome-background":"#aee8ff","chrome-border":"#25a5d8","accent":"#ff8cb3","accent-text":"#ffffff","button-color":"#000000","button-background":"#55cdfc","input-color":"#000000","input-background":"#ffffff","border-radius":"37","box-shadow-strength":"10","box-shadow-spread":"30","highlight-strength":"50"});
 			customWidgets();
 		}
 		function whiteLight() {
@@ -183,13 +260,13 @@
 			document.body.style.setProperty('--input-background', '#f4f4f4');
 
 			document.body.style.setProperty('--border-radius', 15 / 50 + "em");
-			document.querySelector('input.rounded-corners').value = '15';
+			document.querySelector('input.border-radius').value = '15';
 			
 			document.body.style.setProperty('--box-shadow-spread', .50 * 10 + "px");
-			document.querySelector('input.shadow-spread').value = '50';
+			document.querySelector('input.box-shadow-spread').value = '50';
 			
 			document.body.style.setProperty('--box-shadow-strength', '0.05');
-			document.querySelector('input.shadow-strength').value = '05';
+			document.querySelector('input.box-shadow-strength').value = '05';
 			
 			document.body.style.setProperty('--highlight-strength', '0');
 			document.querySelector('input.highlight-strength').value = '0';
@@ -218,13 +295,13 @@
 			document.body.style.setProperty('--input-background', '#fcedff');
 
 			document.body.style.setProperty('--border-radius', 30 / 50 + "em");
-			document.querySelector('input.rounded-corners').value = '30';
+			document.querySelector('input.border-radius').value = '30';
 			
 			document.body.style.setProperty('--box-shadow-spread', .50 * 10 + "px");
-			document.querySelector('input.shadow-spread').value = '50';
+			document.querySelector('input.box-shadow-spread').value = '50';
 			
 			document.body.style.setProperty('--box-shadow-strength', '0.15');
-			document.querySelector('input.shadow-strength').value = '15';
+			document.querySelector('input.box-shadow-strength').value = '15';
 			
 			document.body.style.setProperty('--highlight-strength', '0.40');
 			document.querySelector('input.highlight-strength').value = '40';
@@ -253,13 +330,13 @@
 			document.querySelector('#input-background').value = '#f2f2f2';
 			document.body.style.setProperty('--input-background', '#f2f2f2');
 			document.body.style.setProperty('--border-radius', 15 / 50 + "em");
-			document.querySelector('input.rounded-corners').value = '15';
+			document.querySelector('input.border-radius').value = '15';
 			
 			document.body.style.setProperty('--box-shadow-spread', .50 * 10 + "px");
-			document.querySelector('input.shadow-spread').value = '50';
+			document.querySelector('input.box-shadow-spread').value = '50';
 			
 			document.body.style.setProperty('--box-shadow-strength', '0.15');
-			document.querySelector('input.shadow-strength').value = '15';
+			document.querySelector('input.box-shadow-strength').value = '15';
 			
 			document.body.style.setProperty('--highlight-strength', '0.30');
 			document.querySelector('input.highlight-strength').value = '30';
@@ -267,6 +344,7 @@
 		}
 
 		function simpleDark() {
+		/*
 			document.querySelector('#body-background').value = '#606060';
 			document.body.style.setProperty('--body-background', '#606060');
 			document.querySelector('#body-color').value = '#f2f2f2';
@@ -288,16 +366,29 @@
 			document.querySelector('#input-background').value = '#707070';
 			document.body.style.setProperty('--input-background', '#707070');
 			document.body.style.setProperty('--border-radius', 15 / 50 + "em");
-			document.querySelector('input.rounded-corners').value = '15';
+			document.querySelector('input.border-radius').value = '15';
 			
 			document.body.style.setProperty('--box-shadow-spread', .50 * 10 + "px");
-			document.querySelector('input.shadow-spread').value = '50';
+			document.querySelector('input.box-shadow-spread').value = '50';
 			
 			document.body.style.setProperty('--box-shadow-strength', '0.15');
-			document.querySelector('input.shadow-strength').value = '15';
+			document.querySelector('input.box-shadow-strength').value = '15';
 			
 			document.body.style.setProperty('--highlight-strength', '0.15');
 			document.querySelector('input.highlight-strength').value = '15';
+		*/
+
+
+			loadTheme(
+				{"body-background":"#5e5e5e","body-color":"#f2f2f2","chrome-color":"#f2f2f2","chrome-background":"#565656","chrome-border":"#181818","accent":"#3b8de0","accent-text":"#ffffff","button-color":"#ffffff","button-background":"#474747","input-color":"#f2f2f2","input-background":"#707070","border-radius":"13","box-shadow-strength":"10","box-shadow-spread":"33","highlight-strength":"10"}
+			);
+			customWidgets();
+		}
+
+
+		function popular() {
+
+			loadTheme({"body-background":"#ffffff","body-color":"#474747","chrome-color":"#474747","chrome-background":"#ffffff","chrome-border":"#d1d1d1","accent":"#a74b91","accent-text":"#ffffff","button-color":"#000000","button-background":"#f7f7f7","input-color":"#000000","input-background":"#f7f7f7","border-radius":"32","box-shadow-strength":"8","box-shadow-spread":"50","highlight-strength":"0"});
 			customWidgets();
 		}
 		function pureBlack() {
@@ -323,13 +414,13 @@
 			document.body.style.setProperty('--input-background', '#313131');
 
 			document.body.style.setProperty('--border-radius', 0 / 50 + "em");
-			document.querySelector('input.rounded-corners').value = '0';
+			document.querySelector('input.border-radius').value = '0';
 			
 			document.body.style.setProperty('--box-shadow-spread', .50 * 10 + "px");
-			document.querySelector('input.shadow-spread').value = '50';
+			document.querySelector('input.box-shadow-spread').value = '50';
 			
 			document.body.style.setProperty('--box-shadow-strength', '0.15');
-			document.querySelector('input.shadow-strength').value = '15';
+			document.querySelector('input.box-shadow-strength').value = '15';
 			
 			document.body.style.setProperty('--highlight-strength', '0.0');
 			document.querySelector('input.highlight-strength').value = '0';
@@ -360,13 +451,13 @@
 			document.body.style.setProperty('--input-background', '#000000');
 
 			document.body.style.setProperty('--border-radius', 0 / 50 + "em");
-			document.querySelector('input.rounded-corners').value = '0';
+			document.querySelector('input.border-radius').value = '0';
 			
 			document.body.style.setProperty('--box-shadow-spread', .50 * 10 + "px");
-			document.querySelector('input.shadow-spread').value = '50';
+			document.querySelector('input.box-shadow-spread').value = '50';
 			
 			document.body.style.setProperty('--box-shadow-strength', '0.15');
-			document.querySelector('input.shadow-strength').value = '15';
+			document.querySelector('input.box-shadow-strength').value = '15';
 			
 			document.body.style.setProperty('--highlight-strength', '0.0');
 			document.querySelector('input.highlight-strength').value = '0';
@@ -395,13 +486,13 @@
 			document.querySelector('#input-background').value = '#ffffff';
 			document.body.style.setProperty('--input-background', '#ffffff');
 			document.body.style.setProperty('--border-radius', 15 / 50 + "em");
-			document.querySelector('input.rounded-corners').value = '15';
+			document.querySelector('input.border-radius').value = '15';
 			
 			document.body.style.setProperty('--box-shadow-spread', .50 * 10 + "px");
-			document.querySelector('input.shadow-spread').value = '50';
+			document.querySelector('input.box-shadow-spread').value = '50';
 			
 			document.body.style.setProperty('--box-shadow-strength', '0.20');
-			document.querySelector('input.shadow-strength').value = '20';
+			document.querySelector('input.box-shadow-strength').value = '20';
 			
 			document.body.style.setProperty('--highlight-strength', '0.50');
 			document.querySelector('input.highlight-strength').value = '50';
@@ -429,13 +520,13 @@
 			document.querySelector('#input-background').value = '#ffffff';
 			document.body.style.setProperty('--input-background', '#ffffff');
 			document.body.style.setProperty('--border-radius', 15 / 50 + "em");
-			document.querySelector('input.rounded-corners').value = '15';
+			document.querySelector('input.border-radius').value = '15';
 			
 			document.body.style.setProperty('--box-shadow-spread', .50 * 10 + "px");
-			document.querySelector('input.shadow-spread').value = '50';
+			document.querySelector('input.box-shadow-spread').value = '50';
 			
 			document.body.style.setProperty('--box-shadow-strength', '0.15');
-			document.querySelector('input.shadow-strength').value = '15';
+			document.querySelector('input.box-shadow-strength').value = '15';
 			
 			document.body.style.setProperty('--highlight-strength', '0.15');
 			document.querySelector('input.highlight-strength').value = '15';
@@ -467,13 +558,13 @@
 			document.body.style.setProperty('--input-background', '#ffffff');
 
 			document.body.style.setProperty('--border-radius', 20 / 50 + "em");
-			document.querySelector('input.rounded-corners').value = '20';
+			document.querySelector('input.border-radius').value = '20';
 			
 			document.body.style.setProperty('--box-shadow-spread', 0 * 10 + "px");
-			document.querySelector('input.shadow-spread').value = '0';
+			document.querySelector('input.box-shadow-spread').value = '0';
 			
 			document.body.style.setProperty('--box-shadow-strength', '0.30');
-			document.querySelector('input.shadow-strength').value = '30';
+			document.querySelector('input.box-shadow-strength').value = '30';
 			
 			document.body.style.setProperty('--highlight-strength', '0.60');
 			document.querySelector('input.highlight-strength').value = '60';
@@ -502,13 +593,13 @@
 			document.body.style.setProperty('--input-background', '#ffffff');
 			
 			document.body.style.setProperty('--border-radius', 0 / 50 + "em");
-			document.querySelector('input.rounded-corners').value = '0';
+			document.querySelector('input.border-radius').value = '0';
 			
 			document.body.style.setProperty('--box-shadow-spread', .50 * 10 + "px");
-			document.querySelector('input.shadow-spread').value = '50';
+			document.querySelector('input.box-shadow-spread').value = '50';
 			
 			document.body.style.setProperty('--box-shadow-strength', '0.0');
-			document.querySelector('input.shadow-strength').value = '0';
+			document.querySelector('input.box-shadow-strength').value = '0';
 			
 			document.body.style.setProperty('--highlight-strength', '0.0');
 			document.querySelector('input.highlight-strength').value = '0';
@@ -537,13 +628,13 @@
 			document.body.style.setProperty('--input-background', '#ffffff');
 			
 			document.body.style.setProperty('--border-radius', 15 / 50 + "em");
-			document.querySelector('input.rounded-corners').value = '15';
+			document.querySelector('input.border-radius').value = '15';
 			
 			document.body.style.setProperty('--box-shadow-spread', .50 * 10 + "px");
-			document.querySelector('input.shadow-spread').value = '50';
+			document.querySelector('input.box-shadow-spread').value = '50';
 			
 			document.body.style.setProperty('--box-shadow-strength', '0.15');
-			document.querySelector('input.shadow-strength').value = '15';
+			document.querySelector('input.box-shadow-strength').value = '15';
 			
 			document.body.style.setProperty('--highlight-strength', '0.15');
 			document.querySelector('input.highlight-strength').value = '15';
@@ -572,18 +663,19 @@
 			document.body.style.setProperty('--input-background', '#ffffff');
 			
 			document.body.style.setProperty('--border-radius', 15 / 50 + "em");
-			document.querySelector('input.rounded-corners').value = '15';
+			document.querySelector('input.border-radius').value = '15';
 			
 			document.body.style.setProperty('--box-shadow-spread', .50 * 10 + "px");
-			document.querySelector('input.shadow-spread').value = '50';
+			document.querySelector('input.box-shadow-spread').value = '50';
 			
 			document.body.style.setProperty('--box-shadow-strength', '0.15');
-			document.querySelector('input.shadow-strength').value = '15';
+			document.querySelector('input.box-shadow-strength').value = '15';
 			
 			document.body.style.setProperty('--highlight-strength', '0.80');
 			document.querySelector('input.highlight-strength').value = '80';
 			customWidgets();
 		}
+		/*
 		for (let colorSelect of $$('#set-colors > input[type=color]')) {
 			let updateColor = () => {
 				document.body.style.setProperty('--' + colorSelect.id, colorSelect.value)
@@ -591,14 +683,15 @@
 			colorSelect.addEventListener('change', updateColor);
 			updateColor();
 		}
-		document.body.style.setProperty('--border-radius', Number(document.querySelector('input.rounded-corners').value) / 50 + "em");
+		document.body.style.setProperty('--border-radius', Number(document.querySelector('input.border-radius').value) / 50 + "em");
 		
-		document.body.style.setProperty('--box-shadow-spread', String(Number(document.querySelector('input.shadow-spread').value) / 100 * 10) + "px");
+		document.body.style.setProperty('--box-shadow-spread', String(Number(document.querySelector('input.box-shadow-spread').value) / 100 * 10) + "px");
 		
-		document.body.style.setProperty('--box-shadow-strength', String(Number(document.querySelector('input.shadow-strength').value) / 100));
+		document.body.style.setProperty('--box-shadow-strength', String(Number(document.querySelector('input.box-shadow-strength').value) / 100));
 		
 		document.body.style.setProperty('--highlight-strength', Number(document.querySelector('input.highlight-strength').value) / 100);
 		
+		*/
 		customWidgets();
 	</script>
 </section>
