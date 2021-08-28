@@ -59,21 +59,32 @@
 	<!-- Script selection -->
 	<div class="hbox">
 		<label for="script-select">Script </label>
-		<select class="script" id="script-select" onchange="updateScript()">
+		<select class="script" id="script-select">
+			{% include 'speech-scripts.html' %}
 		</select>
 	</div>
 	<textarea rows="6" id="transcript"></textarea>
 	<script>
-		for (let key in speechScripts) {
-			let script = speechScripts[key].replace(/\s\s*/g, ' ');
-			$('#script-select').appendChild(option(key, {value: script}));
-		}
+		globalState.render(['transcript'], current => {
+			$('#transcript').value = current.transcript;
+		});
 
-		function updateScript() {
-			document.querySelector('#transcript').innerHTML 
-				= document.querySelector('select.script').value;
+		function formatTranscript(value) {
+			return value.replace(/\s\s+/g, '\n').trim()
 		}
-		updateScript();
+		globalState.set('transcript', formatTranscript($('#script-select').value));
+
+		$('#script-select').addEventListener('change', evt => {
+			let value = $('#script-select').value;
+			globalState.set('transcript',  value == 'custom' ? '' : formatTranscript(value));
+		});
+
+		$('#transcript').addEventListener('change', evt => {
+			if (globalState.get('transcript') != $('#transcript').value) {
+				globalState.set('transcript', $('#transcript').value);
+				$('#script-select').value = 'custom';
+			}
+		});
 	</script>
 
 
@@ -97,7 +108,7 @@
 	<!-- Submit -->
 	<button id="submit" class='attention' onclick="submitAudio()">Add Clip</button>
 	<script>
-
+	try {
 		// record from their microphone in-browser,
 		let mediaRecorder = null;
 		let audioChunks = [];
@@ -115,7 +126,6 @@
 				mediaRecorder.addEventListener("stop", () => {
 					clearInterval(recordingInterval);
 				});
-				console.log('recording');
 				stopButton.disabled = false;
 				startButton.disabled = true;
 				audioChunks = [];
@@ -125,34 +135,38 @@
 				});
 			}
 
+			function alertRecordingFailure(exception) {
+				alert("Sorry, something went wrong. " 
+					+ "Your device's browser may not be able to record audio. "
+					+ "Try uploading a file recorded from a native app instead."
+				);
+				console.error(exception);
+			}
 			if (mediaRecorder) { startRecording(); } else {
-				navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-					
-					mediaRecorder = new MediaRecorder(stream);
-					
-					mediaRecorder.addEventListener("stop", () => {
-						stopButton.disabled = true;
-						startButton.disabled = false;
-						const audioBlob = new Blob(audioChunks);
-						recordedAudio = audioBlob;
+				try { 
+					navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+						
+						mediaRecorder = new MediaRecorder(stream);
+						
+						mediaRecorder.addEventListener("stop", () => {
+							stopButton.disabled = true;
+							startButton.disabled = false;
+							const audioBlob = new Blob(audioChunks);
+							recordedAudio = audioBlob;
 
-						let reader = new FileReader(recordedAudio);	
-						reader.readAsDataURL(recordedAudio);
-						reader.addEventListener("load", () => {
-							$('#recording-preview').src = reader.result.replace(
-								/data:.*;base64/, "data:audio/wav;base64"
-							);
-							$('#recording-preview').load();
+							let reader = new FileReader(recordedAudio);	
+							reader.readAsDataURL(recordedAudio);
+							reader.addEventListener("load", () => {
+								$('#recording-preview').src = reader.result.replace(
+									/data:.*;base64/, "data:audio/wav;base64"
+								);
+								$('#recording-preview').load();
+							});
 						});
-					});
-					stopButton.addEventListener("click", () => {mediaRecorder.stop();}, false);
-					startRecording();
-				}).catch(() => {
-					alert("Sorry, something went wrong." 
-						+ "Your device's browser may not be able to record audio."
-						+ "Try uploading a file instead."
-					);
-				});
+						stopButton.addEventListener("click", () => {mediaRecorder.stop();}, false);
+						startRecording();
+					}).catch(exception => alertRecordingFailure(exception));
+				} catch(exception) { alertRecordingFailure(exception); }
 			}
 		}
 		$('#start-recording').addEventListener('click', evt => {
@@ -201,21 +215,29 @@
 				$('button.new-clip').classList.remove('hidden');
 				$('button.new-clip + .spinner').classList.add('hidden');
 
-				if (!data.hasOwnProperty('phones') || data.phones.length < 1) {
-					alert("We couldn't identify the words in your clip." 
-					    + "Make sure that the transcript matches the audio.");
-					return;
-				}
+				console.assert(data.hasOwnProperty('phones') && data.phones.length < 1);
 				
 				clip.loadResponse(data);
 				globalState.mutate('clips', clips => clips.push(clip));
+				globalState.set('playing', false);
 				globalState.set('playingClip', clip);
 				globalState.set('previewClip', clip);
 
-			}).catch(() => alert(`
-				Sorry, we weren't able to process your recording.
-				Make sure to speak clearly and ensure that your transcript matches the audio.
-			`.replace(/[\n\t ]*/, ' ')));
+			}).catch(() => {
+				alert(
+					"Sorry, we weren't able to process your recording. " +
+					"Make sure to speak clearly and ensure " +
+					"that your transcript matches the audio. " +
+					"Also, try to include a 1-second period of silence in your clip " +
+					"for successful noise removal."
+				);
+				$('button.new-clip').classList.remove('hidden');
+				$('button.new-clip + .spinner').classList.add('hidden');
+			});
 		}
+	} catch (exception) {
+		alert("An unknown error occured.");
+		console.log(exception);
+	}
 	</script>
 </section>

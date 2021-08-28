@@ -90,8 +90,14 @@ class VoiceGraph {
 					clip.marker.style.background = clip.color;
 
 					clip.marker.addEventListener('click', evt => {
-						globalState.set('playingClip', clip);
-						globalState.set('previewClip', clip);
+						if (globalState.get('playingClip') == clip) {
+							globalState.set('playing', !globalState.get('playing'));
+						} else {
+							globalState.set('playbackTime', 0);
+							globalState.set('playing', false);
+							globalState.set('playingClip', clip);
+							globalState.set('previewClip', clip);
+						}
 					});
 					clip.marker.addEventListener('mouseenter', evt => {
 						globalState.set('previewClip', clip);
@@ -301,6 +307,4 @@ class VoiceGraph {
 for (let graph of document.querySelectorAll('voice-graph-2d')) {
 	graph.voiceGraph = new VoiceGraph(graph);
 }
-
-
 

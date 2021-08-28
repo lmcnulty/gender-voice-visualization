@@ -67,6 +67,7 @@ class StateManager {
 	}
 
 	update(key) {
+		
 		for (let updater of this.state[key].updaters) {
 			let current = {};
 			for (let updaterKey of updater.keys) {
@@ -90,7 +91,7 @@ class StateManager {
 
 	// This should be used for immutable access,
     // but actually making a copy each time would probably be inefficient,
-	// so just be disciplined.
+	// so just be disciplined for now.
 	get(key) {
 		this.checkKey(key);
 		return this.state[key].value;

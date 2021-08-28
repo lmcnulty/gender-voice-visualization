@@ -1,4 +1,3 @@
-
 window.onresize = evt => {
 	if (window.innerWidth / window.innerHeight > 1.4) {
 		document.body.classList.remove('narrow-body');
@@ -9,6 +8,7 @@ window.onresize = evt => {
 	}
 }
 window.onload = window.onresize;
+$('.play-pause').focus();
 
 $('button.details').click();
 
@@ -70,3 +70,4 @@ fetch('./resources/bob.json').then(response => response.json()).then(clip => {
 ///*fetch('./resources/wina.json').then(response => response.json()).then(clip => {
 //	globalState.mutate('clips', clips => clips.push(clip));
 //});*/
+

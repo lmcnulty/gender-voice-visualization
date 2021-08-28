@@ -7,42 +7,46 @@
 <progress class="player" value="0" min="0"></progress>
 <video class="clip"></video>
 <script>
-(() => {
+try {
 	let mediaElement = $('video.clip');
 	let playPauseButton = $('button.play-pause');
 	let progressBar = $('progress.player');
 
 	document.body.addEventListener('keyup', evt => {
-		console.log(document.activeElement.tagName);
-		if (['INPUT', 'TEXTAREA', 'BUTTON', 'SUMMARY'].filter(
+		
+		if (['INPUT', 'TEXTAREA'].filter(
 			tag => tag == document.activeElement.tagName
-		).length > 0) {
-			return;
+		).length == 0) {
+			if (evt.code == 'ArrowRight') {
+				globalState.set('playbackTime', Math.min(globalState.get('playbackTime') + 1, mediaElement.duration));
+			}
+			if (evt.code == 'ArrowLeft') {
+				globalState.set('playbackTime', Math.max(globalState.get('playbackTime') - 1, 0));
+			}
 		}
-		if (evt.code == 'ArrowRight') {
-			globalState.set('playbackTime', Math.min(globalState.get('playbackTime') + 1, mediaElement.duration));
-		}
-		if (evt.code == 'ArrowLeft') {
-			globalState.set('playbackTime', Math.max(globalState.get('playbackTime') - 1, 0));
-		}
-		if (evt.code == 'Space' && document.activeElement != playPauseButton) {
-			togglePlayPause();
+		if (evt.code == 'Space' && ['INPUT', 'TEXTAREA', 'BUTTON', 'SUMMARY'].filter(
+			tag => tag == document.activeElement.tagName
+		).length == 0) {
+			globalState.set('playing', !globalState.get('playing'));
 		}
 	});
 
-	function updateDuration(evt) {
-		console.log('duration', mediaElement.duration);
-		if (this.duration == Infinity) {
-			mediaElement.load();
+	globalState.render(['playingClip'], current => {
+		if (current.playingClip && current.playingClip.audio) {
 			progressBar.setAttribute('max', 60);
-		} else {
-			playPauseButton.disabled = false;
+			mediaElement.addEventListener('loadedmetadata', updateDuration);
+			mediaElement.addEventListener('durationchange', updateDuration);
+			mediaElement.src = current.playingClip.audio;
+			globalState.set('playbackTime', 0);
+		}
+	});
+	function updateDuration(evt) {
+		if (mediaElement.duration < 1000 && mediaElement.duration != Infinity) {
 			progressBar.setAttribute('max', mediaElement.duration);
 		};
 	}
 
 	globalState.render(['playingClip'], current => {
-		playPauseButton.disabled = true;
 		progressBar.setAttribute('max', 60);
 		if (current.playingClip && current.playingClip.audio) {
 			mediaElement.addEventListener('loadedmetadata', updateDuration);
@@ -52,31 +56,37 @@
 		}
 	})
 
-	function togglePlayPause() {
-		if (mediaElement.paused || mediaElement.ended) {
-			mediaElement.play();
-			playPauseButton.classList.add('playing') ;
-		} else {
-			mediaElement.pause();
-			playPauseButton.classList.remove('playing') ;
+	globalState.render(['playing'], current => {
+		if (current.playing && !globalState.get('playingClip')) {
+			globalState.set('playing', false);
+			return;
 		}
-	}
+		if (current.playing) {
+			playPauseButton.classList.add('playing') ;
+			mediaElement.play();
+		} else {
+			playPauseButton.classList.remove('playing') ;
+			mediaElement.pause();
+		}
+
+	});
 	playPauseButton.addEventListener('click', evt => {
-		togglePlayPause();
+		globalState.set('playing', !globalState.get('playing'));
+		globalState.set('previewClip', globalState.get('playingClip'));
 	});
 
-	mediaElement.addEventListener('timeupdate', evt => {
-	})
-
 	progressBar.addEventListener('click', evt => {
-		let pos = (evt.pageX  - progressBar.offsetLeft) / progressBar.offsetWidth;
-		globalState.set('playbackTime', pos * mediaElement.duration);
+		if (globalState.get('playingClip')) {
+			let pos = (evt.pageX  - progressBar.offsetLeft) / progressBar.offsetWidth;
+			globalState.set('playbackTime', pos * mediaElement.duration);
+		}
 	})
+	
 	let dragInProgress = false;
 	progressBar.addEventListener('mousedown', evt => dragInProgress = true);
 	progressBar.addEventListener('mouseup', evt => dragInProgress = false);
 	progressBar.addEventListener('mousemove', evt => {
-		if (dragInProgress) {
+		if (dragInProgress && globalState.get('playingClip')) {
 			let pos =  (evt.pageX  - progressBar.offsetLeft) 
 			          / progressBar.offsetWidth;
 			globalState.set('playbackTime', pos * mediaElement.duration);
@@ -91,8 +101,8 @@
 		}
 
 		progressBar.setAttribute('value', current.playbackTime);
-		if (current.playbackTime >= progressBar.max) {
-			playPauseButton.classList.remove('playing');
+		if (current.playbackTime >= progressBar.max && globalState.get('playing') == true) {
+			globalState.set('playing', false);
 		}
 	});
 
@@ -105,7 +115,10 @@
 	}
 	window.requestAnimationFrame(updateTime);
 
-})();
+} catch(exception) {
+	alert("An unknown error occured.");
+	console.error(exception);
+}
 </script>
 <style>
 

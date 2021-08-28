@@ -11,6 +11,9 @@ globalState.init('clips', []);
 globalState.init('playingClip', null);
 globalState.init('playbackTime', 0);
 globalState.init('previewClip', null);
+globalState.init('playing', false);
+globalState.init('transcript', null);
+
 
 /*
 globalState.init('windowSize', {
