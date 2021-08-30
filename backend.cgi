@@ -4,6 +4,7 @@ import os, random, json, statistics
 import cgi, cgitb   # I like cgi because it was popular when I was born
 
 import preprocessing, phones, resonance
+from settings import settings
 
 # Helpers
 random_id = lambda: str(random.randint(0, 2**32))
@@ -20,8 +21,7 @@ transcript = form.getvalue('transcript')
 
 id = random_id()
 
-tmp_dir = '/rec/' + id
-os.mkdir(tmp_dir)
+tmp_dir =  settings['recordings'] + id
 
 praat_output = preprocessing.process(uploaded_file, transcript, tmp_dir)
 

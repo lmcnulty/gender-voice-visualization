@@ -854,38 +854,39 @@ and assets under a Creative Commons Attribution Sharealike license.
         }
 
         				
+        function loadNextClip(names) {
+        	if (names.length > 0) {
+        		fetch(`./resources/${names.pop()}.json`).then(response => response.json()).then(clip => {
+        			for (let existingClip of globalState.get('clips')) {
+        				if (existingClip.id == clip.id) return;
+        			}
+        			globalState.mutate('clips', clips => clips.push(clip));
+        			loadNextClip(names);
+        		});
+        	}
+        }
+
 
         function loadDefaultClips() {
-        	fetch('./resources/charlotte.json').then(response => response.json()).then(clip => {
+        	let defaultClips = ['quinn', 'charlotte', 'jenn', 'lucy', 'bob', 'morgan'].reverse();
+
+        	fetch('./resources/all.json').then(response => response.json()).then(clip => {
         		for (let existingClip of globalState.get('clips')) {
         			if (existingClip.id == clip.id) return;
         		}
         		globalState.mutate('clips', clips => clips.push(clip));
         		globalState.set('previewClip', clip);
         		globalState.set('playingClip', clip);
+        		loadNextClip(defaultClips);
         	});
 
-        	for (let name of ['charlotte', 'quinn', 'lucy', 'morgan', 'fern', 'bob', 'lesley']) {
-        		fetch(`./resources/${name}.json`).then(response => response.json()).then(clip => {
-        			for (let existingClip of globalState.get('clips')) {
-        				if (existingClip.id == clip.id) return;
-        			}
-        			globalState.mutate('clips', clips => clips.push(clip));
-        		});
-        	}
         }
         function loadExtendedClips() {
-        	for (let name of [
-        		'jenn', 'chuck', 'steve', 'david', 'aiden', 'zoe', 
+        	let extendedClips = [
+        		'fern', 'lesley', 'chuck', 'steve', 'david', 'aiden', 'zoe', 
         		'luna', 'leonard', 'kristen', 'wina', 'chris'
-        	]) {
-        		fetch(`./resources/${name}.json`).then(response => response.json()).then(clip => {
-        			for (let existingClip of globalState.get('clips')) {
-        				if (existingClip.id == clip.id) return;
-        			}
-        		      globalState.mutate('clips', clips => clips.push(clip));
-        		});
-        	}
+        	].reverse();
+        	loadNextClip(extendedClips);
         }
         				const cyrb53 = function(str, seed = 0) {
         	let h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;
@@ -2106,12 +2107,15 @@ and assets under a Creative Commons Attribution Sharealike license.
             	.wide-body .mobile-help + p {
             		margin-top: 0px;
             	}
+            	.help details + details {
+            		margin-top: .5em;
+            	}
             </style>
             <section class="help">
             	<h2>Tutorial</h2>
 
             	<div class='mobile-help'>
-            	Mobile users: You can tap the top this pane
+            	Mobile users: You can tap the top of this pane
             	to expand/collapse it for easier reading.
             	</div>
 
@@ -2139,6 +2143,7 @@ and assets under a Creative Commons Attribution Sharealike license.
             	associated with the selected point on the graph.
             	Examine some of the provided examples to get a sense
             	of how positions on the graph correspond to your perceptions of gender.
+            	(Note: Example clips may take some time to show up on slow connections).
             	You can visualize your own recordings by pressing the <strong>add clip button</strong>
             	in the top-right and submitting a recording.
             	It will take some time to process,
@@ -2156,6 +2161,61 @@ and assets under a Creative Commons Attribution Sharealike license.
             	<p>We hope that using this program will help you understand how voices are gendered
             	and assess your own progress if you are trying to alter your voice
             	to better match your gender identity or desired presentation. Good luck!
+
+            	<h2>FAQ</h2>
+            	<details>
+            		<summary>Why does the marker move around so much even when I'm not changing my voice drastically?</summary>
+            		<p>Most speech has a broad range of values in pitch and resonance,
+            		e.g. The highest and brightest phone spoken in a sample of typical male speech
+            		may well be similar in pitch in resonance to the <em>average</em> phone in typical female speech.
+            		Our perception of a voice is based on the overall tendencies within speech
+            		rather than the moment-to-moment features of individual phones.</p>
+            	</details>
+            	<details>
+            		<summary>Why do all the markers start so close together?</summary>
+            		<p>When not playing, the markers are displayed at the median values across the whole clip.
+            		Because there's a wide range of values in most speech,
+            		this pushes the median towards the center.
+            		However, a small change in median values
+            		can have a big influence on how a voice is gendered</p>
+            	</details>
+            	<details>
+            		<summary>Does this program support languages other than English?</summary>
+            		<p>Not currently. 
+            		If you add recording in another language, 
+            		you <em>might</em> get an output,
+            		but it will probably not be very accurate.</p>
+            	</details>
+            	<details>
+            		<summary>Do accent and dialect affect pitch and resonance?</summary>
+            		<p>Yes, so you may wish to upload recordings of other speakers with your accent or dialect
+            		to better compare with your own voice.</p> 
+            	</details>
+            	<details>
+            		<summary>Ok, I can see my resonance now, but how do I actually change it?</summary>
+            		<p>There are several ways. One is to raise (brightening) or lower (darkening) your larynx.
+            		Your larynx raises when you swallow and lowers when you yawn.
+            		You may be able to feel it move if you put your hand over the front of your neck
+            		while you make one of these movements.
+            		If you can learn to control your larynx position in normal speech,
+            		it can have a big effect on your resonance.
+            		</p> 
+            		<p>
+            		Your resonance is also affected by the space in your mouth.
+            		Holding your tongue higher in your mouth as you speak will brighten your resonance,
+            		and holding it lower will darken it.
+            		</p>
+            	</details>
+            	<details>
+            		<summary>Even though my pitch and resonance seem to be in the right spot,
+            		I don't feel like my voice sounds like I want it to.</summary>
+            		<p>There are many dimensions to voice other than pitch and resonance,
+            		so you might need to target other features.
+            		You might also be straining to reach a particular point,
+            		which can be audible to a listener.
+            		It might help to pick a less extreme target
+            		which you can reach comfortably.</p>
+            	</details>
 
             	<h2>Credits</h2>
             	<p>This application is developed by Luna McNulty
@@ -2238,9 +2298,15 @@ and assets under a Creative Commons Attribution Sharealike license.
             }
             </style>
             <section class="details"> 
-
+            	<h2 class='instructions'>Clip Details</h2>
             	<div class='instructions'>
             		When you select a clip/point from the graph it will be displayed here.
+            		If you just loaded the page and are seeing this,
+            		your browser is downloading the examples
+            		and they will display as they arrive.
+            		If you are on a slow connection,
+            		you may wish to start by reading the instructions in the help tab
+            		while you wait.
             	</div>
             	<div class='view'>
             		<div class="hbox">

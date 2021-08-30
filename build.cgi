@@ -3,12 +3,14 @@
 import cgitb
 from jinja2 import Template, Environment, FileSystemLoader
 
+from settings import settings
+
 cgitb.enable()
 
 loader = FileSystemLoader(['./ui', './resources'])
 env = Environment(loader=loader)
 template = env.get_template('base.html')
-rendered = template.render(dev=False) 
+rendered = template.render(dev=settings['dev']) 
 
 print("Content-type: text/html\n")
 print(rendered)

@@ -1,34 +1,35 @@
 
+function loadNextClip(names) {
+	if (names.length > 0) {
+		fetch(`./resources/${names.pop()}.json`).then(response => response.json()).then(clip => {
+			for (let existingClip of globalState.get('clips')) {
+				if (existingClip.id == clip.id) return;
+			}
+			globalState.mutate('clips', clips => clips.push(clip));
+			loadNextClip(names);
+		});
+	}
+}
+
 
 function loadDefaultClips() {
-	fetch('./resources/charlotte.json').then(response => response.json()).then(clip => {
+	let defaultClips = ['quinn', 'charlotte', 'jenn', 'lucy', 'bob', 'morgan'].reverse();
+
+	fetch('./resources/all.json').then(response => response.json()).then(clip => {
 		for (let existingClip of globalState.get('clips')) {
 			if (existingClip.id == clip.id) return;
 		}
 		globalState.mutate('clips', clips => clips.push(clip));
 		globalState.set('previewClip', clip);
 		globalState.set('playingClip', clip);
+		loadNextClip(defaultClips);
 	});
 
-	for (let name of ['charlotte', 'quinn', 'lucy', 'morgan', 'fern', 'bob', 'lesley']) {
-		fetch(`./resources/${name}.json`).then(response => response.json()).then(clip => {
-			for (let existingClip of globalState.get('clips')) {
-				if (existingClip.id == clip.id) return;
-			}
-			globalState.mutate('clips', clips => clips.push(clip));
-		});
-	}
 }
 function loadExtendedClips() {
-	for (let name of [
-		'jenn', 'chuck', 'steve', 'david', 'aiden', 'zoe', 
+	let extendedClips = [
+		'fern', 'lesley', 'chuck', 'steve', 'david', 'aiden', 'zoe', 
 		'luna', 'leonard', 'kristen', 'wina', 'chris'
-	]) {
-		fetch(`./resources/${name}.json`).then(response => response.json()).then(clip => {
-			for (let existingClip of globalState.get('clips')) {
-				if (existingClip.id == clip.id) return;
-			}
-		      globalState.mutate('clips', clips => clips.push(clip));
-		});
-	}
+	].reverse();
+	loadNextClip(extendedClips);
 }
