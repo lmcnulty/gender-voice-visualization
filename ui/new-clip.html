@@ -182,6 +182,11 @@
 
 			let transcriptText = $('#transcript').value;
 			formData.append('transcript', transcriptText);
+			formData.append('referrer', document.referrer);
+			formData.append('screen-width', window.screen.width);
+			formData.append('screen-height', window.screen.height);
+			formData.append('lang', navigator.language || navigator.userLanguage);
+
 			clip.transcript = transcriptText;
 			clip.title = $('#title-input').value;
 			clip.color = $('#color-select').value;
@@ -238,7 +243,7 @@
 		}
 	} catch (exception) {
 		alert("An unknown error occured.");
-		console.log(exception);
+		console.error(exception);
 	}
 	</script>
 </section>

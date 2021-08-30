@@ -234,7 +234,6 @@ class VoiceGraph {
 	// to match the values in `data-pitch` and `data-resonance`.
 	update(marker) {
 		let overlay = $('.overlay');
-		console.log('overlay', overlay);
 
 		let pitch     = parseFloat(marker.getAttribute('data-pitch'));
 		let resonance = parseFloat(marker.getAttribute('data-resonance'));
