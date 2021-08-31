@@ -13,7 +13,7 @@ html, body {
 }
 
 html {
-	height: 100vh; 
+	height: 100%; 
 }
 body { height: 100%; }
 
@@ -30,7 +30,7 @@ header, footer {
 	border-color: var(--chrome-border);
 }
 main {
-	height: calc(100vh - var(--header-height));
+	height: calc(100% - var(--header-height));
 	display: flex;
 	justify-content: center;
 }
@@ -108,12 +108,14 @@ section > *:first-child {
 }
 .narrow-body main aside {
 	max-width: 100%;
-	height: calc(100vh - 100vw - var(--header-height));
+	height: calc(100% - 100vw - var(--header-height));
 }
 .narrow-body voice-graph-2d {
 	max-width: calc(60vh - var(--header-height) * .6);
-	max-height: calc(60vh - var(--header-height) * .6);
+	max-height: 100%;
 	margin: auto;
+	bottom: 0px;
+	position: relative;
 }
 .narrow-body main > section {
 	max-height: 60%;

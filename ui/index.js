@@ -6,6 +6,10 @@ window.onresize = evt => {
 		document.body.classList.add('narrow-body');
 		document.body.classList.remove('wide-body');
 	}
+	let vgEl = $('voice-graph-2d');
+	vgEl.style.maxWidth = document.body.classList.contains('narrow-body')
+		? getComputedStyle(vgEl).height
+		: null;
 }
 window.onload = window.onresize;
 $('.play-pause').focus();

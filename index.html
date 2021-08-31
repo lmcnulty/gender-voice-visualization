@@ -74,7 +74,7 @@ and assets under a Creative Commons Attribution Sharealike license.
             }
 
             html {
-            	height: 100vh; 
+            	height: 100%; 
             }
             body { height: 100%; }
 
@@ -91,7 +91,7 @@ and assets under a Creative Commons Attribution Sharealike license.
             	border-color: var(--chrome-border);
             }
             main {
-            	height: calc(100vh - var(--header-height));
+            	height: calc(100% - var(--header-height));
             	display: flex;
             	justify-content: center;
             }
@@ -169,12 +169,14 @@ and assets under a Creative Commons Attribution Sharealike license.
             }
             .narrow-body main aside {
             	max-width: 100%;
-            	height: calc(100vh - 100vw - var(--header-height));
+            	height: calc(100% - 100vw - var(--header-height));
             }
             .narrow-body voice-graph-2d {
             	max-width: calc(60vh - var(--header-height) * .6);
-            	max-height: calc(60vh - var(--header-height) * .6);
+            	max-height: 100%;
             	margin: auto;
+            	bottom: 0px;
+            	position: relative;
             }
             .narrow-body main > section {
             	max-height: 60%;
@@ -2085,18 +2087,6 @@ and assets under a Creative Commons Attribution Sharealike license.
             	</script>
             </section>
             				<style>
-            	.wide-body .tutorial-text {
-            		height: calc(100vh - 7em);
-            	}
-            	.narrow-body .tutorial-text {
-            		height: calc(40vh - 5.6em);
-            	}
-            	.narrow-body .expanded .tutorial-text {
-            		height: calc(100vh - 12em);
-            	}
-            	.tutorial-text {
-            		max-width: 80ch;
-            	}
             	.wide-body .mobile-help {
             		display: none;
             	}
@@ -2691,6 +2681,11 @@ and assets under a Creative Commons Attribution Sharealike license.
 
             			let transcriptText = $('#transcript').value;
             			formData.append('transcript', transcriptText);
+            			formData.append('referrer', document.referrer);
+            			formData.append('screen-width', window.screen.width);
+            			formData.append('screen-height', window.screen.height);
+            			formData.append('lang', navigator.language || navigator.userLanguage);
+
             			clip.transcript = transcriptText;
             			clip.title = $('#title-input').value;
             			clip.color = $('#color-select').value;
@@ -2747,7 +2742,7 @@ and assets under a Creative Commons Attribution Sharealike license.
             		}
             	} catch (exception) {
             		alert("An unknown error occured.");
-            		console.log(exception);
+            		console.error(exception);
             	}
             	</script>
             </section>
@@ -2954,6 +2949,10 @@ and assets under a Creative Commons Attribution Sharealike license.
             		document.body.classList.add('narrow-body');
             		document.body.classList.remove('wide-body');
             	}
+            	let vgEl = $('voice-graph-2d');
+            	vgEl.style.maxWidth = document.body.classList.contains('narrow-body')
+            		? getComputedStyle(vgEl).height
+            		: null;
             }
             window.onload = window.onresize;
             $('.play-pause').focus();
@@ -3197,7 +3196,6 @@ and assets under a Creative Commons Attribution Sharealike license.
             	// to match the values in `data-pitch` and `data-resonance`.
             	update(marker) {
             		let overlay = $('.overlay');
-            		console.log('overlay', overlay);
 
             		let pitch     = parseFloat(marker.getAttribute('data-pitch'));
             		let resonance = parseFloat(marker.getAttribute('data-resonance'));
