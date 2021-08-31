@@ -2,35 +2,12 @@
 /* ======================= Variables ======================= */
 body {
 	--header-height: 2.5rem;
-	--body-background: white;
-	--body-color: black;
-	--widget-background: inherit;
-	--widget-color: inherit;
 	
-	--input-background: inherit;
-	--input-color: inherit;
-	
-	--accent: purple;
-	--accent-text: white;
+	{% for key in theme %}
+		--{{key}}: {{theme[key]}};
+	{% endfor %}
 
-	--border-radius: .2em;
-
-	--box-shadow-strength: 0.1;
-	--highlight-strength: 0.1;
-	--box-shadow-spread: 4px;
-	--box-shadow: -2px 2px var(--box-shadow-spread) 2px rgba(0, 0, 0, var(--box-shadow-strength));
-	
-	--chrome-background: #444;
-	--chrome-color: #ccc;
-	--chrome-border: #000;
-	
-	--chrome-background: #ddd;
-	--chrome-color: #000;
-	--chrome-border: #888;
-
-	--button-background: inherit;
-	--button-color: inherit;
-	
+	--box-shadow: -1px 1px var(--box-shadow-spread) var(--box-shadow-spread) rgba(0,0,0,calc(var(--box-shadow-strength)));
 	--progress-bar-background: var(--accent);
 }
 

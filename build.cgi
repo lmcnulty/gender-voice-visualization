@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import cgitb
+import cgitb, json
 from jinja2 import Template, Environment, FileSystemLoader
 
 from settings import settings
@@ -10,7 +10,15 @@ cgitb.enable()
 loader = FileSystemLoader(['./ui', './resources'])
 env = Environment(loader=loader)
 template = env.get_template('base.html')
-rendered = template.render(dev=settings['dev']) 
+
+
+with open('./resources/themes.json') as f:
+	themes = json.load(f)
+
+
+
+rendered = template.render(dev=settings['dev'], theme=themes['Deep Dark']);
+
 
 print("Content-type: text/html\n")
 print(rendered)

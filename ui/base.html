@@ -4,7 +4,12 @@
 	<head>
 		<meta charset='utf-8'/>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="theme-color" content="#45acf4">
 		<title>Acoustic Genderspace Viewer - Research Trial</title>
+		<link rel="shortcut icon" href="./resources/logo.png">
+		<link rel="icon" sizes="192x192" href="./resources/logo.png">
+		<link href="data:text/css," rel="stylesheet" type="text/css" title="Null">
+		<link rel="manifest" href="./manifest.json">
 		<style>
 			{% filter indent(width=12) %}
 				{% include 'variables.css' %}
@@ -14,11 +19,6 @@
 				{% include 'spinner.css' %}
 			{% endfilter %}
 		</style>
-		<link rel="shortcut icon" href="./resources/logo.png">
-		<link rel="icon" sizes="192x192" href="./resources/logo.png">
-		<meta name="theme-color" content="#45acf4">
-		<link href="data:text/css," rel="stylesheet" type="text/css" title="Null">
-		<link rel="manifest" href="./manifest.json">
 
 		{% if dev %}
 			<script src="./ui/dom.js"></script>
@@ -38,7 +38,7 @@
 		</script>
 		{% endif %}
 	</head>
-	<body class="narrow-body">
+	<body class="narrow-body custom-widgets">
 		<header>
 			{% filter indent(width=12) %}
 				{% include 'player.html' %}

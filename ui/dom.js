@@ -54,9 +54,6 @@ class StateManager {
 	}
 
 	init(key, value) {
-		if (this.state.hasOwnProperty(key)) {
-			throw `Key '${key}' has already been initialized.`
-		}
 		this.state[key] = {'value' : value, 'updaters' : []}
 	}
 
