@@ -74,6 +74,7 @@ voice-graph-2d > .overlay {
 }
 
 voice-graph-2d > .overlay > .marker {
+	display: online-block;
 	height: 1.5em;
 	width: 1.5em;
 	border-radius: 50%;

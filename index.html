@@ -437,6 +437,7 @@ and assets under a Creative Commons Attribution Sharealike license.
             }
 
             voice-graph-2d > .overlay > .marker {
+            	display: online-block;
             	height: 1.5em;
             	width: 1.5em;
             	border-radius: 50%;
@@ -641,12 +642,443 @@ and assets under a Creative Commons Attribution Sharealike license.
             			
 		</style>
 
+		<script>
+			
+
+let darkIcon = String(`
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   id="svg5181"
+   version="1.1"
+   viewBox="0 0 8.5024996 8.5054264"
+   height="32.146492"
+   width="32.135433">
+  <defs
+     id="defs5175" />
+  <metadata
+     id="metadata5178">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(-24.474941,-137.0211)"
+     id="layer1">
+    <rect style="fill:none;fill-opacity:1;stroke:currentColor;stroke-width:0.56500006;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0"
+       id="rect4546-3"
+       width="7.9375"
+       height="7.9375"
+       x="24.757441"
+       y="137.30507" />
+    <path
+       id="path4571"
+       d="m 27.40326,137.30506 c -3.43959,1.32291 -3.43959,6.61458 0,7.9375"
+       style="fill:none;stroke:currentColor;stroke-width:0.565;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       style="fill:none;stroke:currentColor;stroke-width:0.565;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 27.93242,138.09881 c -2.64583,1.85208 -2.64583,4.49791 0,6.35"
+       id="path4573" />
+    <path
+       style="fill:none;stroke:currentColor;stroke-width:0.565;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 30.0491,137.30506 c 3.43959,1.32291 3.43959,6.61458 0,7.9375"
+       id="path5740" />
+    <path
+       id="path5742"
+       d="m 29.51994,138.09881 c 2.64583,1.85208 2.64583,4.49791 0,6.35"
+       style="fill:none;stroke:currentColor;stroke-width:0.565;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  </g>
+</svg>
+`)
+
+let brightIcon = String(`
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="32.135433"
+   height="32.153236"
+   viewBox="0 0 8.5025005 8.5072107"
+   version="1.1"
+   id="svg4565"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
+   sodipodi:docname="bright.svg">
+  <defs id="defs4559">
+	<link href="style.css" type="text/css" rel="stylesheet" 
+          xmlns="http://www.w3.org/1999/xhtml"/>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="11.2"
+     inkscape:cx="12.379905"
+     inkscape:cy="11.113832"
+     inkscape:document-units="mm"
+     inkscape:current-layer="svg4565"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     units="px"
+     inkscape:window-width="1920"
+     inkscape:window-height="1002"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata4562">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-32.790418,-144.57973)">
+    <rect
+       style="fill:none;fill-opacity:1;stroke:currentColor;stroke-width:0.56500006;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0"
+       id="rect4581"
+       width="7.9375"
+       height="7.9375"
+       x="33.072918"
+       y="144.86459"
+       inkscape:export-xdpi="191.19"
+       inkscape:export-ydpi="191.19" />
+    <path
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path4583"
+       d="m 33.866667,144.86458 c 1.85208,1.32292 1.85208,6.61459 0,7.9375"
+       style="fill:none;stroke:currentColor;stroke-width:0.56500006;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       style="fill:none;stroke:currentColor;stroke-width:0.56500006;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 35.454167,145.39375 c 1.32291,1.85209 1.32291,5.02709 0,6.87917"
+       id="path4585"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;stroke:currentColor;stroke-width:0.56500006;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 40.216657,144.86459 c -1.85208,1.32292 -1.85208,6.61459 0,7.9375"
+       id="path833"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <path
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path835"
+       d="m 38.629157,145.39376 c -1.32291,1.85209 -1.32291,5.02709 0,6.87917"
+       style="fill:none;stroke:currentColor;stroke-width:0.56500006;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  </g>
+</svg>
+`)
+		</script>
 		
-			<script src="./ui/dom.js"></script>
-			<script src="./ui/globals.js"></script>
-			<script src="./ui/clip.js"></script>
-			<script src="./ui/examples.js"></script>
-			<script src="./ui/util.js"></script>
+		<script>
+			
+        				
+        let $ = s => document.querySelector(s);
+        let $$ = s => document.querySelectorAll(s);
+
+        function clearSelector(selector) {
+        	for (let section of $$(selector)) {
+        			$('#offscreen').appendChild(section);
+        	}
+        }
+        function create(elementType) {
+
+        	let newElement = document.createElement(elementType);
+        	for (let i = 1; i < arguments.length; i++) {
+        		let currentArgument = arguments[i];		
+        		if (typeof(currentArgument) === 'string') {
+        			newElement.innerHTML += currentArgument;
+        		} else if (Array.isArray(currentArgument)) {
+        			for (let j = 0; j < arguments[i].length; j++) {
+        				if (typeof(arguments[i][j]) === 'string') {
+        					newElement.innerHTML += currentArgument[j];		
+        				} else {	
+        					newElement.appendChild(currentArgument[j]);
+        				}
+        			}
+        		} else if (currentArgument instanceof Element) {
+        			newElement.appendChild(currentArgument);
+        		} else if (typeof(currentArgument) === 'function') {
+        			currentArgument(newElement);
+        		} else {
+        			Object.getOwnPropertyNames(currentArgument).forEach(
+        				function (val, idx, array) {
+        					newElement.setAttribute(val, currentArgument[val]);
+        				}
+        			);
+        		}
+        	}
+        	return newElement;
+        }
+        for (let e of ['div', 'span', 'img', 'canvas', 'svg', 'option', 'button']) {
+        	window[e] = function() {
+        		let args = [e].concat(Array.from(arguments));
+        		return create.apply(null, args);
+        	}
+        }
+
+        function downloadFile(content, title) {
+        	create('a', { download : title, href : content }).click();
+        }
+
+        class StateManager {
+
+        	constructor() {
+        		this.state = {}
+        	}
+
+        	init(key, value) {
+        		this.state[key] = {'value' : value, 'updaters' : []}
+        	}
+
+        	checkKey(key) {
+        		if (!this.state.hasOwnProperty(key)) {
+        			throw `Key '${key}' does not exist in state object.`
+        		}
+        	}
+
+        	update(key) {
+        		
+        		for (let updater of this.state[key].updaters) {
+        			let current = {};
+        			for (let updaterKey of updater.keys) {
+        				current[updaterKey] = this.state[updaterKey].value
+        			}
+        			updater.callback(current);
+        		}
+        	}
+
+        	set(key, value) {
+        		this.checkKey(key);
+        		this.state[key].value = value;
+        		this.update(key);
+        	}
+
+        	mutate(key, callback) {
+        		this.checkKey(key);
+        		callback(this.state[key].value);
+        		this.update(key);
+        	}
+
+        	// This should be used for immutable access,
+            // but actually making a copy each time would probably be inefficient,
+        	// so just be disciplined for now.
+        	get(key) {
+        		this.checkKey(key);
+        		return this.state[key].value;
+        	}
+
+        	render(keys, callback) {
+        		let current = {}
+        		for (let key of keys) {
+        			this.checkKey(key);
+        			this.state[key].updaters.push({
+        				"callback": callback,
+        				"keys": keys
+        			});
+        			current[key] = this.state[key].value;
+        		}
+        		callback(current);
+        	}
+
+        	sync(stateKey, element, key) {
+        		this.init(stateKey, element[key]);
+
+        		let thisState = this;
+        		element.addEventListener('change', evt => {
+        			thisState.set(stateKey, evt.target[key]);
+        		});
+
+        		this.render([stateKey], current => {
+        			element[key] = current[stateKey];
+        		});
+
+        		this.set(stateKey, element[key]);
+        	}
+        }
+        				
+        //let playingData;
+
+        // List of values indexed by 1/100 of milliseconds.
+        // Faster to retreieve because array access is O(1).
+        //let timedPlayingData = [];  
+
+        let globalState = new StateManager();
+
+        globalState.init('clips', []);
+        globalState.init('playingClip', null);
+        globalState.init('playbackTime', 0);
+        globalState.init('previewClip', null);
+        globalState.init('playing', false);
+        globalState.init('transcript', null);
+
+
+        /*
+        globalState.init('windowSize', {
+        	height: window.innerHeight,
+        	width: window.innerWidth
+        })
+
+        window.addEventListener('resize', evt => {
+        	globalState.set('windowSize', {
+        		height: window.innerHeight,
+        		width: window.innerWidth
+        	})
+        });
+        */
+        				
+
+        class Phone {
+        	constructor() {
+        		this.time = null;
+        		this.phoneme = null;
+        	}
+        }
+
+        class Clip {
+        	constructor() {
+        		this.audio = null; // data url for audio
+        		this.phones = [];
+        		this.indexedPhones = [];
+        		this.meanPitch = null;  // Number
+        		this.meanResonance = null;  // Number
+        		this.id = null;
+        		this.marker = null; // Element
+        		this.transcript = null;
+        		this.title = '';
+        	}
+        	loadAudioFile(file) {
+        		let reader = new FileReader(file);	
+        		reader.readAsDataURL(file);
+        		reader.addEventListener("load", () => {
+        			this.audio = reader.result.replace(
+        				/data:.*;base64/, 
+        				"data:audio/wav;base64"
+        			);
+        			this.id = hash(this.audio);
+        		});
+        	}
+        	loadResponse(data) {
+        		this.phones = data.phones;
+        		this.meanPitch = data.meanPitch;
+        		this.meanResonance = data.meanResonance;
+        		this.medianPitch = data.medianPitch;
+        		this.medianResonance = data.medianResonance;
+        		this.stdevPitch = data.stdevPitch;
+        		this.stdevResonance = data.stdevResonance;
+
+        		this.indexedPhones = Array(Math.ceil(last(this.phones).time * 100));
+        		for (let phone of data.phones) {
+        			this.indexedPhones[Math.floor(phone.time * 100)] = phone;
+        		}
+        		
+        		// Fill in missing values with what came before
+        		for (let i = 0; i < this.indexedPhones.length; i++) {
+        			if (!this.indexedPhones[i]) {
+        				if (this.indexedPhones[i - 1]) {
+        					this.indexedPhones[i] = this.indexedPhones[i - 1];
+        				} else {
+        					throw 'First data point is undefined';
+        				}
+        			}
+        		}
+        	}
+        }
+
+        				
+        function loadNextClip(names) {
+        	if (names.length > 0) {
+        		fetch(`./resources/${names.pop()}.json`).then(response => response.json()).then(clip => {
+        			for (let existingClip of globalState.get('clips')) {
+        				if (existingClip.id == clip.id) return;
+        			}
+        			globalState.mutate('clips', clips => clips.push(clip));
+        			loadNextClip(names);
+        		});
+        	}
+        }
+
+
+        function loadDefaultClips() {
+        	let defaultClips = ['quinn', 'charlotte', 'jenn', 'lucy', 'bob', 'morgan'].reverse();
+
+        	fetch('./resources/all.json').then(response => response.json()).then(clip => {
+        		for (let existingClip of globalState.get('clips')) {
+        			if (existingClip.id == clip.id) return;
+        		}
+        		globalState.mutate('clips', clips => clips.push(clip));
+        		globalState.set('previewClip', clip);
+        		globalState.set('playingClip', clip);
+        		loadNextClip(defaultClips);
+        	});
+
+        }
+        function loadExtendedClips() {
+        	let extendedClips = [
+        		'fern', 'lesley', 'chuck', 'steve', 'david', 'aiden', 'zoe', 
+        		'luna', 'leonard', 'kristen', 'wina', 'chris'
+        	].reverse();
+        	loadNextClip(extendedClips);
+        }
+        				const cyrb53 = function(str, seed = 0) {
+        	let h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;
+        	for (let i = 0, ch; i < str.length; i++) {
+        		ch = str.charCodeAt(i);
+        		h1 = Math.imul(h1 ^ ch, 2654435761);
+        		h2 = Math.imul(h2 ^ ch, 1597334677);
+        	}
+        	h1 = Math.imul(h1 ^ (h1>>>16), 2246822507) ^ Math.imul(h2 ^ (h2>>>13), 3266489909);
+        	h2 = Math.imul(h2 ^ (h2>>>16), 2246822507) ^ Math.imul(h1 ^ (h1>>>13), 3266489909);
+        	return 4294967296 * (2097151 & h2) + (h1>>>0);
+        };
+        const hash = cyrb53
+
+
+        function clamp(min, max, val) {
+        	if (val < min) return min;
+        	if (val > max) return max;
+        	return val;
+        }
+
+
+        function last(list) {
+        	return list[list.length - 1];
+        }
+
+
+        function pitchPercent(pitch) {
+        	return clamp(0, 1, (pitch - 50) / 250);
+        }
+        			
+		</script>
 		
 	</head>
 	<body class="narrow-body custom-widgets">
@@ -663,10 +1095,10 @@ and assets under a Creative Commons Attribution Sharealike license.
             </svg>
             </button>
             <progress class="player" value="0" min="0"></progress>
-            <video class="clip"></video>
+            <audio class="clip"></audio>
             <script>
             try {
-            	let mediaElement = $('video.clip');
+            	let mediaElement = $('.clip');
             	let playPauseButton = $('button.play-pause');
             	let progressBar = $('progress.player');
 
@@ -1084,22 +1516,6 @@ and assets under a Creative Commons Attribution Sharealike license.
             	}
             </style>
             <section class="settings">
-            	<label for="theme-select">Theme</label>
-            	<br>
-            	<select id="theme-select">
-            		<option value="Deep Dark">Deep Dark</option>
-            		<option value="Light Blue">Light Blue</option>
-            		<option value="Light Red">Light Red</option>
-            		<option value="Popular">Popular</option>
-            		<option value="Pinkin Blue">Pinkin Blue</option>
-            		<option value="Pink Pank">Pink Pank</option>
-            		<option value="80s">80's</option>
-            		<option value="90s">90's</option>
-            		<option value="00s">00's</option>
-            		<option value="10s">10's</option>
-            		<option value="custom">Custom</option>
-            	<select>
-            	<br>
             	<h2>Your Data</h2>
             	<div id="import-export" class="hbox">
             		<button id="export-clips">Export</button>
@@ -1140,6 +1556,24 @@ and assets under a Creative Commons Attribution Sharealike license.
 
             	<hr>
 
+            	<label for="theme-select">Theme</label>
+            	<br>
+            	<br>
+            	<select id="theme-select">
+            		<option value="Deep Dark">Deep Dark</option>
+            		<option value="Light Blue">Light Blue</option>
+            		<option value="Light Red">Light Red</option>
+            		<option value="Popular">Popular</option>
+            		<option value="Pinkin Blue">Pinkin Blue</option>
+            		<option value="Pink Pank">Pink Pank</option>
+            		<option value="80s">80's</option>
+            		<option value="90s">90's</option>
+            		<option value="00s">00's</option>
+            		<option value="10s">10's</option>
+            		<option value="custom">Custom</option>
+            	<select>
+            	<br>
+            	<br>
 
             	<details id="set-colors">
             		<summary>Customize</summary>
@@ -1537,7 +1971,7 @@ and assets under a Creative Commons Attribution Sharealike license.
             	<h2>Tutorial</h2>
 
             	<div class='mobile-help'>
-            	Mobile users: You can tap the top of this pane
+            	Mobile users: You can tap the top edge of this pane
             	to expand/collapse it for easier reading.
             	</div>
 
@@ -2023,7 +2457,8 @@ and assets under a Creative Commons Attribution Sharealike license.
             	<input type="radio" name="add-recording" id="upload-file" checked>
             	<label for="upload-file">Upload a file</label>
             	<div>
-            		<input type='file' id='audio-file-input' name='recording' accept="audio/*"/>
+            		<input type='file' id='audio-file-input' name='recording' 
+            		capture="user" accept="audio/*,video/*,audio/mpeg,audio/mp4,audio/x-aiff,audio/ogg,audio/vorbis,audio/opus,audio/vnd.wav,.wav,.mp3,.ogg,.opus,.m4a,.webm"/>
             	</div>
             	<br>
             	<input type="radio" name="add-recording" id="record-voice">
@@ -2182,10 +2617,498 @@ and assets under a Creative Commons Attribution Sharealike license.
 		</div>
 
 		
-			<script src="./ui/svg-icons.js"></script>
-			<script src="./ui/recording.js"></script>
-			<script src="./ui/index.js"></script>
-			<script src="./ui/voice-graph.js"></script>
+
+let darkIcon = String(`
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   id="svg5181"
+   version="1.1"
+   viewBox="0 0 8.5024996 8.5054264"
+   height="32.146492"
+   width="32.135433">
+  <defs
+     id="defs5175" />
+  <metadata
+     id="metadata5178">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(-24.474941,-137.0211)"
+     id="layer1">
+    <rect style="fill:none;fill-opacity:1;stroke:currentColor;stroke-width:0.56500006;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0"
+       id="rect4546-3"
+       width="7.9375"
+       height="7.9375"
+       x="24.757441"
+       y="137.30507" />
+    <path
+       id="path4571"
+       d="m 27.40326,137.30506 c -3.43959,1.32291 -3.43959,6.61458 0,7.9375"
+       style="fill:none;stroke:currentColor;stroke-width:0.565;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       style="fill:none;stroke:currentColor;stroke-width:0.565;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 27.93242,138.09881 c -2.64583,1.85208 -2.64583,4.49791 0,6.35"
+       id="path4573" />
+    <path
+       style="fill:none;stroke:currentColor;stroke-width:0.565;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 30.0491,137.30506 c 3.43959,1.32291 3.43959,6.61458 0,7.9375"
+       id="path5740" />
+    <path
+       id="path5742"
+       d="m 29.51994,138.09881 c 2.64583,1.85208 2.64583,4.49791 0,6.35"
+       style="fill:none;stroke:currentColor;stroke-width:0.565;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  </g>
+</svg>
+`)
+
+let brightIcon = String(`
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="32.135433"
+   height="32.153236"
+   viewBox="0 0 8.5025005 8.5072107"
+   version="1.1"
+   id="svg4565"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
+   sodipodi:docname="bright.svg">
+  <defs id="defs4559">
+	<link href="style.css" type="text/css" rel="stylesheet" 
+          xmlns="http://www.w3.org/1999/xhtml"/>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="11.2"
+     inkscape:cx="12.379905"
+     inkscape:cy="11.113832"
+     inkscape:document-units="mm"
+     inkscape:current-layer="svg4565"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     units="px"
+     inkscape:window-width="1920"
+     inkscape:window-height="1002"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata4562">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-32.790418,-144.57973)">
+    <rect
+       style="fill:none;fill-opacity:1;stroke:currentColor;stroke-width:0.56500006;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0"
+       id="rect4581"
+       width="7.9375"
+       height="7.9375"
+       x="33.072918"
+       y="144.86459"
+       inkscape:export-xdpi="191.19"
+       inkscape:export-ydpi="191.19" />
+    <path
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path4583"
+       d="m 33.866667,144.86458 c 1.85208,1.32292 1.85208,6.61459 0,7.9375"
+       style="fill:none;stroke:currentColor;stroke-width:0.56500006;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       style="fill:none;stroke:currentColor;stroke-width:0.56500006;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 35.454167,145.39375 c 1.32291,1.85209 1.32291,5.02709 0,6.87917"
+       id="path4585"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;stroke:currentColor;stroke-width:0.56500006;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 40.216657,144.86459 c -1.85208,1.32292 -1.85208,6.61459 0,7.9375"
+       id="path833"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <path
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path835"
+       d="m 38.629157,145.39376 c -1.32291,1.85209 -1.32291,5.02709 0,6.87917"
+       style="fill:none;stroke:currentColor;stroke-width:0.56500006;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  </g>
+</svg>
+`)
+		
+		<script>
+			
+            				window.onresize = evt => {
+            	if (window.innerWidth / window.innerHeight > 1.4) {
+            		document.body.classList.remove('narrow-body');
+            		document.body.classList.add('wide-body');
+            	} else {
+            		document.body.classList.add('narrow-body');
+            		document.body.classList.remove('wide-body');
+            	}
+            	let vgEl = $('voice-graph-2d');
+            	vgEl.style.maxWidth = document.body.classList.contains('narrow-body')
+            		? getComputedStyle(vgEl).height
+            		: null;
+            }
+            window.onload = window.onresize;
+            $('.play-pause').focus();
+
+            $('button.details').click();
+
+            loadDefaultClips();
+            				
+
+            class VoiceGraph {
+
+            	constructor(element) {
+
+            		this.element = element;
+
+            		element.style.position = 'relative';
+            		element.style.boxSizing = 'border-box'
+            		let size = element.clientWidth;
+
+            		this.pitchUpperBoundHz = 300;
+            		this.pitchLowerBoundHz = 50;
+            		this.pitchRange = this.pitchUpperBoundHz - this.pitchLowerBoundHz;
+
+            		for (let child of [
+            			div({'class': 'x axis-labels'}, 
+            				['0%', '← Resonance →', '100%'].map((s, i) => span(
+            					s, {style: 'min-width: 3em; text-align: center;', 'class': i == 1 ? 'title' : ''}
+            				))
+            			),
+            			div({'class': 'x-opposite axis-labels'}, [
+            				this.xValueLabel = span('25%', {'class': 'current-value'})
+            			]),
+
+            			div({'class': 'y axis-labels'},
+            				[this.pitchUpperBoundHz + 'Hz', '← Pitch →', 
+            				 this.pitchLowerBoundHz + 'Hz'
+            				].map((s, i) => span(
+            					s, {style: 'min-height: 3em; text-align: center;', 'class': i == 1 ? 'title' : ''})
+            				)
+            			),
+            			div({'class': 'y-opposite axis-labels'}, [
+            				this.yValueLabel = span('25%', {'class': 'current-value'})
+            			]),
+            			
+            			div({'class': 'overlay'}, [
+            				this.xHairline = span(' ', {'class': 'x hairline hidden'}),
+            				this.yHairline = span(' ', {'class': 'y hairline hidden'}),
+            			], ' '),
+            			
+            			div('𝄞', {'class': 'treble clef'}),
+            			div('𝄢', {'class': 'bass clef'}),
+            			div({'class': 'instrument flute'}, String(brightIcon)),
+            			div({ 'class': 'instrument tuba'}, String(darkIcon)),
+
+            			this.canvas = create('canvas', {
+            				height: size, 
+            				width: size, 
+            			})
+            		]) {
+            			element.appendChild(child);
+            		}
+
+
+            		// displays a plane which blends colors
+            		// from cool to warm, leftward, on the x-axis
+            		// and from light to dark, downard, on the y-axis.
+            		let ctx = this.canvas.getContext('2d');
+            		let rgba = ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
+            		let pink = {r: 255, g: 40,  b: 0};
+            		let blue = {r: 0,   g: 100, b: 255};
+            		for (let i = 0; i < rgba.data.length; i += 4) {
+            			let rise = ((i/4) / rgba.height) / rgba.height;
+            			let run  = ((i/4) % rgba.width) / rgba.width;
+            			let pinkBlue = this.lighten(
+            				this.blend(blue, pink, (2/3)*run + (1/3)*(1 - rise)),
+            				1 - (1.5 * rise)**(.5)
+            			)
+            			rgba.data[i]   = pinkBlue.r;
+            			rgba.data[i+1] = pinkBlue.g;
+            			rgba.data[i+2] = pinkBlue.b;
+            			rgba.data[i+3] = 255;
+            		}
+            		ctx.putImageData(rgba, 0, 0);
+
+            		window.addEventListener('resize', evt => {
+            			for (let marker of $$('.marker')) {
+            				this.update(marker);
+            			}
+            		});
+            		globalState.render(['clips'], current => {
+            			let orphanedMarkers = Array.from($$('.marker'));
+            			for (let clip of current.clips) {
+            				if (!clip.marker) {
+            					clip.marker = this.addMarker(pitchPercent(clip.medianPitch) || .5, clip.medianResonance || .5, null, null);
+            					clip.marker.setAttribute('data-id', clip.id);
+            					clip.marker.style.background = clip.color;
+
+            					clip.marker.addEventListener('click', evt => {
+            						if (globalState.get('playingClip') == clip) {
+            							globalState.set('playing', !globalState.get('playing'));
+            						} else {
+            							$('.tab-set button.details').click();
+            							globalState.set('playbackTime', 0);
+            							globalState.set('playing', false);
+            							globalState.set('playingClip', clip);
+            							globalState.set('previewClip', clip);
+            						}
+            					});
+            					clip.marker.addEventListener('mouseenter', evt => {
+            						globalState.set('previewClip', clip);
+            						for (let marker of $$('.marker')) this.update(marker);
+            					});
+            					this.update(clip.marker);
+            				} else {
+            					let index = orphanedMarkers.indexOf(clip.marker);
+            					orphanedMarkers.splice(index, 1);
+            				}
+            			}
+            			for (let marker of orphanedMarkers) {
+            				marker.parentNode.removeChild(marker);
+            			}
+
+            		})
+
+
+            		globalState.render(['previewClip'], current => {
+            			for (let marker of $$('.marker')) {
+            				marker.classList.remove('preview');
+            				this.update(marker);
+            			}
+            			if (current.previewClip && current.previewClip.marker) {
+            				current.previewClip.marker.classList.add('preview');
+            			}
+            			let hairlines = $$('voice-graph-2d > .overlay > .hairline');
+            			for (let hairline of hairlines) {
+            				if (current.previewClip) {
+            					hairline.classList.remove('hidden');
+            				} else {
+            					hairline.classList.add('hidden');
+            				}
+            			}
+            		})
+
+            		globalState.render(['playingClip'], current => {
+            			for (let marker of $$('.marker')) {
+            				marker.querySelector('.infobox').innerHTML = '';
+            				marker.classList.remove('playing');
+            			};
+            			if (current.playingClip && current.playingClip.marker) {
+            				current.playingClip.marker.classList.add('playing');
+            			}
+            		})
+
+            		globalState.render(['playbackTime'], current  => {
+
+            			let timeIndex = Math.floor(current.playbackTime * 100);
+            			let playingClip = globalState.get('playingClip');
+            			if (!playingClip || 
+            				!playingClip.indexedPhones || 
+            				timeIndex >= playingClip.indexedPhones.length ||
+            				!playingClip.marker
+            			) return;
+            			
+            			let currentPhone = playingClip.indexedPhones[timeIndex];
+
+            			playingClip.marker.querySelector('.infobox').innerHTML = 
+            				currentPhone.word.word == '' ? '' 
+            					: (currentPhone.word.word.replace(/^\w/, (c) => c.toUpperCase()) + ' - ') 
+            				+ currentPhone.phoneme;
+            			
+            			if (current.playbackTime == 0 || Math.abs(current.playbackTime - last(playingClip.phones).time) < 1 ) {
+            				playingClip.marker.setAttribute('data-pitch', pitchPercent(playingClip.medianPitch) || .5);
+            				playingClip.marker.setAttribute('data-resonance', playingClip.medianResonance || .5);
+            			} else {
+            				let isVowel = currentPhone.phoneme && Array.from(currentPhone.phoneme).filter(
+            					value => ["A", "E", "I", "O", "U", "Y"].includes(value)
+            				).length > 0;
+
+            				if (isVowel && currentPhone.hasOwnProperty('F_stdevs') && 
+            					currentPhone.F_stdevs[0] &&  currentPhone.F_stdevs[1] && 
+            					currentPhone.F_stdevs[2] &&  currentPhone.F_stdevs[3]
+            				) {
+            					if (currentPhone != null && currentPhone.F[0]  &&isVowel) {
+            						playingClip.marker.setAttribute('data-pitch', pitchPercent(currentPhone.F[0]));
+            					}
+            					if (currentPhone.F_stdevs && isVowel) {
+            						playingClip.marker.setAttribute('data-resonance', clamp(0, 1, 
+            							((0.7321428571428571 * currentPhone.F_stdevs[1] 
+            							+ 0.26785714285714285 * currentPhone.F_stdevs[2] 
+            							/*+ 0 * currentPhone.F_stdevs[3]*/) + 2) / 4
+            						));
+            					}
+            				}
+            			}
+
+            			this.update(playingClip.marker);
+            		});
+            	}
+
+            	getClipById(id) {
+            		for (let marker of $$('.marker')) {
+            			if (marker.getAttribute('data-id') == id) {
+            				return marker;
+            			}
+            		}
+            	}
+
+            	addMarker(pitch, resonance, label, ratings) {
+            		let newMarker;
+            		this.element.querySelector('.overlay').appendChild(
+            			 newMarker = button(label || ' ', {
+            				'class': 'marker', 
+            				'data-pitch': pitch,
+            				'data-resonance': resonance,
+            			}, [
+            				div({'class' : 'infobox'}, ratings == null ? [] : [
+            					 div({'class':'ratings-bar'}, [
+            							'strongly-disagree', 'disagree',
+            							'agree', 'strongly-agree'
+            						].map((e, i) => span(
+            							ratings[i] > .14 ? this.percent(ratings[i]) : ' ', 
+            							{'class': e, style: `width: ${this.percent(ratings[i])}`}
+            						))
+            					)
+            				])
+            			])
+            		)
+            		let vg = this;
+            		let showDetails = evt => {
+            			vg.update(newMarker);
+            		}
+            		newMarker.addEventListener('mouseover', showDetails);
+            		newMarker.addEventListener('click', showDetails);
+            		
+            		this.update(newMarker);
+            		
+            		return newMarker;
+            	}
+
+            	// Set visual positioning of markers and labels
+            	// to match the values in `data-pitch` and `data-resonance`.
+            	update(marker) {
+            		let overlay = $('.overlay');
+
+            		let pitch     = parseFloat(marker.getAttribute('data-pitch'));
+            		let resonance = parseFloat(marker.getAttribute('data-resonance'));
+
+            		let translateX = `${Math.round(overlay.clientWidth * resonance)}px`;
+            		let translateY = `${Math.round(overlay.clientHeight * (1-pitch))}px`;
+            		let markerTranslateY = `${-Math.round(overlay.clientHeight * pitch)}px`;
+            		let hairTranslateY = `${Math.round(overlay.clientHeight * (1 - pitch))}px`;
+            		marker.style.transform = `translate(${translateX}, ${translateY})`;
+
+
+            		// Update the hairlines and labels
+            		this.xHairline.style.border = '1px solid red';
+            		
+            		let previewClip = globalState.get('previewClip');
+
+            		if (previewClip && previewClip.marker && marker == previewClip.marker) {
+            			this.xValueLabel.style.transform = `translate(${translateX}, 0px)`;
+            			this.yValueLabel.style.transform = `translate(0px, ${markerTranslateY})`; 
+
+            			// Doesn't move unless there's a delay
+            			let hairx = this.xHairline;
+            			let hairy = this.yHairline;
+            			setTimeout(() => {
+            				$('.x.hairline').style.transform = `translate(${translateX}, 0px)`;
+            				$('.y.hairline').style.transform = `translate(0px, ${hairTranslateY})`;
+            			}, 1);
+
+            			this.xValueLabel.innerHTML = `${Math.round(resonance * 100)}%`;
+            			this.yValueLabel.innerHTML = `${Math.round(
+            				this.pitchLowerBoundHz + pitch * this.pitchRange
+            			)}Hz`;
+
+            			this.yHairline.style.opacity = '1';
+            			this.yValueLabel.style.opacity = '1';
+            			this.xHairline.style.opacity = '1';
+            			this.xValueLabel.style.opacity = '1';
+            		}
+            	}
+
+            	/*
+            	preview(recordings) {
+            		for (recording of recordings) {
+            			let el = document.createElement('div');
+            			let vg = this;
+            			el.addEventListener('click', evt => {
+            				vg.play(recording);
+            				vg.preview(recordings);
+            			})
+            		}
+            	}
+            	*/
+
+            	/* Color manipulation */
+            	lighten(color, proportion) {
+            		return proportion >= 0 
+            		? { r: color.r + (255 - color.r) * proportion,
+            			g: color.g + (255 - color.g) * proportion,
+            			b: color.b + (255 - color.b) * proportion, }
+            		: { r: color.r - color.r * -proportion,
+            			g: color.g - color.g * -proportion,
+            			b: color.b - color.b * -proportion, }
+            	}
+            	blend(color1, color2, amount) {
+            		return {
+            			r: color1.r * (1 - amount) + color2.r * amount,
+            			g: color1.g * (1 - amount) + color2.g * amount,
+            			b: color1.b * (1 - amount) + color2.b * amount,
+            		}
+            	}
+
+            	percent(x) {
+            		return Math.floor(x * 100) + '%';
+            	}
+            }
+
+            for (let graph of document.querySelectorAll('voice-graph-2d')) {
+            	graph.voiceGraph = new VoiceGraph(graph);
+            }
+
+            			
+		</script>
 		
 	</body>
 </html>

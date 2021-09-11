@@ -20,6 +20,9 @@
 			{% endfilter %}
 		</style>
 
+		<script>
+			{% include 'svg-icons.js' %}
+		</script>
 		{% if dev %}
 			<script src="./ui/dom.js"></script>
 			<script src="./ui/globals.js"></script>
@@ -78,16 +81,13 @@
 			{% endfilter %}
 		</div>
 
+		{% include "svg-icons.js" %}
 		{% if dev %}
-			<script src="./ui/svg-icons.js"></script>
-			<script src="./ui/recording.js"></script>
 			<script src="./ui/index.js"></script>
 			<script src="./ui/voice-graph.js"></script>
 		{% else %}
 		<script>
 			{% filter indent(width=12) %}
-				{% include "svg-icons.js" %}
-				{% include "recording.js" %}
 				{% include "index.js" %}
 				{% include "voice-graph.js" %}
 			{% endfilter %}

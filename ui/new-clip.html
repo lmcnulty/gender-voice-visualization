@@ -92,7 +92,8 @@
 	<input type="radio" name="add-recording" id="upload-file" checked>
 	<label for="upload-file">Upload a file</label>
 	<div>
-		<input type='file' id='audio-file-input' name='recording' accept="audio/*"/>
+		<input type='file' id='audio-file-input' name='recording' 
+		capture="user" accept="audio/*,video/*,audio/mpeg,audio/mp4,audio/x-aiff,audio/ogg,audio/vorbis,audio/opus,audio/vnd.wav,.wav,.mp3,.ogg,.opus,.m4a,.webm"/>
 	</div>
 	<br>
 	<input type="radio" name="add-recording" id="record-voice">
