@@ -1,5 +1,5 @@
 {
-	"dev"        : false,
-	"logs"       : "/var/log/acousticgender.space/",
+	"dev"        : true,
+	"logs"       : "/var/log/test.acousticgender.space/",
 	"recordings" : "/rec/"
 }

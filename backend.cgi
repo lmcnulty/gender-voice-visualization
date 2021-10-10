@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
-import os, random, json, statistics
+import os, random, json, statistics, hashlib, datetime
 import cgi, cgitb   # I like cgi because it was popular when I was born
+import maxminddb
 
 import preprocessing, phones, resonance
 from settings import settings
-import datetime
 
 # Helpers
 random_id = lambda: str(random.randint(0, 2**32))
@@ -35,24 +35,34 @@ resonance.compute_resonance(data, weights)
 
 print(json.dumps(data))	
 
+countries = None
+if os.path.exists('./countries.mmdb'):
+	countries = maxminddb.open_database('./countries.mmdb')
+
 # Logging
 if settings['logs'] and os.path.exists(settings['logs']):
-	try:
-		logfile = settings['logs'] + request_date.replace(' ', '_') + '_' + id + '.json'
-		with open(logfile, 'w') as f:
-			f.write(json.dumps({
-				# Hash the IP so that we can count use by a single user
-				# without compromising their privacy.
-				'id': hash(os.environ.get('REMOTE_ADDR')),
-				'ua': os.environ.get('HTTP_USER_AGENT'),
-				'date': request_date,
-				'referrer': form.getvalue('referrer'),
-				'lang': form.getvalue('lang'),
-				'screen-dimensions' : {
-					'width' : form.getvalue('screen-width'),
-					'height' : form.getvalue('screen-height'),
-				}
-			}))
+	#try:
 
-	except:
-		pass
+	ip = os.environ.get('REMOTE_ADDR')
+	logfile = settings['logs'] + request_date.replace(' ', '_') + '_' + id + '.json'
+	with open(logfile, 'w') as f:
+		log_info = {
+			# Hash the IP so that we can count use by a single user
+			# without compromising their privacy.
+			'country': countries.get(ip)['country']['iso_code'],
+			'ua': os.environ.get('HTTP_USER_AGENT'),
+			'date': request_date,
+			'referrer': form.getvalue('referrer'),
+			'lang': form.getvalue('lang'),
+			'screen-dimensions' : {
+				'width' : form.getvalue('screen-width'),
+				'height' : form.getvalue('screen-height'),
+			}
+		}
+		log_info['id'] = hashlib.sha256((
+			ip + log_info['ua'] + str(log_info['screen-dimensions'])
+		).encode('ascii')).hexdigest()
+		f.write(json.dumps(log_info))
+
+	#except:
+	#	pass
