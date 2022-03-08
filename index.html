@@ -62,7 +62,7 @@ and assets under a Creative Commons Attribution Sharealike license.
             	
             		--box-shadow-spread: 40;
             	
-            		--highlight-strength: 14;
+            		--highlight-strength: 9;
             	
 
             	--box-shadow: -1px 1px var(--box-shadow-spread) var(--box-shadow-spread) rgba(0,0,0,calc(var(--box-shadow-strength)));
@@ -261,7 +261,10 @@ and assets under a Creative Commons Attribution Sharealike license.
             	color: var(--accent);
             }
 
-            .custom-widgets button, .custom-widgets  input[type=submit] {
+            .custom-widgets button, 
+            .custom-widgets  input[type=submit],
+            .custom-widgets input[type=file]::file-selector-button 
+            {
             	padding-top: 0px;
             	padding-bottom: 0px;
             	vertical-align: middle;
@@ -283,7 +286,10 @@ and assets under a Creative Commons Attribution Sharealike license.
               box-shadow: inset var(--box-shadow);
             }
 
-            button, input[type=submit] {
+            button, 
+            input[type=submit] ,
+            input[type=file]::file-selector-button
+            {
             	height: calc(var(--header-height) - 1rem);
             }
             input, textarea, progress[value], select {
@@ -297,7 +303,9 @@ and assets under a Creative Commons Attribution Sharealike license.
             	font-size: 100%;
             }
               
-            .custom-widgets button:after, .custom-widgets input[type=submit]:after {
+            .custom-widgets button:after, 
+            .custom-widgets input[type=submit]:after
+            {
               content: ' ';
               position: absolute;
               bottom: 0px;
@@ -1479,7 +1487,7 @@ to help us in our research.
             		"border-radius":"8",
             		"box-shadow-strength":"8",
             		"box-shadow-spread":"40",
-            		"highlight-strength":"14"
+            		"highlight-strength":"9"
             	},
 
             	"Popular": {

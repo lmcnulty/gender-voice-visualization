@@ -20,7 +20,10 @@ a {
 	color: var(--accent);
 }
 
-.custom-widgets button, .custom-widgets  input[type=submit] {
+.custom-widgets button, 
+.custom-widgets  input[type=submit],
+.custom-widgets input[type=file]::file-selector-button 
+{
 	padding-top: 0px;
 	padding-bottom: 0px;
 	vertical-align: middle;
@@ -42,7 +45,10 @@ main > section {
   box-shadow: inset var(--box-shadow);
 }
 
-button, input[type=submit] {
+button, 
+input[type=submit] ,
+input[type=file]::file-selector-button
+{
 	height: calc(var(--header-height) - 1rem);
 }
 input, textarea, progress[value], select {
@@ -56,7 +62,9 @@ h2 {
 	font-size: 100%;
 }
   
-.custom-widgets button:after, .custom-widgets input[type=submit]:after {
+.custom-widgets button:after, 
+.custom-widgets input[type=submit]:after
+{
   content: ' ';
   position: absolute;
   bottom: 0px;
