@@ -262,8 +262,7 @@ and assets under a Creative Commons Attribution Sharealike license.
             }
 
             .custom-widgets button, 
-            .custom-widgets  input[type=submit],
-            .custom-widgets input[type=file]::file-selector-button 
+            .custom-widgets  input[type=submit]
             {
             	padding-top: 0px;
             	padding-bottom: 0px;
@@ -274,6 +273,17 @@ and assets under a Creative Commons Attribution Sharealike license.
             	border-radius: var(--border-radius);
             	box-shadow: var(--box-shadow);
             }
+            .custom-widgets input[type=file]::file-selector-button {
+            	padding-top: 0px;
+            	padding-bottom: 0px;
+            	vertical-align: middle;
+            	background: var(--button-background);
+            	color: var(--button-color);
+            	border: 1px solid var(--chrome-border);
+            	border-radius: var(--border-radius);
+            	box-shadow: var(--box-shadow);
+            }
+
             .custom-widgets textarea, .custom-widgets select, .custom-widgets input {
             	background: var(--input-background);
             	color: var(--input-color);
@@ -287,9 +297,11 @@ and assets under a Creative Commons Attribution Sharealike license.
             }
 
             button, 
-            input[type=submit] ,
-            input[type=file]::file-selector-button
+            input[type=submit]
             {
+            	height: calc(var(--header-height) - 1rem);
+            }
+            input[type=file]::file-selector-button {
             	height: calc(var(--header-height) - 1rem);
             }
             input, textarea, progress[value], select {
