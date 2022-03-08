@@ -1238,6 +1238,7 @@ to help us in our research.
         	function hideModal() {
         		$('.modal-shadow').classList.add('hidden');
         		$('.play-pause').focus();
+        		resizeEvent(null);
         	}
         	$('.modal > .close').addEventListener('click', evt => {
         			clearSelector('.modal > section');
