@@ -1,0 +1,5 @@
+{
+	"dev"        : true,
+	"logs"       : "/var/log/test.acousticgender.space/",
+	"recordings" : "/rec/"
+}

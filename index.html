@@ -1,53 +1,71 @@
 <!doctype html>
 <!--
 Hello! If you're seeing this, you're probably using your browser's
-"view-source" feature. You might notice that the frontend of this
-project appears to be one big file. In fact, it is compiled from
-many files that are combined into one for performance reasons.
-We've tried to make the output here as readable as possible, but
-you might have an easier time looking at the source code in the 
-Git repository: <INSERT REPOSITORY LINK>
+"view-source" feature. We've tried to make the output here readable,
+but you may have better luck looking at the source files in our git
+repository [1]
+
+- https://gitlab.com/lmcnulty/gender-voice-visualization
+- https://github.com/lmcnulty/gender-voice-visualization
+
+The source is free software under the GNU Affero General Public License [1],
+and assets under a Creative Commons Attribution Sharealike license.
+
+[1] https://gitlab.com/lmcnulty/gender-voice-visualization,
+    https://github.com/lmcnulty/gender-voice-visualization 
+[2] https://www.gnu.org/licenses/agpl-3.0.en.html
+[3] https://creativecommons.org/licenses/by-sa/4.0/
 -->
 <html>
 	<head>
 		<meta charset='utf-8'/>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="theme-color" content="#45acf4">
 		<title>Acoustic Genderspace Viewer - Research Trial</title>
+		<link rel="shortcut icon" href="./resources/logo.png">
+		<link rel="icon" sizes="192x192" href="./resources/logo.png">
+		<link href="data:text/css," rel="stylesheet" type="text/css" title="Null">
+		<link rel="manifest" href="./manifest.json">
 		<style>
 			
             				
             /* ======================= Variables ======================= */
             body {
             	--header-height: 2.5rem;
-            	--body-background: white;
-            	--body-color: black;
-            	--widget-background: inherit;
-            	--widget-color: inherit;
             	
-            	--input-background: inherit;
-            	--input-color: inherit;
             	
-            	--accent: purple;
-            	--accent-text: white;
+            		--body-background: #5e5e5e;
+            	
+            		--body-color: #f2f2f2;
+            	
+            		--chrome-color: #f2f2f2;
+            	
+            		--chrome-background: #565656;
+            	
+            		--chrome-border: #181818;
+            	
+            		--accent: #169CF9;
+            	
+            		--accent-text: #ffffff;
+            	
+            		--button-color: #ffffff;
+            	
+            		--button-background: #474747;
+            	
+            		--input-color: #f2f2f2;
+            	
+            		--input-background: #707070;
+            	
+            		--border-radius: 8;
+            	
+            		--box-shadow-strength: 8;
+            	
+            		--box-shadow-spread: 40;
+            	
+            		--highlight-strength: 9;
+            	
 
-            	--border-radius: .2em;
-
-            	--box-shadow-strength: 0.1;
-            	--highlight-strength: 0.1;
-            	--box-shadow-spread: 4px;
-            	--box-shadow: -2px 2px var(--box-shadow-spread) 2px rgba(0, 0, 0, var(--box-shadow-strength));
-            	
-            	--chrome-background: #444;
-            	--chrome-color: #ccc;
-            	--chrome-border: #000;
-            	
-            	--chrome-background: #ddd;
-            	--chrome-color: #000;
-            	--chrome-border: #888;
-
-            	--button-background: inherit;
-            	--button-color: inherit;
-            	
+            	--box-shadow: -1px 1px var(--box-shadow-spread) var(--box-shadow-spread) rgba(0,0,0,calc(var(--box-shadow-strength)));
             	--progress-bar-background: var(--accent);
             }
 
@@ -59,12 +77,17 @@ Git repository: <INSERT REPOSITORY LINK>
             html, body {
             	position: relative;
             	margin: 0px;
-            	height: 100%;
             	overflow: hidden;
             	background: var(--body-background);
             	color: var(--body-color);
             	font-family: sans-serif;
             }
+
+            html {
+            	height: 100%; 
+            }
+            body { height: 100%; }
+
             header, footer {
             	height: var(--header-height);
             	width: 100%;
@@ -78,7 +101,7 @@ Git repository: <INSERT REPOSITORY LINK>
             	border-color: var(--chrome-border);
             }
             main {
-            	height: calc(100vh - var(--header-height));
+            	height: calc(100% - var(--header-height));
             	display: flex;
             	justify-content: center;
             }
@@ -156,12 +179,14 @@ Git repository: <INSERT REPOSITORY LINK>
             }
             .narrow-body main aside {
             	max-width: 100%;
-            	height: calc(100vh - 100vw - var(--header-height));
+            	height: calc(100% - 100vw - var(--header-height));
             }
             .narrow-body voice-graph-2d {
             	max-width: calc(60vh - var(--header-height) * .6);
-            	max-height: calc(60vh - var(--header-height) * .6);
+            	max-height: 100%;
             	margin: auto;
+            	bottom: 0px;
+            	position: relative;
             }
             .narrow-body main > section {
             	max-height: 60%;
@@ -232,8 +257,13 @@ Git repository: <INSERT REPOSITORY LINK>
             	opacity: .5;
             }
 
+            a {
+            	color: var(--accent);
+            }
 
-            .custom-widgets button, .custom-widgets  input[type=submit] {
+            .custom-widgets button, 
+            .custom-widgets  input[type=submit]
+            {
             	padding-top: 0px;
             	padding-bottom: 0px;
             	vertical-align: middle;
@@ -243,6 +273,17 @@ Git repository: <INSERT REPOSITORY LINK>
             	border-radius: var(--border-radius);
             	box-shadow: var(--box-shadow);
             }
+            .custom-widgets input[type=file]::file-selector-button {
+            	padding-top: 0px;
+            	padding-bottom: 0px;
+            	vertical-align: middle;
+            	background: var(--button-background);
+            	color: var(--button-color);
+            	border: 1px solid var(--chrome-border);
+            	border-radius: var(--border-radius);
+            	box-shadow: var(--box-shadow);
+            }
+
             .custom-widgets textarea, .custom-widgets select, .custom-widgets input {
             	background: var(--input-background);
             	color: var(--input-color);
@@ -255,7 +296,12 @@ Git repository: <INSERT REPOSITORY LINK>
               box-shadow: inset var(--box-shadow);
             }
 
-            button, input[type=submit] {
+            button, 
+            input[type=submit]
+            {
+            	height: calc(var(--header-height) - 1rem);
+            }
+            input[type=file]::file-selector-button {
             	height: calc(var(--header-height) - 1rem);
             }
             input, textarea, progress[value], select {
@@ -269,7 +315,9 @@ Git repository: <INSERT REPOSITORY LINK>
             	font-size: 100%;
             }
               
-            .custom-widgets button:after, .custom-widgets input[type=submit]:after {
+            .custom-widgets button:after, 
+            .custom-widgets input[type=submit]:after
+            {
               content: ' ';
               position: absolute;
               bottom: 0px;
@@ -311,7 +359,12 @@ Git repository: <INSERT REPOSITORY LINK>
             	color: white;
             	color: var(--accent-text);
             }
-
+            h2 {
+            	margin-bottom: .5em;
+            }
+            h2 + p {
+            	margin-top: .5em;
+            }
 
             .scrolling-text-box {
             	background: var(--body-background);
@@ -324,6 +377,9 @@ Git repository: <INSERT REPOSITORY LINK>
             	background: var(--accent);
             	color: var(--accent-text);
             	font-weight: bold;
+            }
+            hr {
+            	border: 1px solid var(--chrome-border);
             }
             				
             /* Voice Graph */
@@ -401,6 +457,7 @@ Git repository: <INSERT REPOSITORY LINK>
             }
 
             voice-graph-2d > .overlay > .marker {
+            	display: online-block;
             	height: 1.5em;
             	width: 1.5em;
             	border-radius: 50%;
@@ -604,21 +661,213 @@ Git repository: <INSERT REPOSITORY LINK>
             }
             			
 		</style>
-		<link rel="shortcut icon" href="./resources/logo.png">
-		<link rel="icon" sizes="192x192" href="./resources/logo.png">
-		<meta name="theme-color" content="#45acf4">
-		<link href="data:text/css," rel="stylesheet" type="text/css" title="Null">
-		<link rel="manifest" href="./manifest.json">
 
+		<script>
+			
+
+let darkIcon = String(`
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   id="svg5181"
+   version="1.1"
+   viewBox="0 0 8.5024996 8.5054264"
+   height="32.146492"
+   width="32.135433">
+  <defs
+     id="defs5175" />
+  <metadata
+     id="metadata5178">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(-24.474941,-137.0211)"
+     id="layer1">
+    <rect style="fill:none;fill-opacity:1;stroke:currentColor;stroke-width:0.56500006;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0"
+       id="rect4546-3"
+       width="7.9375"
+       height="7.9375"
+       x="24.757441"
+       y="137.30507" />
+    <path
+       id="path4571"
+       d="m 27.40326,137.30506 c -3.43959,1.32291 -3.43959,6.61458 0,7.9375"
+       style="fill:none;stroke:currentColor;stroke-width:0.565;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       style="fill:none;stroke:currentColor;stroke-width:0.565;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 27.93242,138.09881 c -2.64583,1.85208 -2.64583,4.49791 0,6.35"
+       id="path4573" />
+    <path
+       style="fill:none;stroke:currentColor;stroke-width:0.565;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 30.0491,137.30506 c 3.43959,1.32291 3.43959,6.61458 0,7.9375"
+       id="path5740" />
+    <path
+       id="path5742"
+       d="m 29.51994,138.09881 c 2.64583,1.85208 2.64583,4.49791 0,6.35"
+       style="fill:none;stroke:currentColor;stroke-width:0.565;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  </g>
+</svg>
+`)
+
+let brightIcon = String(`
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="32.135433"
+   height="32.153236"
+   viewBox="0 0 8.5025005 8.5072107"
+   version="1.1"
+   id="svg4565"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
+   sodipodi:docname="bright.svg">
+  <defs id="defs4559">
+	<link href="style.css" type="text/css" rel="stylesheet" 
+          xmlns="http://www.w3.org/1999/xhtml"/>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="11.2"
+     inkscape:cx="12.379905"
+     inkscape:cy="11.113832"
+     inkscape:document-units="mm"
+     inkscape:current-layer="svg4565"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     units="px"
+     inkscape:window-width="1920"
+     inkscape:window-height="1002"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata4562">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-32.790418,-144.57973)">
+    <rect
+       style="fill:none;fill-opacity:1;stroke:currentColor;stroke-width:0.56500006;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0"
+       id="rect4581"
+       width="7.9375"
+       height="7.9375"
+       x="33.072918"
+       y="144.86459"
+       inkscape:export-xdpi="191.19"
+       inkscape:export-ydpi="191.19" />
+    <path
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path4583"
+       d="m 33.866667,144.86458 c 1.85208,1.32292 1.85208,6.61459 0,7.9375"
+       style="fill:none;stroke:currentColor;stroke-width:0.56500006;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       style="fill:none;stroke:currentColor;stroke-width:0.56500006;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 35.454167,145.39375 c 1.32291,1.85209 1.32291,5.02709 0,6.87917"
+       id="path4585"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;stroke:currentColor;stroke-width:0.56500006;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 40.216657,144.86459 c -1.85208,1.32292 -1.85208,6.61459 0,7.9375"
+       id="path833"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <path
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path835"
+       d="m 38.629157,145.39376 c -1.32291,1.85209 -1.32291,5.02709 0,6.87917"
+       style="fill:none;stroke:currentColor;stroke-width:0.56500006;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  </g>
+</svg>
+`)
+		</script>
 		
 			<script src="./ui/dom.js"></script>
 			<script src="./ui/globals.js"></script>
 			<script src="./ui/clip.js"></script>
+			<script src="./ui/examples.js"></script>
 			<script src="./ui/util.js"></script>
-			<script src="./ui/speech-scripts.js"></script>
 		
 	</head>
-	<body class="narrow-body">
+	<body class="narrow-body custom-widgets">
+		<style>
+	.popup {
+		max-width: 500px;
+		width: 400px;
+		margin: 1em;
+		margin-left: calc(-200px);
+		padding: 1em;
+		padding-right: 2em;
+		color: black;
+		background: white;
+		border: 2px solid whitesmoke;
+		box-shadow: 0px 0px 10px 10px rgba(0, 0, 0, .25);
+		position: fixed;
+		top: 0px;
+		left: 50%;
+		z-index: 99999999999999;
+		transition: all 1s;
+		border-radius: .25em;
+	}
+	.popup button.close {
+		background: none;
+		border: none;
+		box-shadow: none;
+		font-size: 200%;
+		color: grey;
+		position: absolute;
+		top: 0px;
+		right: 0px;
+	}
+	.popup.offscreen {
+		top: -300px;
+		opacity: 0;
+	}
+</style>
+<div class="popup offscreen">
+Please complete <a href="https://brown.co1.qualtrics.com/jfe/form/SV_4PgW7EKNvnxnWLk">our survey</a>
+to help us in our research.
+<button class="close" onclick="$('.popup').classList.add('offscreen')">×</button>
+</div>
+<script>
+//setTimeout(() => $('.popup').classList.remove('offscreen'), 30000);
+</script>
 		<header>
 			
             				
@@ -632,10 +881,10 @@ Git repository: <INSERT REPOSITORY LINK>
             </svg>
             </button>
             <progress class="player" value="0" min="0"></progress>
-            <video class="clip"></video>
+            <audio class="clip"></audio>
             <script>
             try {
-            	let mediaElement = $('video.clip');
+            	let mediaElement = $('.clip');
             	let playPauseButton = $('button.play-pause');
             	let progressBar = $('progress.player');
 
@@ -804,6 +1053,7 @@ Git repository: <INSERT REPOSITORY LINK>
             		width: 100%;
             		height: var(--header-height);
             		margin: 0px;
+            		opacity: 0;
             	}
             </style>
             <!-- ====================================================== -->
@@ -1008,6 +1258,7 @@ Git repository: <INSERT REPOSITORY LINK>
         	function hideModal() {
         		$('.modal-shadow').classList.add('hidden');
         		$('.play-pause').focus();
+        		resizeEvent(null);
         	}
         	$('.modal > .close').addEventListener('click', evt => {
         			clearSelector('.modal > section');
@@ -1025,58 +1276,103 @@ Git repository: <INSERT REPOSITORY LINK>
             	.settings > label:first-child {
             		font-weight: bold;
             	}
-            	#theme-select {
-            		width: 100%;
+            	#export-clips {
+            		margin-right: auto;
+            	}
+            	section.settings .hbox {
+            		display: flex;
+            		align-items: center;
+            	}
+            	section.settings .hbox > * + * {
+            		margin-left: .25em;
+            	}
+            	#import-export {
+            		margin-top: .5em;
+            		margin-bottom: .5em;
+            	}
+            	section.settings .hbox h2 {
+            		margin: 0px;
+            		margin-right: auto;
+            	}
+            	.example {
+            		align-items: center;
+            	}
+            	section.settings select {
+            		width: 50ch;
+            		flex-shrink: 1;
             	}
             </style>
             <section class="settings">
-            	<label for="theme-select">Theme</label>
-            	<br>
-            	<select id="theme-select" onchange="if (this.value != 'custom') eval(this.value)">
-            		<option value="simpleDark()">Deep Dark</option>
+            	<h2>Your Data</h2>
+            	<div id="import-export" class="hbox">
+            		<button id="export-clips">Export</button>
+            		<input type="file" id="import-clips-file"/>
+            		<button id="import-clips">Import</button>
+            	</div>
+            	<script>
+            		$('#export-clips').addEventListener('click', evt => {
+            			let cloneClips = JSON.parse(JSON.stringify(globalState.get('clips')));
+            			for (let clip of cloneClips) delete clip.marker;
+            			downloadFile('data:text/json;charset=utf-8,' + encodeURIComponent(
+            				JSON.stringify(cloneClips)
+            			), 'clips.json');
+            		});
             		
-            		<option value="lightBlue()">Light Blue</option>
-            		
-            		<option value="lightRed()">Light Red</option>
-            		
-            		<option value="popular()">Popular</option>
-            		
-            		<!--option value="whiteLight()">White Light</option>
-            		<option value="simpleGray()">Medium Gray</option>
-            		<option value="pureBlack()">Pure Black</option-->
+            		$('#import-clips').addEventListener('click', evt => {
+            			if ($('#import-clips-file').files.length > 0) {
+            				let reader = new FileReader();
+            				reader.onload = evt => {
+            					let loadedClips = JSON.parse(evt.target.result);
+            					globalState.set('clips', loadedClips);
+            					globalState.set('playingClip', last(loadedClips));
+            					globalState.set('previewClip', last(loadedClips));
+            				}
+            				reader.readAsText($('#import-clips-file').files[0]);
+            			} else {
+            				alert('You need to select the file containing your exported data.');
+            			}
+            		});
+            	</script>
+            	<hr>
+            	<div class="hbox examples">
+            	<h2>Examples</h2>
+            		<button id="load-default-clips" onclick="loadDefaultClips()">Reload Defaults</button>
+            		<button id="load-extended-clips" onclick="loadExtendedClips()">Load Extended</button>
+            	</div>
+            	<p>Warning: The extended set of examples may use large amounts of data.</p>
 
-            		<!--option value="pinkPank()">Pink Pank</option-->
-            		<option value="pinkBlue()">Pinkin Blue</option>
-            		
-            		<!--option value="terminal()">80s Terminal</option>
-            		<option value="win95()">Win95</option>
-            		<option value="winXP()">WinXP</option>
-            		<option value="win10()">Win10</option-->
+            	<hr>
 
-            		<!--option value="adwaita()">Adwaita</option>
-            		<option value="ubuntu()">Yaru</option>
-            		<option value="xfceEvolution()">XFCE Evolution</option-->
-            		
-            		<!--option value="nativeStyle()">Native Style (Limited Support)</option-->
-            		
+            	<h2>Theme</h2>
+            	<select id="theme-select">
+            		<option value="Deep Dark">Deep Dark</option>
+            		<option value="Light Blue">Light Blue</option>
+            		<option value="Light Red">Light Red</option>
+            		<option value="Popular">Popular</option>
+            		<option value="Pinkin Blue">Pinkin Blue</option>
+            		<option value="Pink Pank">Pink Pank</option>
+            		<option value="80s">80's</option>
+            		<option value="90s">90's</option>
+            		<option value="00s">00's</option>
+            		<option value="10s">10's</option>
             		<option value="custom">Custom</option>
             	<select>
             	<br>
             	<br>
 
             	<details id="set-colors">
-            		<summary>Customize Theme</summary>
+            		<summary>Customize</summary>
             		Rounded Corners:
-            		<input type="range" value="15" id="border-radius" data-onchange="document.body.style.setProperty('--border-radius', (this.value / 50) + 'em');"/>
+            		<input type="range" value="15" id="border-radius" />
             		<br>
             		Shadow Strength:
-            		<input type="range" value="5" id="box-shadow-strength" class="proportion"  data-onchange="document.body.style.setProperty('--box-shadow-strength', (this.value / 100));"/>
+            		<input type="range" value="5" id="box-shadow-strength" class="proportion"  />
             		<br>
             		Shadow Spread:
-            		<input type="range" value="15" id="box-shadow-spread" data-onchange="document.body.style.setProperty('--box-shadow-spread', (this.value / 100) * 10 + 'px');"/>
+            		<input type="range" value="15" id="box-shadow-spread" />
             		<br>
             		Highlight Strength:
-            		<input type="range" value="0" id="highlight-strength" class="proportion" data-onchange="document.body.style.setProperty('--highlight-strength', (this.value / 100));"/>
+            		<input type="range" value="0" id="highlight-strength" class="proportion" />
             		<br>
             		<br>
 
@@ -1116,13 +1412,239 @@ Git repository: <INSERT REPOSITORY LINK>
 
             	</details>
             	<script>
-            		let themeState = new StateManager();
 
+            		let themeState = new StateManager();
+            		let themes = {
+            	"Light Blue": {
+            		"body-background":"#ffffff",
+            		"body-color":"#000000",
+            		"chrome-color":"#000000",
+            		"chrome-background":"#f4f7f9",
+            		"chrome-border":"#bfc2c4",
+            		"accent":"#0fa9ff",
+            		"accent-text":"#ffffff",
+            		"button-color":"#000000",
+            		"button-background":"#f7f7f7",
+            		"input-color":"#000000",
+            		"input-background":"#ffffff",
+            		"border-radius":"30",
+            		"box-shadow-strength":"11",
+            		"box-shadow-spread":"30",
+            		"highlight-strength":"24"
+            	},
+            	"Light Red":{"body-background":"#ffffff",
+            		"body-color":"#401a25",
+            		"chrome-color":"#401a25",
+            		"chrome-background":"#f9f4f5",
+            		"chrome-border":"#c4bfc0",
+            		"accent":"#ff6d96",
+            		"accent-text":"#ffffff",
+            		"button-color":"#401a25",
+            		"button-background":"#f7f7f7",
+            		"input-color":"#401a25",
+            		"input-background":"#ffffff",
+            		"border-radius":"30",
+            		"box-shadow-strength":"11",
+            		"box-shadow-spread":"30",
+            		"highlight-strength":"29"
+            	},
+
+            	"Pinkin Blue": {
+            		"body-background":"#c6efff",
+            		"body-color":"#2d2d2d",
+            		"chrome-color":"#2d2d2d",
+            		"chrome-background":"#aee8ff",
+            		"chrome-border":"#25a5d8",
+            		"accent":"#ff8cb3",
+            		"accent-text":"#ffffff",
+            		"button-color":"#000000",
+            		"button-background":"#55cdfc",
+            		"input-color":"#000000",
+            		"input-background":"#ffffff",
+            		"border-radius":"37",
+            		"box-shadow-strength":"10",
+            		"box-shadow-spread":"30",
+            		"highlight-strength":"50"
+            	},
+
+            	"Pink Pank": {"body-background":"#ffe5f8",
+            		"body-color":"#401a25",
+            		"chrome-color":"#401a25",
+            		"chrome-background":"#ffdcf7",
+            		"chrome-border":"#ea9cd9",
+            		"accent":"#dd55c6",
+            		"accent-text":"#ffffff",
+            		"button-color":"#000000",
+            		"button-background":"#ffe8f9",
+            		"input-color":"#401a25",
+            		"input-background":"#ffffff",
+            		"border-radius":"49",
+            		"box-shadow-strength":"6",
+            		"box-shadow-spread":"41",
+            		"highlight-strength":"32"
+            	},
+
+            	"Deep Dark": {
+            		"body-background":"#5e5e5e",
+            		"body-color":"#f2f2f2",
+            		"chrome-color":"#f2f2f2",
+            		"chrome-background":"#565656",
+            		"chrome-border":"#181818",
+            		"accent":"#169CF9",
+            		"accent-text":"#ffffff",
+            		"button-color":"#ffffff",
+            		"button-background":"#474747",
+            		"input-color":"#f2f2f2",
+            		"input-background":"#707070",
+            		"border-radius":"8",
+            		"box-shadow-strength":"8",
+            		"box-shadow-spread":"40",
+            		"highlight-strength":"9"
+            	},
+
+            	"Popular": {
+            		"body-background":"#ffffff",
+            		"body-color":"#474747",
+            		"chrome-color":"#474747",
+            		"chrome-background":"#ffffff",
+            		"chrome-border":"#d1d1d1",
+            		"accent":"#a74b91",
+            		"accent-text":"#ffffff",
+            		"button-color":"#000000",
+            		"button-background":"#f7f7f7",
+            		"input-color":"#000000",
+            		"input-background":"#f7f7f7",
+            		"border-radius":"32",
+            		"box-shadow-strength":"8",
+            		"box-shadow-spread":"50",
+            		"highlight-strength":"0"
+            	},
+
+            	"Ubuntu" : {
+            		"body-background": "#ffffff",
+            		"body-color": "#000000",
+            		"chrome-color": "#000000",
+            		"chrome-background": "#f5f6f7",
+            		"chrome-border": "#b4b7ba",
+            		"accent": "#e95421",
+            		"accent-text":"#ffffff",
+            		"button-color": "#000000",
+            		"button-background": "#f0f3f4",
+            		"input-color": "#000000",
+            		"input-background": "#ffffff",
+            		"border-radius": "0.3",
+            		"box-shadow-spread": "5",
+            		"box-shadow-strength": "0.15",
+            		"highlight-strength": "0.15"
+            	},
+
+            	"10s": {
+            		"body-background": "#ffffff",
+            		"body-color": "#2d2d2d",
+            		"chrome-color": "#2d2d2d",
+            		"chrome-background": "#f0f0f0",
+            		"chrome-border": "#8d8d8d",
+            		"accent": "#1979ca",
+            		"accent-text":"#ffffff",
+            		"button-color": "#000000",
+            		"button-background": "#dcdcdc",
+            		"input-color": "#000000",
+            		"input-background": "#ffffff",
+            		"border-radius": ".4",
+            		"box-shadow-spread": "5",
+            		"box-shadow-strength": "0.0",
+            		"highlight-strength": "0.0"
+            	},
+            	"90s" : {
+            		"body-background":"#fffee2",
+            		"body-color":"#2d2d2d",
+            		"chrome-color":"#2d2d2d",
+            		"chrome-background":"#c0c0c0",
+            		"chrome-border":"#404040",
+            		"accent":"#000080",
+            		"accent-text":"#ffffff",
+            		"button-color":"#000000",
+            		"button-background":"#c3c3c3",
+            		"input-color":"#000000",
+            		"input-background":"#ffffff",
+            		"border-radius":"15",
+            		"box-shadow-strength":"38",
+            		"box-shadow-spread":"0",
+            		"highlight-strength":"60"
+            	},
+
+            	"Pinkin Blues Old": {
+            		"body-background": "#d8f4ff",
+            		"body-color": "#2d2d2d",
+            		"chrome-color": "#2d2d2d",
+            		"chrome-background": "#aee8ff",
+            		"chrome-border": "#25a5d8",
+            		"accent": "#f7a8b8",
+            		"accent-text": "#ffffff",
+            		"button-color": "#000000",
+            		"button-background": "#55cdfc",
+            		"input-color": "#000000",
+            		"input-background": "#ffffff",
+            		"border-radius": ".6em",
+            		"box-shadow-spread": "5px",
+            		"box-shadow-strength": "0.15",
+            		"highlight-strength": "0.40",
+            		"border-radius":"32",
+            		"box-shadow-strength":"8",
+            		"box-shadow-spread":"5",
+            		"highlight-strength":"0"
+            	},
+
+            	"80s": {
+            		"body-background": "#000000",
+            		"body-color": "#00ff0c",
+            		"chrome-color": "#00ff0c",
+            		"chrome-background": "#000000",
+            		"chrome-border": "#00ff0c",
+            		"accent": "#00ff0c",
+            		"accent-text": "#000000",
+            		"button-color": "#00ff0c",
+            		"button-background": "#000000",
+            		"input-color": "#00ff0c",
+            		"input-background": "#000000",
+            		"border-radius": "0em",
+            		"box-shadow-spread": ".5",
+            		"box-shadow-strength": "15",
+            		"highlight-strength": "0.0"
+            	},
+
+            	"00s": {
+            		"body-background": "#f4f3ee",
+            		"body-color": "#000000",
+            		"chrome-color": "#000000",
+            		"chrome-background": "#ece9d8",
+            		"chrome-border": "#76a2cb",
+            		"accent": "#0070f6",
+            		"accent-text": "#ffffff",
+            		"button-color": "#000000",
+            		"button-background": "#f3f3ef",
+            		"input-color": "#000000",
+            		"input-background": "#ffffff",
+            		"border-radius": "12",
+            		"box-shadow-spread": "20",
+            		"box-shadow-strength": "15",
+            		"highlight-strength": "15"
+            	}
+            };
+            		let theme = $('#theme-select').value;
+            		loadTheme(themes[theme]);
+            		
             		for (let colorSelect of $$('#set-colors > input[type=color]')) {
-            			themeState.sync(colorSelect.id, colorSelect, 'value');
+            			if (!themeState.state.hasOwnProperty(colorSelect.id)) {
+            				themeState.init(colorSelect.id, null);
+            			}
             			themeState.render([colorSelect.id], current => {
             				document.body.style.setProperty('--' + colorSelect.id, current[colorSelect.id]);
             			});
+            		}
+
+            		for (let colorSelect of $$('#set-colors > input[type=color]')) {
+            			themeState.sync(colorSelect.id, colorSelect, 'value');
             			themeState.set(colorSelect.id, colorSelect.value);
             			colorSelect.addEventListener('change', evt => {
             				$('#theme-select').value = 'custom';
@@ -1130,8 +1652,14 @@ Git repository: <INSERT REPOSITORY LINK>
             		}
 
             		for (let select of $$('#set-colors > input[type=range]')) {
-            			console.log(select.id);
             			themeState.sync(select.id, select, 'value');
+            			select.addEventListener('change', evt => {
+            				$('#theme-select').value = 'custom';
+            			});
+            		}
+
+
+            		for (let select of $$('#set-colors > input[type=range]')) {
             			themeState.render([select.id], current => {
             				if (select.classList.contains('proportion')) {
             					document.body.style.setProperty('--' + select.id, current[select.id] / 100);
@@ -1143,20 +1671,36 @@ Git repository: <INSERT REPOSITORY LINK>
             					document.body.style.setProperty('--' + select.id, (current[select.id] / 100) * 10 + 'px');
             				}
             			});
+            		}
 
-            			select.addEventListener('change', evt => {
-            				$('#theme-select').value = 'custom';
+            		function doLoadTheme(theme) {
+            			if (themes[theme]) {
+            				loadTheme(themes[theme]);
+            			} else {
+            				setTimeout(() => doLoadTheme(theme), 1000);
+            			}
+            		}
+            		$('#theme-select').addEventListener('change', evt => {
+            			let theme = $('#theme-select').value;
+            			doLoadTheme(theme);
+            		});
+
+
+            		for (let colorSelect of $$('#set-colors > input[type=color]')) {
+            			if (!themeState.state.hasOwnProperty(colorSelect.id)) {
+            				themeState.init(colorSelect.id, current[colorSelect.id]);
+            			}
+            			themeState.render([colorSelect.id], current => {
+            				document.body.style.setProperty('--' + colorSelect.id, current[colorSelect.id]);
             			});
             		}
 
-            		eval($('#theme-select').value);
+            		theme = $('#theme-select').value;
+            		loadTheme(themes[theme]);
 
-            		function nativeWidgets() {
-            			$('body').classList.remove('custom-widgets');
-            		}
-            		function customWidgets() {
-            			$('body').classList.add('custom-widgets');
-            		}
+            		function nativeWidgets() {$('body').classList.remove('custom-widgets')};
+            		function customWidgets() {$('body').classList.add('custom-widgets')};
+
             		function recordTheme() {
             			let theme = {};
             			for (let key in themeState.state) {
@@ -1166,22 +1710,13 @@ Git repository: <INSERT REPOSITORY LINK>
             		}
             		function loadTheme(theme) {
             			for (let key in theme) {
-            				themeState.set(key, theme[key]);
+            				if (themeState.state.hasOwnProperty(key)) {
+            					themeState.set(key, theme[key]);
+            				}  else {
+            					themeState.init(key, theme[key]);
+            				}
             			}
             		}
-            		/*
-            		function recordColors() {
-            			let colors = '';
-            			for (let colorSelect of $$('#set-colors > input[type=color]')) {
-            				colors += `document.querySelector('#${colorSelect.id}').value = '${getComputedStyle(document.body).getPropertyValue('--' + colorSelect.id)}';\n`;
-            				colors += `document.body.style.setProperty('--${colorSelect.id}', '${colorSelect.value}');\n`
-            			}
-            			for (let select of $$('#set-colors > input[type=slider]')) {
-            				colors += `document.querySelector('#${select.id}').value = '${getComputedStyle(document.body).getPropertyValue('--' + select.id)}';\n`;
-            				colors += `document.body.style.setProperty('--${select.id}', '${select.value}');\n`
-            			}
-            		}
-            		*/
             		function nativeStyle() {
             			whiteLight();
             			document.body.style.setProperty('--body-background', 'White');
@@ -1193,593 +1728,163 @@ Git repository: <INSERT REPOSITORY LINK>
             			document.body.style.setProperty('--button-color', 'ButtonText');
             			document.body.style.setProperty('--button-background', 'ButtonFace');
             			document.body.style.setProperty('--input-color', '#000000');
-
             			document.body.style.setProperty('--border-radius', 15 / 50 + "em");
-            			document.querySelector('input.border-radius').value = '15';
-            			
             			document.body.style.setProperty('--box-shadow-spread', .50 * 10 + "px");
-            			document.querySelector('input.box-shadow-spread').value = '50';
-            			
             			document.body.style.setProperty('--box-shadow-strength', '0.05');
-            			document.querySelector('input.box-shadow-strength').value = '05';
-            			
             			document.body.style.setProperty('--highlight-strength', '0');
             			document.querySelector('input.highlight-strength').value = '0';
             			nativeWidgets();
             		}
-            		
-            		function lightBlue() {
-            			loadTheme({"body-background":"#ffffff","body-color":"#000000","chrome-color":"#000000","chrome-background":"#f4f7f9","chrome-border":"#bfc2c4","accent":"#0fa9ff","accent-text":"#ffffff","button-color":"#000000","button-background":"#f7f7f7","input-color":"#000000","input-background":"#ffffff","border-radius":"30","box-shadow-strength":"11","box-shadow-spread":"50","highlight-strength":"24"});
-            			customWidgets();
-            		}
-            		function lightRed() {
-            			loadTheme(
-            				{"body-background":"#ffffff","body-color":"#401a25","chrome-color":"#401a25","chrome-background":"#f9f4f5","chrome-border":"#c4bfc0","accent":"#ff6d96","accent-text":"#ffffff","button-color":"#401a25","button-background":"#f7f7f7","input-color":"#401a25","input-background":"#ffffff","border-radius":"30","box-shadow-strength":"17","box-shadow-spread":"83","highlight-strength":"29"}
-            			);
-            			customWidgets();
-            		}
-
-
-            		function pinkBlue() {
-            			/*
-            			document.querySelector('#body-background').value = '#d8f4ff';
-            			document.body.style.setProperty('--body-background', '#d8f4ff');
-            			document.querySelector('#body-color').value = '#2d2d2d';
-            			document.body.style.setProperty('--body-color', '#2d2d2d');
-            			document.querySelector('#chrome-color').value = '#2d2d2d';
-            			document.body.style.setProperty('--chrome-color', '#2d2d2d');
-            			document.querySelector('#chrome-background').value = '#aee8ff';
-            			document.body.style.setProperty('--chrome-background', '#aee8ff');
-            			document.querySelector('#chrome-border').value = '#25a5d8';
-            			document.body.style.setProperty('--chrome-border', '#25a5d8');
-            			document.querySelector('#accent').value = '#f7a8b8';
-            			document.body.style.setProperty('--accent', '#f7a8b8');
-            			document.querySelector('#button-color').value = '#000000';
-            			document.body.style.setProperty('--button-color', '#000000');
-            			document.querySelector('#button-background').value = '#55cdfc';
-            			document.body.style.setProperty('--button-background', '#55cdfc');
-            			document.querySelector('#input-color').value = '#000000';
-            			document.body.style.setProperty('--input-color', '#000000');
-            			document.querySelector('#input-background').value = '#ffffff';
-            			document.body.style.setProperty('--input-background', '#ffffff');
-
-            			document.body.style.setProperty('--border-radius', 30 / 50 + "em");
-            			document.querySelector('input.border-radius').value = '30';
-            			
-            			document.body.style.setProperty('--box-shadow-spread', .50 * 10 + "px");
-            			document.querySelector('input.box-shadow-spread').value = '50';
-            			
-            			document.body.style.setProperty('--box-shadow-strength', '0.15');
-            			document.querySelector('input.box-shadow-strength').value = '15';
-            			
-            			document.body.style.setProperty('--highlight-strength', '0.40');
-            			document.querySelector('input.highlight-strength').value = '40';
-            			*/
-
-
-            			loadTheme({"body-background":"#c6efff","body-color":"#2d2d2d","chrome-color":"#2d2d2d","chrome-background":"#aee8ff","chrome-border":"#25a5d8","accent":"#ff8cb3","accent-text":"#ffffff","button-color":"#000000","button-background":"#55cdfc","input-color":"#000000","input-background":"#ffffff","border-radius":"37","box-shadow-strength":"10","box-shadow-spread":"30","highlight-strength":"50"});
-            			customWidgets();
-            		}
-            		function whiteLight() {
-            			document.querySelector('#body-background').value = '#ffffff';
-            			document.body.style.setProperty('--body-background', '#ffffff');
-            			document.querySelector('#body-color').value = '#2d2d2d';
-            			document.body.style.setProperty('--body-color', '#2d2d2d');
-            			document.querySelector('#chrome-color').value = '#2d2d2d';
-            			document.body.style.setProperty('--chrome-color', '#2d2d2d');
-            			document.querySelector('#chrome-background').value = '#ffffff';
-            			document.body.style.setProperty('--chrome-background', '#ffffff');
-            			document.querySelector('#chrome-border').value = '#c3c3c3';
-            			document.body.style.setProperty('--chrome-border', '#c3c3c3');
-            			document.querySelector('#accent').value = '#4367d2';
-            			document.body.style.setProperty('--accent', '#4367d2');
-            			document.querySelector('#button-color').value = '#000000';
-            			document.body.style.setProperty('--button-color', '#000000');
-            			document.querySelector('#button-background').value = '#d9d9d9';
-            			document.body.style.setProperty('--button-background', '#d9d9d9');
-            			document.querySelector('#input-color').value = '#000000';
-            			document.body.style.setProperty('--input-color', '#000000');
-            			document.querySelector('#input-background').value = '#f4f4f4';
-            			document.body.style.setProperty('--input-background', '#f4f4f4');
-
-            			document.body.style.setProperty('--border-radius', 15 / 50 + "em");
-            			document.querySelector('input.border-radius').value = '15';
-            			
-            			document.body.style.setProperty('--box-shadow-spread', .50 * 10 + "px");
-            			document.querySelector('input.box-shadow-spread').value = '50';
-            			
-            			document.body.style.setProperty('--box-shadow-strength', '0.05');
-            			document.querySelector('input.box-shadow-strength').value = '05';
-            			
-            			document.body.style.setProperty('--highlight-strength', '0');
-            			document.querySelector('input.highlight-strength').value = '0';
-            			customWidgets();
-            		}
-            		function pinkPank() {
-            			document.querySelector('#body-background').value = '#fad6ff';
-            			document.body.style.setProperty('--body-background', '#fad6ff');
-            			document.querySelector('#body-color').value = '#000000';
-            			document.body.style.setProperty('--body-color', '#000000');
-            			document.querySelector('#chrome-color').value = '#000000';
-            			document.body.style.setProperty('--chrome-color', '#000000');
-            			document.querySelector('#chrome-background').value = '#f0c7f3';
-            			document.body.style.setProperty('--chrome-background', '#f0c7f3');
-            			document.querySelector('#chrome-border').value = '#914875';
-            			document.body.style.setProperty('--chrome-border', '#914875');
-            			document.querySelector('#accent').value = '#914875';
-            			document.body.style.setProperty('--accent', '#914875');
-            			document.querySelector('#button-color').value = '#000000';
-            			document.body.style.setProperty('--button-color', '#000000');
-            			document.querySelector('#button-background').value = '#f586ff';
-            			document.body.style.setProperty('--button-background', '#f586ff');
-            			document.querySelector('#input-color').value = '#000000';
-            			document.body.style.setProperty('--input-color', '#000000');
-            			document.querySelector('#input-background').value = '#fcedff';
-            			document.body.style.setProperty('--input-background', '#fcedff');
-
-            			document.body.style.setProperty('--border-radius', 30 / 50 + "em");
-            			document.querySelector('input.border-radius').value = '30';
-            			
-            			document.body.style.setProperty('--box-shadow-spread', .50 * 10 + "px");
-            			document.querySelector('input.box-shadow-spread').value = '50';
-            			
-            			document.body.style.setProperty('--box-shadow-strength', '0.15');
-            			document.querySelector('input.box-shadow-strength').value = '15';
-            			
-            			document.body.style.setProperty('--highlight-strength', '0.40');
-            			document.querySelector('input.highlight-strength').value = '40';
-            			
-            			customWidgets();
-            		}
-            		function simpleGray() {
-            			document.querySelector('#body-background').value = '#ffffff';
-            			document.body.style.setProperty('--body-background', '#ffffff');
-            			document.querySelector('#body-color').value = '#000000';
-            			document.body.style.setProperty('--body-color', '#000000');
-            			document.querySelector('#chrome-color').value = '#000000';
-            			document.body.style.setProperty('--chrome-color', '#000000');
-            			document.querySelector('#chrome-background').value = '#dedede';
-            			document.body.style.setProperty('--chrome-background', '#dedede');
-            			document.querySelector('#chrome-border').value = '#b0b0b0';
-            			document.body.style.setProperty('--chrome-border', '#b0b0b0');
-            			document.querySelector('#accent').value = '#478fb1';
-            			document.body.style.setProperty('--accent', '#478fb1');
-            			document.querySelector('#button-color').value = '#000000';
-            			document.body.style.setProperty('--button-color', '#000000');
-            			document.querySelector('#button-background').value = '#c1c1c1';
-            			document.body.style.setProperty('--button-background', '#c1c1c1');
-            			document.querySelector('#input-color').value = '#000000';
-            			document.body.style.setProperty('--input-color', '#000000');
-            			document.querySelector('#input-background').value = '#f2f2f2';
-            			document.body.style.setProperty('--input-background', '#f2f2f2');
-            			document.body.style.setProperty('--border-radius', 15 / 50 + "em");
-            			document.querySelector('input.border-radius').value = '15';
-            			
-            			document.body.style.setProperty('--box-shadow-spread', .50 * 10 + "px");
-            			document.querySelector('input.box-shadow-spread').value = '50';
-            			
-            			document.body.style.setProperty('--box-shadow-strength', '0.15');
-            			document.querySelector('input.box-shadow-strength').value = '15';
-            			
-            			document.body.style.setProperty('--highlight-strength', '0.30');
-            			document.querySelector('input.highlight-strength').value = '30';
-            			customWidgets();
-            		}
-
-            		function simpleDark() {
-            		/*
-            			document.querySelector('#body-background').value = '#606060';
-            			document.body.style.setProperty('--body-background', '#606060');
-            			document.querySelector('#body-color').value = '#f2f2f2';
-            			document.body.style.setProperty('--body-color', '#f2f2f2');
-            			document.querySelector('#chrome-color').value = '#f2f2f2';
-            			document.body.style.setProperty('--chrome-color', '#f2f2f2');
-            			document.querySelector('#chrome-background').value = '#565656';
-            			document.body.style.setProperty('--chrome-background', '#565656');
-            			document.querySelector('#chrome-border').value = '#181818';
-            			document.body.style.setProperty('--chrome-border', '#181818');
-            			document.querySelector('#accent').value = '#3B8DE0';
-            			document.body.style.setProperty('--accent', '#3B8DE0');
-            			document.querySelector('#button-color').value = '#ffffff';
-            			document.body.style.setProperty('--button-color', '#ffffff');
-            			document.querySelector('#button-background').value = '#474747';
-            			document.body.style.setProperty('--button-background', '#474747');
-            			document.querySelector('#input-color').value = '#f2f2f2';
-            			document.body.style.setProperty('--input-color', '#f2f2f2');
-            			document.querySelector('#input-background').value = '#707070';
-            			document.body.style.setProperty('--input-background', '#707070');
-            			document.body.style.setProperty('--border-radius', 15 / 50 + "em");
-            			document.querySelector('input.border-radius').value = '15';
-            			
-            			document.body.style.setProperty('--box-shadow-spread', .50 * 10 + "px");
-            			document.querySelector('input.box-shadow-spread').value = '50';
-            			
-            			document.body.style.setProperty('--box-shadow-strength', '0.15');
-            			document.querySelector('input.box-shadow-strength').value = '15';
-            			
-            			document.body.style.setProperty('--highlight-strength', '0.15');
-            			document.querySelector('input.highlight-strength').value = '15';
-            		*/
-
-
-            			loadTheme(
-            				{"body-background":"#5e5e5e","body-color":"#f2f2f2","chrome-color":"#f2f2f2","chrome-background":"#565656","chrome-border":"#181818","accent":"#3b8de0","accent-text":"#ffffff","button-color":"#ffffff","button-background":"#474747","input-color":"#f2f2f2","input-background":"#707070","border-radius":"13","box-shadow-strength":"10","box-shadow-spread":"33","highlight-strength":"10"}
-            			);
-            			customWidgets();
-            		}
-
-
-            		function popular() {
-
-            			loadTheme({"body-background":"#ffffff","body-color":"#474747","chrome-color":"#474747","chrome-background":"#ffffff","chrome-border":"#d1d1d1","accent":"#a74b91","accent-text":"#ffffff","button-color":"#000000","button-background":"#f7f7f7","input-color":"#000000","input-background":"#f7f7f7","border-radius":"32","box-shadow-strength":"8","box-shadow-spread":"50","highlight-strength":"0"});
-            			customWidgets();
-            		}
-            		function pureBlack() {
-            			document.querySelector('#body-background').value = '#000000';
-            			document.body.style.setProperty('--body-background', '#000000');
-            			document.querySelector('#body-color').value = '#f2f2f2';
-            			document.body.style.setProperty('--body-color', '#f2f2f2');
-            			document.querySelector('#chrome-color').value = '#f2f2f2';
-            			document.body.style.setProperty('--chrome-color', '#f2f2f2');
-            			document.querySelector('#chrome-background').value = '#000000';
-            			document.body.style.setProperty('--chrome-background', '#000000');
-            			document.querySelector('#chrome-border').value = '#646464';
-            			document.body.style.setProperty('--chrome-border', '#646464');
-            			document.querySelector('#accent').value = '#d65a59';
-            			document.body.style.setProperty('--accent', '#d65a59');
-            			document.querySelector('#button-color').value = '#f2f2f2';
-            			document.body.style.setProperty('--button-color', '#f2f2f2');
-            			document.querySelector('#button-background').value = '#000000';
-            			document.body.style.setProperty('--button-background', '#000000');
-            			document.querySelector('#input-color').value = '#ffffff';
-            			document.body.style.setProperty('--input-color', '#ffffff');
-            			document.querySelector('#input-background').value = '#313131';
-            			document.body.style.setProperty('--input-background', '#313131');
-
-            			document.body.style.setProperty('--border-radius', 0 / 50 + "em");
-            			document.querySelector('input.border-radius').value = '0';
-            			
-            			document.body.style.setProperty('--box-shadow-spread', .50 * 10 + "px");
-            			document.querySelector('input.box-shadow-spread').value = '50';
-            			
-            			document.body.style.setProperty('--box-shadow-strength', '0.15');
-            			document.querySelector('input.box-shadow-strength').value = '15';
-            			
-            			document.body.style.setProperty('--highlight-strength', '0.0');
-            			document.querySelector('input.highlight-strength').value = '0';
-            			customWidgets();
-            		}
-            		function terminal() {
-            			document.body.style.setProperty('--accent-text', '#000000');
-
-            			document.querySelector('#body-background').value = '#000000';
-            			document.body.style.setProperty('--body-background', '#000000');
-            			document.querySelector('#body-color').value = '#00ff0c';
-            			document.body.style.setProperty('--body-color', '#00ff0c');
-            			document.querySelector('#chrome-color').value = '#00ff0c';
-            			document.body.style.setProperty('--chrome-color', '#00ff0c');
-            			document.querySelector('#chrome-background').value = '#000000';
-            			document.body.style.setProperty('--chrome-background', '#000000');
-            			document.querySelector('#chrome-border').value = '#00ff0c';
-            			document.body.style.setProperty('--chrome-border', '#00ff0c');
-            			document.querySelector('#accent').value = '#00ff0c';
-            			document.body.style.setProperty('--accent', '#00ff0c');
-            			document.querySelector('#button-color').value = '#00ff0c';
-            			document.body.style.setProperty('--button-color', '#00ff0c');
-            			document.querySelector('#button-background').value = '#000000';
-            			document.body.style.setProperty('--button-background', '#000000');
-            			document.querySelector('#input-color').value = '#00ff0c';
-            			document.body.style.setProperty('--input-color', '#00ff0c');
-            			document.querySelector('#input-background').value = '#000000';
-            			document.body.style.setProperty('--input-background', '#000000');
-
-            			document.body.style.setProperty('--border-radius', 0 / 50 + "em");
-            			document.querySelector('input.border-radius').value = '0';
-            			
-            			document.body.style.setProperty('--box-shadow-spread', .50 * 10 + "px");
-            			document.querySelector('input.box-shadow-spread').value = '50';
-            			
-            			document.body.style.setProperty('--box-shadow-strength', '0.15');
-            			document.querySelector('input.box-shadow-strength').value = '15';
-            			
-            			document.body.style.setProperty('--highlight-strength', '0.0');
-            			document.querySelector('input.highlight-strength').value = '0';
-            			customWidgets();
-            		}
-
-            		function xfceEvolution() {
-            			document.querySelector('#body-background').value = '#ffffff';
-            			document.body.style.setProperty('--body-background', '#ffffff');
-            			document.querySelector('#body-color').value = '#333333';
-            			document.body.style.setProperty('--body-color', '#333333');
-            			document.querySelector('#chrome-color').value = '#333333';
-            			document.body.style.setProperty('--chrome-color', '#333333');
-            			document.querySelector('#chrome-background').value = '#ceced0';
-            			document.body.style.setProperty('--chrome-background', '#ceced0');
-            			document.querySelector('#chrome-border').value = '#90908e';
-            			document.body.style.setProperty('--chrome-border', '#90908e');
-            			document.querySelector('#accent').value = '#2a75c4';
-            			document.body.style.setProperty('--accent', '#2a75c4');
-            			document.querySelector('#button-color').value = '#000000';
-            			document.body.style.setProperty('--button-color', '#000000');
-            			document.querySelector('#button-background').value = '#bfbfbf';
-            			document.body.style.setProperty('--button-background', '#bfbfbf');
-            			document.querySelector('#input-color').value = '#000000';
-            			document.body.style.setProperty('--input-color', '#000000');
-            			document.querySelector('#input-background').value = '#ffffff';
-            			document.body.style.setProperty('--input-background', '#ffffff');
-            			document.body.style.setProperty('--border-radius', 15 / 50 + "em");
-            			document.querySelector('input.border-radius').value = '15';
-            			
-            			document.body.style.setProperty('--box-shadow-spread', .50 * 10 + "px");
-            			document.querySelector('input.box-shadow-spread').value = '50';
-            			
-            			document.body.style.setProperty('--box-shadow-strength', '0.20');
-            			document.querySelector('input.box-shadow-strength').value = '20';
-            			
-            			document.body.style.setProperty('--highlight-strength', '0.50');
-            			document.querySelector('input.highlight-strength').value = '50';
-            			customWidgets();
-            		}
-            		function winXP() {
-            			document.querySelector('#body-background').value = '#f4f3ee';
-            			document.body.style.setProperty('--body-background', '#f4f3ee');
-            			document.querySelector('#body-color').value = '#000000';
-            			document.body.style.setProperty('--body-color', '#000000');
-            			document.querySelector('#chrome-color').value = '#000000';
-            			document.body.style.setProperty('--chrome-color', '#000000');
-            			document.querySelector('#chrome-background').value = '#ece9d8';
-            			document.body.style.setProperty('--chrome-background', '#ece9d8');
-            			document.querySelector('#chrome-border').value = '#76a2cb';
-            			document.body.style.setProperty('--chrome-border', '#76a2cb');
-            			document.querySelector('#accent').value = '#0070f6';
-            			document.body.style.setProperty('--accent', '#0070f6');
-            			document.querySelector('#button-color').value = '#000000';
-            			document.body.style.setProperty('--button-color', '#000000');
-            			document.querySelector('#button-background').value = '#f3f3ef';
-            			document.body.style.setProperty('--button-background', '#f3f3ef');
-            			document.querySelector('#input-color').value = '#000000';
-            			document.body.style.setProperty('--input-color', '#000000');
-            			document.querySelector('#input-background').value = '#ffffff';
-            			document.body.style.setProperty('--input-background', '#ffffff');
-            			document.body.style.setProperty('--border-radius', 15 / 50 + "em");
-            			document.querySelector('input.border-radius').value = '15';
-            			
-            			document.body.style.setProperty('--box-shadow-spread', .50 * 10 + "px");
-            			document.querySelector('input.box-shadow-spread').value = '50';
-            			
-            			document.body.style.setProperty('--box-shadow-strength', '0.15');
-            			document.querySelector('input.box-shadow-strength').value = '15';
-            			
-            			document.body.style.setProperty('--highlight-strength', '0.15');
-            			document.querySelector('input.highlight-strength').value = '15';
-            			customWidgets();
-            		}
-            		function win95() {
-
-            			document.body.style.setProperty('--accent-text', '#ffffff');
-
-            			document.querySelector('#body-background').value = '#fffee2';
-            			document.body.style.setProperty('--body-background', '#fffee2');
-            			document.querySelector('#body-color').value = '#2d2d2d';
-            			document.body.style.setProperty('--body-color', '#2d2d2d');
-            			document.querySelector('#chrome-color').value = '#2d2d2d';
-            			document.body.style.setProperty('--chrome-color', '#2d2d2d');
-            			document.querySelector('#chrome-background').value = '#c0c0c0';
-            			document.body.style.setProperty('--chrome-background', '#c0c0c0');
-            			document.querySelector('#chrome-border').value = '#404040';
-            			document.body.style.setProperty('--chrome-border', '#404040');
-            			document.querySelector('#accent').value = '#000080';
-            			document.body.style.setProperty('--accent', '#000080');
-            			document.querySelector('#button-color').value = '#000000';
-            			document.body.style.setProperty('--button-color', '#000000');
-            			document.querySelector('#button-background').value = '#c3c3c3';
-            			document.body.style.setProperty('--button-background', '#c3c3c3');
-            			document.querySelector('#input-color').value = '#000000';
-            			document.body.style.setProperty('--input-color', '#000000');
-            			document.querySelector('#input-background').value = '#ffffff';
-            			document.body.style.setProperty('--input-background', '#ffffff');
-
-            			document.body.style.setProperty('--border-radius', 20 / 50 + "em");
-            			document.querySelector('input.border-radius').value = '20';
-            			
-            			document.body.style.setProperty('--box-shadow-spread', 0 * 10 + "px");
-            			document.querySelector('input.box-shadow-spread').value = '0';
-            			
-            			document.body.style.setProperty('--box-shadow-strength', '0.30');
-            			document.querySelector('input.box-shadow-strength').value = '30';
-            			
-            			document.body.style.setProperty('--highlight-strength', '0.60');
-            			document.querySelector('input.highlight-strength').value = '60';
-            			customWidgets();
-            		}
-            		function win10() {
-            			document.querySelector('#body-background').value = '#ffffff';
-            			document.body.style.setProperty('--body-background', '#ffffff');
-            			document.querySelector('#body-color').value = '#2d2d2d';
-            			document.body.style.setProperty('--body-color', '#2d2d2d');
-            			document.querySelector('#chrome-color').value = '#2d2d2d';
-            			document.body.style.setProperty('--chrome-color', '#2d2d2d');
-            			document.querySelector('#chrome-background').value = '#f0f0f0';
-            			document.body.style.setProperty('--chrome-background', '#f0f0f0');
-            			document.querySelector('#chrome-border').value = '#8d8d8d';
-            			document.body.style.setProperty('--chrome-border', '#8d8d8d');
-            			document.querySelector('#accent').value = '#1979ca';
-            			document.body.style.setProperty('--accent', '#1979ca');
-            			document.querySelector('#button-color').value = '#000000';
-            			document.body.style.setProperty('--button-color', '#000000');
-            			document.querySelector('#button-background').value = '#dcdcdc';
-            			document.body.style.setProperty('--button-background', '#dcdcdc');
-            			document.querySelector('#input-color').value = '#000000';
-            			document.body.style.setProperty('--input-color', '#000000');
-            			document.querySelector('#input-background').value = '#ffffff';
-            			document.body.style.setProperty('--input-background', '#ffffff');
-            			
-            			document.body.style.setProperty('--border-radius', 0 / 50 + "em");
-            			document.querySelector('input.border-radius').value = '0';
-            			
-            			document.body.style.setProperty('--box-shadow-spread', .50 * 10 + "px");
-            			document.querySelector('input.box-shadow-spread').value = '50';
-            			
-            			document.body.style.setProperty('--box-shadow-strength', '0.0');
-            			document.querySelector('input.box-shadow-strength').value = '0';
-            			
-            			document.body.style.setProperty('--highlight-strength', '0.0');
-            			document.querySelector('input.highlight-strength').value = '0';
-            			customWidgets();
-            		}
-            		function ubuntu() {
-            			document.querySelector('#body-background').value = '#ffffff';
-            			document.body.style.setProperty('--body-background', '#ffffff');
-            			document.querySelector('#body-color').value = '#000000';
-            			document.body.style.setProperty('--body-color', '#000000');
-            			document.querySelector('#chrome-color').value = '#000000';
-            			document.body.style.setProperty('--chrome-color', '#000000');
-            			document.querySelector('#chrome-background').value = '#f5f6f7';
-            			document.body.style.setProperty('--chrome-background', '#f5f6f7');
-            			document.querySelector('#chrome-border').value = '#b4b7ba';
-            			document.body.style.setProperty('--chrome-border', '#b4b7ba');
-            			document.querySelector('#accent').value = '#e95421';
-            			document.body.style.setProperty('--accent', '#e95421');
-            			document.querySelector('#button-color').value = '#000000';
-            			document.body.style.setProperty('--button-color', '#000000');
-            			document.querySelector('#button-background').value = '#f0f3f4';
-            			document.body.style.setProperty('--button-background', '#f0f3f4');
-            			document.querySelector('#input-color').value = '#000000';
-            			document.body.style.setProperty('--input-color', '#000000');
-            			document.querySelector('#input-background').value = '#ffffff';
-            			document.body.style.setProperty('--input-background', '#ffffff');
-            			
-            			document.body.style.setProperty('--border-radius', 15 / 50 + "em");
-            			document.querySelector('input.border-radius').value = '15';
-            			
-            			document.body.style.setProperty('--box-shadow-spread', .50 * 10 + "px");
-            			document.querySelector('input.box-shadow-spread').value = '50';
-            			
-            			document.body.style.setProperty('--box-shadow-strength', '0.15');
-            			document.querySelector('input.box-shadow-strength').value = '15';
-            			
-            			document.body.style.setProperty('--highlight-strength', '0.15');
-            			document.querySelector('input.highlight-strength').value = '15';
-            			customWidgets();
-            		}
-            		function adwaita() {
-            			document.querySelector('#body-background').value = '#ffffff';
-            			document.body.style.setProperty('--body-background', '#ffffff');
-            			document.querySelector('#body-color').value = '#2d2d2d';
-            			document.body.style.setProperty('--body-color', '#2d2d2d');
-            			document.querySelector('#chrome-color').value = '#2d2d2d';
-            			document.body.style.setProperty('--chrome-color', '#2d2d2d');
-            			document.querySelector('#chrome-background').value = '#f6f5f4';
-            			document.body.style.setProperty('--chrome-background', '#f6f5f4');
-            			document.querySelector('#chrome-border').value = '#d5d0cc';
-            			document.body.style.setProperty('--chrome-border', '#d5d0cc');
-            			document.querySelector('#accent').value = '#3584e4';
-            			document.body.style.setProperty('--accent', '#3584e4');
-            			document.querySelector('#button-color').value = '#000000';
-            			document.body.style.setProperty('--button-color', '#000000');
-            			document.querySelector('#button-background').value = '#efeeec';
-            			document.body.style.setProperty('--button-background', '#efeeec');
-            			document.querySelector('#input-color').value = '#000000';
-            			document.body.style.setProperty('--input-color', '#000000');
-            			document.querySelector('#input-background').value = '#ffffff';
-            			document.body.style.setProperty('--input-background', '#ffffff');
-            			
-            			document.body.style.setProperty('--border-radius', 15 / 50 + "em");
-            			document.querySelector('input.border-radius').value = '15';
-            			
-            			document.body.style.setProperty('--box-shadow-spread', .50 * 10 + "px");
-            			document.querySelector('input.box-shadow-spread').value = '50';
-            			
-            			document.body.style.setProperty('--box-shadow-strength', '0.15');
-            			document.querySelector('input.box-shadow-strength').value = '15';
-            			
-            			document.body.style.setProperty('--highlight-strength', '0.80');
-            			document.querySelector('input.highlight-strength').value = '80';
-            			customWidgets();
-            		}
-            		/*
-            		for (let colorSelect of $$('#set-colors > input[type=color]')) {
-            			let updateColor = () => {
-            				document.body.style.setProperty('--' + colorSelect.id, colorSelect.value)
-            			}
-            			colorSelect.addEventListener('change', updateColor);
-            			updateColor();
-            		}
-            		document.body.style.setProperty('--border-radius', Number(document.querySelector('input.border-radius').value) / 50 + "em");
-            		
-            		document.body.style.setProperty('--box-shadow-spread', String(Number(document.querySelector('input.box-shadow-spread').value) / 100 * 10) + "px");
-            		
-            		document.body.style.setProperty('--box-shadow-strength', String(Number(document.querySelector('input.box-shadow-strength').value) / 100));
-            		
-            		document.body.style.setProperty('--highlight-strength', Number(document.querySelector('input.highlight-strength').value) / 100);
-            		
-            		*/
-            		customWidgets();
             	</script>
             </section>
             				<style>
-            	.wide-body .tutorial-text {
-            		height: calc(100vh - 7em);
+            	.wide-body .mobile-help {
+            		display: none;
             	}
-            	.narrow-body .tutorial-text {
-            		height: calc(40vh - 5.6em);
+            	.mobile-help {
+            		font-size: smaller;
+            		font-style: italic;
             	}
-            	.narrow-body .expanded .tutorial-text {
-            		height: calc(100vh - 12em);
+            	.wide-body .mobile-help + p {
+            		margin-top: 0px;
             	}
-            	.tutorial-text {
-            		max-width: 80ch;
+            	.help details + details {
+            		margin-top: .5em;
+            	}
+            	.help .notice {
+            		text-align: center;
+            		margin-bottom: 0px;
+            		font-weight: bold;
+            	}
+            	.notice + h2 {
+            		margin-top: 0px;
             	}
             </style>
             <section class="help">
+            	<!--p class='notice'>Help us out! Answer 
+            	<a href="https://brown.co1.qualtrics.com/jfe/form/SV_4PgW7EKNvnxnWLk">our survey</a>.
+            	</p-->
             	<h2>Tutorial</h2>
-            	<div class='tutorial-text scrolling-text-box'>
-            	<p>
-            	<!--img src="resources/logo.png" alt="An acoustic guitar where the headstick is semi-triangular forming a Mars-sign along with the neck and sound hold. Likewise, the sound hole, strings, and bridge form a Venus sign. The image is in the pink, blue, and white transgender pride colors." style="float: right" width='128'/-->
-            	Two major properties of a voice
-            	which influence how it is gendered
-            	are <strong>pitch</strong>,
-            	the frequency at which your vocal folds vibrate,
-            	and <strong>resonance</strong>,
-            	the size of the passages the air travels through.
-            	<!--
-            	<ul>
-            		<li>Pitch is the frequency at which the object emitting a sound vibrates.
-            		In voices, this will be the vocal folds.
 
-            		<li>Resonance is the effect exerted on a sound by the passage it travels through.
-            		In voices, the passage is the vocal tract.
-            	</ul>
-            	<p>
-            	Testosterone tends to thicken the vocal folds and lengthen the vocal tract,
-            	resulting in lower pitch and darker resonance.
-            	Therefore, most people read voices with these features as male or masculine.
-            	-->
-
-            	<p>
-            	If you want to feminize your voice,
-            	you'll probably want to raise your pitch and resonance,
-            	taking your voice closer to the 
-            	<span style="color: #FDCFC8; font-weight: bold; text-shadow: 0px 0px 1px red">top-right</span> corner of the graph.
-            	If you want to masculinize your voice,
-            	you should target the <span style="color: #054EC4; font-weight: bold">bottom-left</span> corner.
-
-            	If you want your voice to sound more androgynous,
-            	you should target either 
-            	the <span style="color: #b48ead; font-weight: bold">center</span>, or one of the 
-            	<span style="color: #DBD9EC; font-weight: bold; text-shadow: 0px 0px 1px blue">top-left</span>
-            	or <span style="color: #833047; font-weight: bold;">bottom-right</span> corners.
-
-            	<p>
-            	There is no specific threshold in either pitch or resonance 
-            	at which a voice will always be gendered male or female,
-            	and typical values differ by language, dialect, age,
-            	and a variety of other factors.
-            	This tool should be used to explore your own voice
-            	to find your way to a voice that suits you.
-            	It does not attempt to show you whether your voice "passes."
+            	<div class='mobile-help'>
+            	Mobile users: You can tap the top edge of this pane
+            	to expand/collapse it for easier reading.
             	</div>
+
+            	<p>
+            	<img src="resources/logo.png" alt="An acoustic guitar where the headstick is semi-triangular forming a Mars-sign along with the neck and sound hold. Likewise, the sound hole, strings, and bridge form a Venus sign. The image is in the pink, blue, and white transgender pride colors." style="float: right" width='128'/>
+            	This app visualizes the pitch and resonance of voices in recordings over time.
+            	<strong>Pitch</strong> is our perception of the frequency at which the vocal folds vibrate.
+            	<strong>Resonance</strong> is the effect exerted on a sound by the passage the air travels through.
+            	The program plots recordings in a <strong>2-dimensional space</strong>,
+            	where the Y-axis represents pitch,
+            	and the X-axis represents resonance,
+            	with brighter sounds represented with a higher percentage.
+            	</p>
+            	
+
+            	<p>Typically, voices perceived as female have brighter resonance and higher pitch (top right),
+            	while those perceived as male have darker resonance and lower pitch (bottom left).
+            	These features can be blended in different degrees
+            	to create a <strong>broad spectrum</strong> of perceptual and aesthetic qualities related to gender.
+            	There are no sharp cutoffs at which a voice is 
+            	guaranteed to be gendered a specific way,
+            	just as the colors in the graph blend seamlessly into one another.
+
+            	<p>Press the <strong>play button</strong> in the top-left corner of the app to play the clip
+            	associated with the selected point on the graph.
+            	Examine some of the provided examples to get a sense
+            	of how positions on the graph correspond to your perceptions of gender.
+            	(Note: Example clips may take some time to show up on slow connections).
+            	You can visualize your own recordings by pressing the <strong>add clip button</strong>
+            	in the top-right and submitting a recording.
+            	It will take some time to process,
+            	so you may wish to examine the other clips while the recording is processed.
+
+            	<p>Your clips are sent to our server for processing,
+            	but they are <strong>not stored persistently</strong>.
+            	You can save the sound file from your recording
+            	using the <strong>download button</strong> in the "Details" tab.
+            	From the settings tab,
+            	you can also <strong>export</strong> all of your data in a single file
+            	which can be imported for viewing at another time.
+            	Otherwise, your data will be lost when you exit the page.
+
+            	<p>We hope that using this program will help you understand how voices are gendered
+            	and assess your own progress if you are trying to alter your voice
+            	to better match your gender identity or desired presentation. Good luck!
+
+            	<h2>FAQ</h2>
+            	<details>
+            		<summary>Why does the marker move around so much even when I'm not changing my voice drastically?</summary>
+            		<p>Most speech has a broad range of values in pitch and resonance,
+            		e.g. The highest and brightest phone spoken in a sample of typical male speech
+            		may well be similar in pitch in resonance to the <em>average</em> phone in typical female speech.
+            		Our perception of a voice is based on the overall tendencies within speech
+            		rather than the moment-to-moment features of individual phones.</p>
+            	</details>
+            	<details>
+            		<summary>Why do all the markers start so close together?</summary>
+            		<p>When not playing, the markers are displayed at the median values across the whole clip.
+            		Because there's a wide range of values in most speech,
+            		this pushes the median towards the center.
+            		However, a small change in median values
+            		can have a big influence on how a voice is gendered</p>
+            	</details>
+            	<details>
+            		<summary>Does this program support languages other than English?</summary>
+            		<p>Not currently. 
+            		If you add recording in another language, 
+            		you <em>might</em> get an output,
+            		but it will probably not be very accurate.</p>
+            	</details>
+            	<details>
+            		<summary>Do accent and dialect affect pitch and resonance?</summary>
+            		<p>Yes, so you may wish to upload recordings of other speakers with your accent or dialect
+            		to better compare with your own voice.</p> 
+            	</details>
+            	<details>
+            		<summary>Ok, I can see my resonance now, but how do I actually change it?</summary>
+            		<p>There are several ways. One is to raise (brightening) or lower (darkening) your larynx.
+            		Your larynx raises when you swallow and lowers when you yawn.
+            		You may be able to feel it move if you put your hand over the front of your neck
+            		while you make one of these movements.
+            		If you can learn to control your larynx position in normal speech,
+            		it can have a big effect on your resonance.
+            		</p> 
+            		<p>
+            		Your resonance is also affected by the space in your mouth.
+            		Holding your tongue higher in your mouth as you speak will brighten your resonance,
+            		and holding it lower will darken it.
+            		</p>
+            	</details>
+            	<details>
+            		<summary>Even though my pitch and resonance seem to be in the right spot,
+            		I don't feel like my voice sounds like I want it to.</summary>
+            		<p>There are many dimensions to voice other than pitch and resonance,
+            		so you might need to target other features.
+            		You might also be straining to reach a particular point,
+            		which can be audible to a listener.
+            		It might help to pick a less extreme target
+            		which you can reach comfortably.</p>
+            	</details>
+            	<details>
+            		<summary>Can I donate to encourage further development?</summary>
+            		<p>Yes! You can donate through any of the following platforms:</p>
+            		<ul>
+            			<li><a href="https://liberapay.com/lmcnulty">Liberapay</a> - Recurring donations, no extra fees, free-software focus
+            			<li><a href="https://ko-fi.com/lmcnulty">Ko-fi</a> - One-time or recurring donations, no extra fees 
+            			<li><a href="https://www.patreon.com/lmcnulty">Patreon</a> - Recurring donations, takes a cut
+            		</ul>
+            	</details>
+
+            	<h2>Credits</h2>
+            	<p>This application is developed by <a href="https://lmcnulty.me">Luna McNulty</a>
+            	as part of a research project for her Sc. M. program at Brown University.
+            	Its content is available under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>
+            	and uses Creative-Commons-licensed sound files from
+            	Morgan and Christine Lemmer-Webber's podcast <a href="https://fossandcrafts.org">Foss and Crafts</a>
+            	as well as public domain content audiobook content from <a href="librivox.org">Librivox</a>.</p>
             </section>
             				
             <!-- Details -->
@@ -1854,9 +1959,15 @@ Git repository: <INSERT REPOSITORY LINK>
             }
             </style>
             <section class="details"> 
-
+            	<h2 class='instructions'>Clip Details</h2>
             	<div class='instructions'>
             		When you select a clip/point from the graph it will be displayed here.
+            		If you just loaded the page and are seeing this,
+            		your browser is downloading the examples
+            		and they will display as they arrive.
+            		If you are on a slow connection,
+            		you may wish to start by reading the instructions in the help tab
+            		while you wait.
             	</div>
             	<div class='view'>
             		<div class="hbox">
@@ -2036,6 +2147,9 @@ Git repository: <INSERT REPOSITORY LINK>
             	<option value="When the sunlight strikes raindrops in the air, they act as a prism and form a rainbow. The rainbow is a division of white light into many beautiful colors. These take the shape of a long round arch, with its path high above, and its two ends apparently beyond the horizon. There is , according to legend, a boiling pot of gold at one end. People look, but no one ever finds it."
             	>Rainbow Passage</option>
 
+            	<option value="You wish to know all about my grandfather. Well, he is nearly 93 years old, yet he still thinks as swiftly as ever. He dresses himself in an old black frock coat, usually several buttons missing. A long beard clings to his chin, giving those who observe him a pronounced feeling of the utmost respect. When he speaks, his voice is just a bit cracked and quivers a bit. Twice each day he plays skillfully and with zest upon a small organ. Except in the winter when the snow or ice prevents, he slowly takes a short walk in the open air each day. We have often urged him to walk more and smoke less, but he always answers, “Banana oil!” Grandfather likes to be modern in his language.">
+            	Grandfather passage</option>
+
             	<option value="Please call Stella. Ask her to bring these things with her from the store: Six spoons of fresh snow peas, five thick slabs of blue cheese, and maybe a snack for her brother Bob. We also need a small plastic snake and a big toy frog for the kids. She can scoop these things into three red bags, and we will go meet her Wednesday at the train station."
             	>Please call stella</option>
 
@@ -2151,7 +2265,8 @@ Git repository: <INSERT REPOSITORY LINK>
             	<input type="radio" name="add-recording" id="upload-file" checked>
             	<label for="upload-file">Upload a file</label>
             	<div>
-            		<input type='file' id='audio-file-input' name='recording' accept="audio/*"/>
+            		<input type='file' id='audio-file-input' name='recording' 
+            		capture="user" accept="audio/*,video/*,audio/mpeg,audio/mp4,audio/x-aiff,audio/ogg,audio/vorbis,audio/opus,audio/vnd.wav,.wav,.mp3,.ogg,.opus,.m4a,.webm"/>
             	</div>
             	<br>
             	<input type="radio" name="add-recording" id="record-voice">
@@ -2197,7 +2312,8 @@ Git repository: <INSERT REPOSITORY LINK>
             			function alertRecordingFailure(exception) {
             				alert("Sorry, something went wrong. " 
             					+ "Your device's browser may not be able to record audio. "
-            					+ "Try uploading a file recorded from a native app instead."
+            					+ "Try uploading a file recorded from a native app instead "
+            					+ "or using a different browser."
             				);
             				console.error(exception);
             			}
@@ -2240,6 +2356,11 @@ Git repository: <INSERT REPOSITORY LINK>
 
             			let transcriptText = $('#transcript').value;
             			formData.append('transcript', transcriptText);
+            			formData.append('referrer', document.referrer);
+            			formData.append('screen-width', window.screen.width);
+            			formData.append('screen-height', window.screen.height);
+            			formData.append('lang', navigator.language || navigator.userLanguage);
+
             			clip.transcript = transcriptText;
             			clip.title = $('#title-input').value;
             			clip.color = $('#color-select').value;
@@ -2287,8 +2408,8 @@ Git repository: <INSERT REPOSITORY LINK>
             					"Sorry, we weren't able to process your recording. " +
             					"Make sure to speak clearly and ensure " +
             					"that your transcript matches the audio. " +
-            					"Also, try to include a 1-second period of silence in your clip " +
-            					"for successful noise removal."
+            					"For increased chance of success," +
+            					"try using short clips with a 1-second period of silence."
             				);
             				$('button.new-clip').classList.remove('hidden');
             				$('button.new-clip + .spinner').classList.add('hidden');
@@ -2296,7 +2417,7 @@ Git repository: <INSERT REPOSITORY LINK>
             		}
             	} catch (exception) {
             		alert("An unknown error occured.");
-            		console.log(exception);
+            		console.error(exception);
             	}
             	</script>
             </section>
@@ -2304,11 +2425,161 @@ Git repository: <INSERT REPOSITORY LINK>
 		</div>
 
 		
-			<script src="./ui/svg-icons.js"></script>
-			<script src="./ui/recording.js"></script>
+
+let darkIcon = String(`
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   id="svg5181"
+   version="1.1"
+   viewBox="0 0 8.5024996 8.5054264"
+   height="32.146492"
+   width="32.135433">
+  <defs
+     id="defs5175" />
+  <metadata
+     id="metadata5178">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(-24.474941,-137.0211)"
+     id="layer1">
+    <rect style="fill:none;fill-opacity:1;stroke:currentColor;stroke-width:0.56500006;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0"
+       id="rect4546-3"
+       width="7.9375"
+       height="7.9375"
+       x="24.757441"
+       y="137.30507" />
+    <path
+       id="path4571"
+       d="m 27.40326,137.30506 c -3.43959,1.32291 -3.43959,6.61458 0,7.9375"
+       style="fill:none;stroke:currentColor;stroke-width:0.565;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       style="fill:none;stroke:currentColor;stroke-width:0.565;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 27.93242,138.09881 c -2.64583,1.85208 -2.64583,4.49791 0,6.35"
+       id="path4573" />
+    <path
+       style="fill:none;stroke:currentColor;stroke-width:0.565;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 30.0491,137.30506 c 3.43959,1.32291 3.43959,6.61458 0,7.9375"
+       id="path5740" />
+    <path
+       id="path5742"
+       d="m 29.51994,138.09881 c 2.64583,1.85208 2.64583,4.49791 0,6.35"
+       style="fill:none;stroke:currentColor;stroke-width:0.565;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  </g>
+</svg>
+`)
+
+let brightIcon = String(`
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="32.135433"
+   height="32.153236"
+   viewBox="0 0 8.5025005 8.5072107"
+   version="1.1"
+   id="svg4565"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
+   sodipodi:docname="bright.svg">
+  <defs id="defs4559">
+	<link href="style.css" type="text/css" rel="stylesheet" 
+          xmlns="http://www.w3.org/1999/xhtml"/>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="11.2"
+     inkscape:cx="12.379905"
+     inkscape:cy="11.113832"
+     inkscape:document-units="mm"
+     inkscape:current-layer="svg4565"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     units="px"
+     inkscape:window-width="1920"
+     inkscape:window-height="1002"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata4562">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-32.790418,-144.57973)">
+    <rect
+       style="fill:none;fill-opacity:1;stroke:currentColor;stroke-width:0.56500006;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0"
+       id="rect4581"
+       width="7.9375"
+       height="7.9375"
+       x="33.072918"
+       y="144.86459"
+       inkscape:export-xdpi="191.19"
+       inkscape:export-ydpi="191.19" />
+    <path
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path4583"
+       d="m 33.866667,144.86458 c 1.85208,1.32292 1.85208,6.61459 0,7.9375"
+       style="fill:none;stroke:currentColor;stroke-width:0.56500006;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       style="fill:none;stroke:currentColor;stroke-width:0.56500006;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 35.454167,145.39375 c 1.32291,1.85209 1.32291,5.02709 0,6.87917"
+       id="path4585"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;stroke:currentColor;stroke-width:0.56500006;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 40.216657,144.86459 c -1.85208,1.32292 -1.85208,6.61459 0,7.9375"
+       id="path833"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <path
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path835"
+       d="m 38.629157,145.39376 c -1.32291,1.85209 -1.32291,5.02709 0,6.87917"
+       style="fill:none;stroke:currentColor;stroke-width:0.56500006;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  </g>
+</svg>
+`)
+		
 			<script src="./ui/index.js"></script>
 			<script src="./ui/voice-graph.js"></script>
 		
 	</body>
 </html>
-                         

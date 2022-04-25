@@ -16,8 +16,13 @@ button:hover:disabled {
 	opacity: .5;
 }
 
+a {
+	color: var(--accent);
+}
 
-.custom-widgets button, .custom-widgets  input[type=submit] {
+.custom-widgets button, 
+.custom-widgets  input[type=submit]
+{
 	padding-top: 0px;
 	padding-bottom: 0px;
 	vertical-align: middle;
@@ -27,6 +32,17 @@ button:hover:disabled {
 	border-radius: var(--border-radius);
 	box-shadow: var(--box-shadow);
 }
+.custom-widgets input[type=file]::file-selector-button {
+	padding-top: 0px;
+	padding-bottom: 0px;
+	vertical-align: middle;
+	background: var(--button-background);
+	color: var(--button-color);
+	border: 1px solid var(--chrome-border);
+	border-radius: var(--border-radius);
+	box-shadow: var(--box-shadow);
+}
+
 .custom-widgets textarea, .custom-widgets select, .custom-widgets input {
 	background: var(--input-background);
 	color: var(--input-color);
@@ -39,7 +55,12 @@ main > section {
   box-shadow: inset var(--box-shadow);
 }
 
-button, input[type=submit] {
+button, 
+input[type=submit]
+{
+	height: calc(var(--header-height) - 1rem);
+}
+input[type=file]::file-selector-button {
 	height: calc(var(--header-height) - 1rem);
 }
 input, textarea, progress[value], select {
@@ -53,7 +74,9 @@ h2 {
 	font-size: 100%;
 }
   
-.custom-widgets button:after, .custom-widgets input[type=submit]:after {
+.custom-widgets button:after, 
+.custom-widgets input[type=submit]:after
+{
   content: ' ';
   position: absolute;
   bottom: 0px;
@@ -95,7 +118,12 @@ textarea {
 	color: white;
 	color: var(--accent-text);
 }
-
+h2 {
+	margin-bottom: .5em;
+}
+h2 + p {
+	margin-top: .5em;
+}
 
 .scrolling-text-box {
 	background: var(--body-background);
@@ -108,4 +136,7 @@ textarea {
 	background: var(--accent);
 	color: var(--accent-text);
 	font-weight: bold;
+}
+hr {
+	border: 1px solid var(--chrome-border);
 }

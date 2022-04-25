@@ -5,10 +5,10 @@
 {% include 'pause-fill.svg' %}
 </button>
 <progress class="player" value="0" min="0"></progress>
-<video class="clip"></video>
+<audio class="clip"></audio>
 <script>
 try {
-	let mediaElement = $('video.clip');
+	let mediaElement = $('.clip');
 	let playPauseButton = $('button.play-pause');
 	let progressBar = $('progress.player');
 
@@ -177,6 +177,7 @@ try {
 		width: 100%;
 		height: var(--header-height);
 		margin: 0px;
+		opacity: 0;
 	}
 </style>
 <!-- ====================================================== -->

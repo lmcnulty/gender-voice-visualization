@@ -1,10 +1,13 @@
 
-import subprocess, os, glob
+import subprocess, os, glob, shutil
 import magic
+
+from settings import settings
 
 def process(uploaded_file, transcript, tmp_dir):
 	################## Noise Removal ##################
 
+	os.mkdir(tmp_dir)
 	filetype = magic.from_buffer(uploaded_file)
 
 	input_file    = tmp_dir + '/orig'
@@ -18,40 +21,43 @@ def process(uploaded_file, transcript, tmp_dir):
 
 	assert(os.path.exists(input_file))
 
-	subprocess.check_output(['ffmpeg', '-i', input_file, format_file])
+	try:
+		subprocess.check_output(['ffmpeg', '-i', input_file, format_file])
 
-	ffmpeg_silence = subprocess.check_output([
-		'ffmpeg', '-i', input_file, 
-		'-af', 'silencedetect=n=-30dB:d=0.5', 
-		'-f', 'null', '-'
-	], stderr=subprocess.STDOUT).decode('utf-8').split('\n')
+		ffmpeg_silence = subprocess.check_output([
+				'ffmpeg', '-i', input_file, 
+				'-af', 'silencedetect=n=-30dB:d=0.5', 
+				'-f', 'null', '-'
+		], stderr=subprocess.STDOUT).decode('utf-8').split('\n')
 
-	silence_ranges = list(zip(
-		[line.split(" ")[4] for line in ffmpeg_silence 
-			if 'silence_start' in line],
-		[line.split(" ")[4] for line in ffmpeg_silence
-			if 'silence_end' in line]
-	))
+		silence_ranges = list(zip(
+				[line.split(" ")[4] for line in ffmpeg_silence 
+						if 'silence_start' in line],
+				[line.split(" ")[4] for line in ffmpeg_silence
+						if 'silence_end' in line]
+		))
 
-	subprocess.check_output(['ffmpeg', '-i', input_file, 
-		'-af', "aselect='" + '+'.join(
-			['between(t,' + r[0] + ',' + r[1]+')' for r in silence_ranges]
-		) + "', asetpts=N/SR/TB", 
-		silence_file
-	])
+		subprocess.check_output(['ffmpeg', '-i', input_file, 
+				'-af', "aselect='" + '+'.join(
+						['between(t,' + r[0] + ',' + r[1]+')' for r in silence_ranges]
+				) + "', asetpts=N/SR/TB", 
+				silence_file
+		])
 
-	assert(os.path.exists(silence_file))
+		assert(os.path.exists(silence_file))
 
-	subprocess.check_output([
-		'sox', silence_file, '-n', 'noiseprof', noise_profile
-	])
-	subprocess.check_output(['chmod', '777', noise_profile])
-	subprocess.check_output([
-		'sox', format_file, clean_file, 
-		'noisered', noise_profile, '0.2'
-	])
+		subprocess.check_output([
+				'sox', silence_file, '-n', 'noiseprof', noise_profile
+		])
+		subprocess.check_output(['chmod', '777', noise_profile])
+		subprocess.check_output([
+				'sox', format_file, clean_file, 
+				'noisered', noise_profile, '0.2'
+		])
 
-	assert(os.path.exists(clean_file))
+		assert(os.path.exists(clean_file))
+	except e:
+		clean_file = input_file
 
 	################## Forced Alignment ##################
 	corpus_dir = tmp_dir + '/corpus'
@@ -112,4 +118,5 @@ def process(uploaded_file, transcript, tmp_dir):
 		with open(grid.replace('.TextGrid', '.tsv'), 'w') as f:
 			f.write(praat_output)
 
+		shutil.rmtree(tmp_dir)
 		return praat_output

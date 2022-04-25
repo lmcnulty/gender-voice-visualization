@@ -92,7 +92,8 @@
 	<input type="radio" name="add-recording" id="upload-file" checked>
 	<label for="upload-file">Upload a file</label>
 	<div>
-		<input type='file' id='audio-file-input' name='recording' accept="audio/*"/>
+		<input type='file' id='audio-file-input' name='recording' 
+		capture="user" accept="audio/*,video/*,audio/mpeg,audio/mp4,audio/x-aiff,audio/ogg,audio/vorbis,audio/opus,audio/vnd.wav,.wav,.mp3,.ogg,.opus,.m4a,.webm"/>
 	</div>
 	<br>
 	<input type="radio" name="add-recording" id="record-voice">
@@ -138,7 +139,8 @@
 			function alertRecordingFailure(exception) {
 				alert("Sorry, something went wrong. " 
 					+ "Your device's browser may not be able to record audio. "
-					+ "Try uploading a file recorded from a native app instead."
+					+ "Try uploading a file recorded from a native app instead "
+					+ "or using a different browser."
 				);
 				console.error(exception);
 			}
@@ -181,6 +183,11 @@
 
 			let transcriptText = $('#transcript').value;
 			formData.append('transcript', transcriptText);
+			formData.append('referrer', document.referrer);
+			formData.append('screen-width', window.screen.width);
+			formData.append('screen-height', window.screen.height);
+			formData.append('lang', navigator.language || navigator.userLanguage);
+
 			clip.transcript = transcriptText;
 			clip.title = $('#title-input').value;
 			clip.color = $('#color-select').value;
@@ -228,8 +235,8 @@
 					"Sorry, we weren't able to process your recording. " +
 					"Make sure to speak clearly and ensure " +
 					"that your transcript matches the audio. " +
-					"Also, try to include a 1-second period of silence in your clip " +
-					"for successful noise removal."
+					"For increased chance of success," +
+					"try using short clips with a 1-second period of silence."
 				);
 				$('button.new-clip').classList.remove('hidden');
 				$('button.new-clip + .spinner').classList.add('hidden');
@@ -237,7 +244,7 @@
 		}
 	} catch (exception) {
 		alert("An unknown error occured.");
-		console.log(exception);
+		console.error(exception);
 	}
 	</script>
 </section>
