@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 
+print('corpusanalysis.py: __package__ ->', __package__)
+
 import os, subprocess, json
 from collections import defaultdict 
 from statistics import mean, median, stdev
 
-import preprocessing, phones, resonance
-
+from library import preprocessing, phones, resonance
 
 corpus_dir = './corpus'
 processed_corpus_dir = './corpus-processed'

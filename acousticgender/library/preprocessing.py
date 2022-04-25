@@ -1,8 +1,12 @@
 
+print('preprocessing.py: dir() -> ', dir())
+print('preprocessing.py: __name__ -> ', __name__)
 import subprocess, os, glob, shutil
 import magic
 
-from settings import settings
+from . import settings as settings_module
+
+settings = settings_module.settings
 
 def process(uploaded_file, transcript, tmp_dir):
 	################## Noise Removal ##################

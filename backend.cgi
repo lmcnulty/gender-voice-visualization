@@ -4,8 +4,12 @@ import os, random, json, statistics, hashlib, datetime
 import cgi, cgitb   # I like cgi because it was popular when I was born
 import maxminddb
 
-import preprocessing, phones, resonance
-from settings import settings
+import acousticgender
+import acousticgender.library.preprocessing as preprocessing
+import acousticgender.library.phones as phones
+import acousticgender.library.resonance as resonance
+
+settings = acousticgender.library.settings.settings
 
 # Helpers
 random_id = lambda: str(random.randint(0, 2**32))
