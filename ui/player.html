@@ -94,11 +94,11 @@ try {
 	})
 
 	globalState.render(['playbackTime'], current => {
-		/*if (current.playbackTime && 
+		if (current.playbackTime && 
 			current.playbackTime != mediaElement.currentTime
 		) {
-			mediaElement.currentTime = current.playbackTime;
-		}*/
+			 current.playbackTime = mediaElement.currentTime;
+		}
 
 		progressBar.setAttribute('value', current.playbackTime);
 		if (current.playbackTime >= progressBar.max && globalState.get('playing') == true) {
