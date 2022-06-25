@@ -3,7 +3,7 @@
 import cgitb, json
 from jinja2 import Template, Environment, FileSystemLoader
 
-from settings import settings
+from acousticgender.library.settings import settings
 
 cgitb.enable()
 

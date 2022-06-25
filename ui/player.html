@@ -5,7 +5,7 @@
 {% include 'pause-fill.svg' %}
 </button>
 <progress class="player" value="0" min="0"></progress>
-<audio class="clip"></audio>
+<audio class="clip" preload="metadata"></audio>
 <script>
 try {
 	let mediaElement = $('.clip');
@@ -94,11 +94,11 @@ try {
 	})
 
 	globalState.render(['playbackTime'], current => {
-		if (current.playbackTime && 
+		/*if (current.playbackTime && 
 			current.playbackTime != mediaElement.currentTime
 		) {
 			mediaElement.currentTime = current.playbackTime;
-		}
+		}*/
 
 		progressBar.setAttribute('value', current.playbackTime);
 		if (current.playbackTime >= progressBar.max && globalState.get('playing') == true) {
