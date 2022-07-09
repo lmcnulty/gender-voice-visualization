@@ -137,10 +137,19 @@
 			}
 
 			function alertRecordingFailure(exception) {
-				alert("Sorry, something went wrong. " 
-					+ "Your device's browser may not be able to record audio. "
-					+ "Try uploading a file recorded from a native app instead "
-					+ "or using a different browser."
+				alert(
+					String(window.location).slice(0, 5) == 'https'
+					?
+						  "Sorry, something went wrong. " 
+						+ "Please ensure that your microphone is connected "
+						+ "and that your browser allows us to record from it. "
+						+ "Alternately, you can try uploading a file recorded from a native app instead."
+					:
+						  "Recording in-browser is only available "
+						+ "when accessing the site over a secure connection. "
+						+ "To record, reload the page ensuring "
+						+ "that the URL starts with 'https', "
+						+ "including the 's' at the end."
 				);
 				console.error(exception);
 			}
