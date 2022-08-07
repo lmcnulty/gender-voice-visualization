@@ -99,7 +99,7 @@
 				sibling.disabled = false;
 			}
 			clearSelector('.current-tab > section');
-			evt.target.disabled = true;
+			tabButton.disabled = true;
 			$('aside > .current-tab').appendChild($('section.' + tab));
 		});
 	}
