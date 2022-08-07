@@ -1,5 +1,8 @@
 
 /* ======================= Style ======================= */
+body {
+	line-height: 1.4;
+}
 button:hover, input:hover, select:hover, textArea:hover {
 	opacity: .8;
 }
