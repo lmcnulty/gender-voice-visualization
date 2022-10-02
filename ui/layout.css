@@ -40,6 +40,12 @@ header button, footer button {
 	line-height: 1rem;
 	min-width: 2rem;
 }
+button {
+	padding: .25rem .5rem;
+}
+.custom-widgets input[type=file]::file-selector-button {
+	padding: .25rem .5rem;
+}
 button span {
 	display: inline-block;
 	vertical-align: bottom;

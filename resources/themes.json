@@ -12,7 +12,7 @@
 		"input-color":"#000000",
 		"input-background":"#ffffff",
 		"border-radius":"30",
-		"box-shadow-strength":"11",
+		"box-shadow-strength":"5",
 		"box-shadow-spread":"30",
 		"highlight-strength":"24"
 	},
@@ -28,7 +28,7 @@
 		"input-color":"#401a25",
 		"input-background":"#ffffff",
 		"border-radius":"30",
-		"box-shadow-strength":"11",
+		"box-shadow-strength":"5",
 		"box-shadow-spread":"30",
 		"highlight-strength":"29"
 	},
@@ -83,7 +83,7 @@
 		"border-radius":"8",
 		"box-shadow-strength":"8",
 		"box-shadow-spread":"40",
-		"highlight-strength":"9"
+		"highlight-strength":"5"
 	},
 
 	"Popular": {
@@ -99,7 +99,7 @@
 		"input-color":"#000000",
 		"input-background":"#f7f7f7",
 		"border-radius":"32",
-		"box-shadow-strength":"8",
+		"box-shadow-strength":"5",
 		"box-shadow-spread":"50",
 		"highlight-strength":"0"
 	},

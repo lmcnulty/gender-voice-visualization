@@ -6,15 +6,17 @@
 	<button class="settings iconic">⚙ Settings</button>
 </div>
 <style>
-
-		button.hbox {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-		}
-		.tab-set button.hbox span {
-			line-height: 2.5em;
-		}
+	button.hbox {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	.tab-set button.hbox span {
+		line-height: calc(var(--header-height) - .5rem);
+	}
+	.tab-set button.hbox svg {
+		padding-top: .1em;
+	}
 	.tab-set {
 		position: absolute;
 		bottom: 0px;
