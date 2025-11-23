@@ -1,18 +1,21 @@
 <!doctype html>
 <!--
-Hello! If you're seeing this, you're probably using your browser's
-"view-source" feature. We've tried to make the output here readable,
-but you may have better luck looking at the source files in our git
-repository [1]
+Hello! If you're seeing this, you're probably using your
+browser's "view-source" feature. This web page is compiled from
+multiple source code files available in our Git repositories [1].
+ While we've tried to keep the resulting output fairly readable,
+you will get a more complete picture of how the system works by
+viewing the original source files.
 
-- https://gitlab.com/lmcnulty/gender-voice-visualization
-- https://github.com/lmcnulty/gender-voice-visualization
-
-The source is free software under the GNU Affero General Public License [1],
-and assets under a Creative Commons Attribution Sharealike license.
+The source code is free software under the GNU Affero General
+Public License [2], and the assets are released under a Creative
+Commons Attribution Sharealike license [3]. In summary, this
+means that you have the right to to use, modify, and redistribute
+the code and assets of the site, but in doing so, you must offer
+the same rights to the users of any resulting works.
 
 [1] https://gitlab.com/lmcnulty/gender-voice-visualization,
-    https://github.com/lmcnulty/gender-voice-visualization 
+    https://github.com/lmcnulty/gender-voice-visualization
 [2] https://www.gnu.org/licenses/agpl-3.0.en.html
 [3] https://creativecommons.org/licenses/by-sa/4.0/
 -->
@@ -62,7 +65,7 @@ and assets under a Creative Commons Attribution Sharealike license.
             	
             		--box-shadow-spread: 40;
             	
-            		--highlight-strength: 9;
+            		--highlight-strength: 5;
             	
 
             	--box-shadow: -1px 1px var(--box-shadow-spread) var(--box-shadow-spread) rgba(0,0,0,calc(var(--box-shadow-strength)));
@@ -110,6 +113,12 @@ and assets under a Creative Commons Attribution Sharealike license.
             	flex-shrink: 0;
             	line-height: 1rem;
             	min-width: 2rem;
+            }
+            button {
+            	padding: .25rem .5rem;
+            }
+            .custom-widgets input[type=file]::file-selector-button {
+            	padding: .25rem .5rem;
             }
             button span {
             	display: inline-block;
@@ -241,6 +250,9 @@ and assets under a Creative Commons Attribution Sharealike license.
 
             				
             /* ======================= Style ======================= */
+            body {
+            	line-height: 1.4;
+            }
             button:hover, input:hover, select:hover, textArea:hover {
             	opacity: .8;
             }
@@ -881,7 +893,7 @@ to help us in our research.
             </svg>
             </button>
             <progress class="player" value="0" min="0"></progress>
-            <audio class="clip"></audio>
+            <audio class="clip" preload="metadata"></audio>
             <script>
             try {
             	let mediaElement = $('.clip');
@@ -973,7 +985,7 @@ to help us in our research.
             		if (current.playbackTime && 
             			current.playbackTime != mediaElement.currentTime
             		) {
-            			mediaElement.currentTime = current.playbackTime;
+            			 current.playbackTime = mediaElement.currentTime;
             		}
 
             		progressBar.setAttribute('value', current.playbackTime);
@@ -1091,15 +1103,17 @@ to help us in our research.
                 	<button class="settings iconic">⚙ Settings</button>
                 </div>
                 <style>
-
-                		button.hbox {
-                			display: flex;
-                			align-items: center;
-                			justify-content: center;
-                		}
-                		.tab-set button.hbox span {
-                			line-height: 2.5em;
-                		}
+                	button.hbox {
+                		display: flex;
+                		align-items: center;
+                		justify-content: center;
+                	}
+                	.tab-set button.hbox span {
+                		line-height: calc(var(--header-height) - .5rem);
+                	}
+                	.tab-set button.hbox svg {
+                		padding-top: .1em;
+                	}
                 	.tab-set {
                 		position: absolute;
                 		bottom: 0px;
@@ -1184,7 +1198,7 @@ to help us in our research.
                 				sibling.disabled = false;
                 			}
                 			clearSelector('.current-tab > section');
-                			evt.target.disabled = true;
+                			tabButton.disabled = true;
                 			$('aside > .current-tab').appendChild($('section.' + tab));
                 		});
                 	}
@@ -1428,7 +1442,7 @@ to help us in our research.
             		"input-color":"#000000",
             		"input-background":"#ffffff",
             		"border-radius":"30",
-            		"box-shadow-strength":"11",
+            		"box-shadow-strength":"5",
             		"box-shadow-spread":"30",
             		"highlight-strength":"24"
             	},
@@ -1444,7 +1458,7 @@ to help us in our research.
             		"input-color":"#401a25",
             		"input-background":"#ffffff",
             		"border-radius":"30",
-            		"box-shadow-strength":"11",
+            		"box-shadow-strength":"5",
             		"box-shadow-spread":"30",
             		"highlight-strength":"29"
             	},
@@ -1499,7 +1513,7 @@ to help us in our research.
             		"border-radius":"8",
             		"box-shadow-strength":"8",
             		"box-shadow-spread":"40",
-            		"highlight-strength":"9"
+            		"highlight-strength":"5"
             	},
 
             	"Popular": {
@@ -1515,7 +1529,7 @@ to help us in our research.
             		"input-color":"#000000",
             		"input-background":"#f7f7f7",
             		"border-radius":"32",
-            		"box-shadow-strength":"8",
+            		"box-shadow-strength":"5",
             		"box-shadow-spread":"50",
             		"highlight-strength":"0"
             	},
@@ -2310,10 +2324,19 @@ to help us in our research.
             			}
 
             			function alertRecordingFailure(exception) {
-            				alert("Sorry, something went wrong. " 
-            					+ "Your device's browser may not be able to record audio. "
-            					+ "Try uploading a file recorded from a native app instead "
-            					+ "or using a different browser."
+            				alert(
+            					String(window.location).slice(0, 5) == 'https'
+            					?
+            						  "Sorry, something went wrong. " 
+            						+ "Please ensure that your microphone is connected "
+            						+ "and that your browser allows us to record from it. "
+            						+ "Alternately, you can try uploading a file recorded from a native app instead."
+            					:
+            						  "Recording in-browser is only available "
+            						+ "when accessing the site over a secure connection. "
+            						+ "To record, reload the page ensuring "
+            						+ "that the URL starts with 'https', "
+            						+ "including the 's' at the end."
             				);
             				console.error(exception);
             			}
