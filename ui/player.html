@@ -97,7 +97,7 @@ try {
 		if (current.playbackTime && 
 			current.playbackTime != mediaElement.currentTime
 		) {
-			 current.playbackTime = mediaElement.currentTime;
+			 mediaElement.currentTime = current.playbackTime;
 		}
 
 		progressBar.setAttribute('value', current.playbackTime);
